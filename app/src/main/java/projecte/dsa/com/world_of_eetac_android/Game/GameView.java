@@ -103,7 +103,7 @@ public class GameView extends SurfaceView {
 
     @Override
     protected void onDraw(Canvas canvas) {
-       // FuncionsRetrofit.init();
+        FuncionsRetrofit.init();
         Escena escena= FuncionsRetrofit.ObtindreEscena(2);
         escena.setEscenas(celdas);
         //int altoSprite= getHeight()/escena.getAlto();

@@ -17,7 +17,7 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
 public class FuncionsRetrofit {
     public static final String API_URL = "http://10.0.2.2:8080";
     public static final String tag = "Retrofit:";
-    //private static ServeiRetrofit servei;
+    private static ServeiRetrofit servei;
 
     public static void pintar(Escena escena)
     {
@@ -40,22 +40,9 @@ public class FuncionsRetrofit {
                 .build();
 
         // Create an instance of our GitHub API interface.
-        //servei = retrofit.create(ServeiRetrofit.class);
+        servei = retrofit.create(ServeiRetrofit.class);
     }
     public static Escena ObtindreEscena(int id){
-        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
-        // Create a very simple REST adapter which points the GitHub API.
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(API_URL)
-                .addConverterFactory(JacksonConverterFactory.create())
-                .build();
-
-        // Create an instance of our GitHub API interface.
-        ServeiRetrofit servei = retrofit.create(ServeiRetrofit.class);
-
-        // Create a call instance for looking up Retrofit contributors.
         Call<Escena> call = servei.escenas("2");
 
         // Fetch and print a list of the contributors to the library.
