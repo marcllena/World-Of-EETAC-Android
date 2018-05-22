@@ -5,8 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 
-import android.os.AsyncTask;
-
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -14,22 +12,18 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-
+import projecte.dsa.com.world_of_eetac_android.Mon.Globals;
+import projecte.dsa.com.world_of_eetac_android.Mon.Usuario;
 import projecte.dsa.com.world_of_eetac_android.R;
+import projecte.dsa.com.world_of_eetac_android.Services.RetrofitAPI;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * A login screen that offers login via email/password.
  */
-public class LoginActivity extends AppCompatActivity{
-    String IP = "192.168.1.43";//IP del server
-    //String IP = "10.0.1.43";//IP del server
-    //String IP = "10.0.2.2";//IP del server Android
+public class LoginActivity extends AppCompatActivity {
     String username;
     String password;
 
@@ -38,9 +32,11 @@ public class LoginActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        Globals.setApiUrl("http://10.0.2.2:8080");
     }
 
-    public void login(View view) {//Funció que s'activa al fer click al login, i comprova el password i la contrasenya
+
+    public void loginClick(View view) {//Funció que s'activa al fer click al login, i comprova el password i la contrasenya
         EditText nomText = (EditText) findViewById(R.id.nomEditText);
         EditText nomPassword = (EditText) findViewById(R.id.passwordEditText);
         username = nomText.getText().toString();
@@ -49,84 +45,60 @@ public class LoginActivity extends AppCompatActivity{
             AlertDialog.Builder dlgAlert = new AlertDialog.Builder(this);
             dlgAlert.setMessage("Emplena els camps de nom i contrasenya");
             dlgAlert.setTitle("Error");
-            dlgAlert.setPositiveButton("Ok",
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            //dismiss the dialog
-                        }
-                    });
+            dlgAlert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    //dismiss the dialog
+                }
+            });
             dlgAlert.setCancelable(true);
             dlgAlert.create().show();
             return;
         }
-        //new login().execute("http://" + IP + ":9000/Application/loginUsuario"); //Cridem el AsyncTask login
-        iniciarMainActivity();
+        //Fem la consulta
+        login(username, password);
+
     }
+    public void login(String username, final String password) {
+        RetrofitAPI servei = Globals.getInstance().getServeiRetrofit();
+        Call<Usuario> callUser = servei.consultarUsuarioJSON(username);
+        callUser.enqueue(new Callback<Usuario>() {
+            int resultat = -1;
 
-    public class login extends AsyncTask<String, Void, String> {//AsyncTask login
-        InputStream stream = null;
-        String result = null;
-
-        @Override
-        protected String doInBackground(String... urls) {//Fa la petició al servidor
-            try {
-                String query = String.format(urls[0]);
-                URL url = new URL(query);
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                conn.setReadTimeout(10000);
-                conn.setConnectTimeout(15000 /* milliseconds */);
-                conn.setRequestMethod("POST");
-                conn.setDoInput(true);
-                conn.setDoOutput(true);
-                conn.connect();
-
-                String urlParameters = "username=" + username + "&password=" + password;
-                DataOutputStream wr = new DataOutputStream(conn.getOutputStream());
-                wr.writeBytes(urlParameters);
-                wr.flush();
-                wr.close();
-
-                stream = conn.getInputStream();
-                BufferedReader reader = null;
-                StringBuilder sb = new StringBuilder();
-                reader = new BufferedReader(new InputStreamReader(stream));
-
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    sb.append(line);
+            @Override
+            public void onResponse(Call<Usuario> call, Response<Usuario> resposta) {
+                int codi = resposta.code();
+                Log.d("Proba ", "Codi agafat" + codi);
+                if (codi == 200) {
+                    Usuario usuario = (Usuario) resposta.body();
+                    if (usuario.getPassword().equals(password)) {
+                        resultat=0;
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        startActivity(intent);
+                    } else resultat = -1;
+                } else if (codi == 204) {
+                    resultat = -1;
                 }
-                result = sb.toString();
-
-                //En un futur, passarem a una altra activity en funció del codi
-                Log.i("Missatge del servidor", result);
-
-            } catch (Exception e) {
-                e.printStackTrace();
+                if (resultat == -1) {
+                    AlertDialog.Builder dlgAlert = new AlertDialog.Builder(LoginActivity.this);
+                    dlgAlert.setMessage("Usuari/Password incorrecte");
+                    dlgAlert.setTitle("Error en les dades");
+                    dlgAlert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            //dismiss the dialog
+                        }
+                    });
+                    dlgAlert.setCancelable(true);
+                    dlgAlert.create().show();
+                }
             }
-            return result;
-        }
 
-        @Override
-        protected void onPostExecute(String result) {//Analitzar la resposta del servidor
-            TextView n = (TextView) findViewById(R.id.debugText);
-            int codi = Integer.parseInt(result);
-            if (codi == 0) {//Login Correcte
-                iniciarMainActivity();
-            } else {
-                AlertDialog.Builder dlgAlert = new AlertDialog.Builder(LoginActivity.this);
-                dlgAlert.setMessage("Usuari/Password incorrecte");
-                dlgAlert.setTitle("Error en les dades");
-                dlgAlert.setPositiveButton("Ok",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                //dismiss the dialog
-                            }
-                        });
-                dlgAlert.setCancelable(true);
-                dlgAlert.create().show();
-                n.setText("Login incorrecte");
+            @Override
+            public void onFailure(Call<Usuario> call, Throwable t) {
+                // log error here since request failed
+                Log.d("Request: ", "error loading API" + t.toString());
+
             }
-        }
+        });
     }
 
     public void registre_button(View view) {//Funció que s'executa per mostrar el camp adicional de repetir password
@@ -136,12 +108,16 @@ public class LoginActivity extends AppCompatActivity{
         Button cancelar = (Button) findViewById(R.id.buttonCancelar);
         Button registrar = (Button) findViewById(R.id.buttonRegistrar);
         Button registrar2 = (Button) findViewById(R.id.buttonRegister2);
+        TextView profe = (TextView) findViewById(R.id.textView4);
+        EditText prof = (EditText) findViewById(R.id.professionEditText);
         login.setVisibility(View.INVISIBLE);
         cancelar.setVisibility(View.VISIBLE);
         registrar.setVisibility(View.INVISIBLE);
         registrar2.setVisibility(View.VISIBLE);
         nomPassword2.setVisibility(View.VISIBLE);
         password2.setVisibility(View.VISIBLE);
+        profe.setVisibility(View.VISIBLE);
+        prof.setVisibility(View.VISIBLE);
 
     }
 
@@ -152,6 +128,8 @@ public class LoginActivity extends AppCompatActivity{
         Button cancelar = (Button) findViewById(R.id.buttonCancelar);
         Button registrar = (Button) findViewById(R.id.buttonRegistrar);
         Button registrar2 = (Button) findViewById(R.id.buttonRegister2);
+        TextView profe = (TextView) findViewById(R.id.textView4);
+        EditText prof = (EditText) findViewById(R.id.professionEditText);
         login.setVisibility(View.VISIBLE);
         cancelar.setVisibility(View.INVISIBLE);
         registrar.setVisibility(View.VISIBLE);
@@ -159,26 +137,30 @@ public class LoginActivity extends AppCompatActivity{
         nomPassword2.setText("");
         nomPassword2.setVisibility(View.INVISIBLE);
         password2.setVisibility(View.INVISIBLE);
+        profe.setVisibility(View.INVISIBLE);
+        prof.setVisibility(View.INVISIBLE);
+
     }
 
-    public void registrar(View view) {//Funció que envia les dades del registre al server
+    public void registrarClick(View view) {//Funció que envia les dades del registre al server
         EditText nomText = (EditText) findViewById(R.id.nomEditText);
         EditText nomPassword = (EditText) findViewById(R.id.passwordEditText);
         EditText nomPassword2 = (EditText) findViewById(R.id.password2EditText);
+        EditText prof= (EditText) findViewById(R.id.professionEditText);
         username = nomText.getText().toString();
         password = nomPassword.getText().toString();
+        String profession = prof.getText().toString();
         String password2 = nomPassword2.getText().toString();
         nomPassword.setText("");
         nomPassword2.setText("");
-        if (username.equals("") || password.equals("") || password2.equals("")) {//Mirem que hagi emplenat els camps
+        if (username.equals("") || password.equals("") || password2.equals("")||profession.equals("")) {//Mirem que hagi emplenat els camps
             AlertDialog.Builder dlgAlert = new AlertDialog.Builder(this);
             dlgAlert.setMessage("Emplena tots els camps");
             dlgAlert.setTitle("Error");
-            dlgAlert.setPositiveButton("Ok",
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                        }
-                    });
+            dlgAlert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                }
+            });
             dlgAlert.setCancelable(true);
             dlgAlert.create().show();
             return;
@@ -187,100 +169,68 @@ public class LoginActivity extends AppCompatActivity{
             AlertDialog.Builder dlgAlert = new AlertDialog.Builder(this);
             dlgAlert.setMessage("Les dos contrasenyes han de coincidir");
             dlgAlert.setTitle("Error");
-            dlgAlert.setPositiveButton("Ok",
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                        }
-                    });
+            dlgAlert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                }
+            });
             dlgAlert.setCancelable(true);
             dlgAlert.create().show();
             return;
         }
-        //Enviem els parametres amb un POST
-        //new registre().execute("http://" + IP + ":9000/Application/registrarUsuario");//Cridem el AsyncTask registre
+        //Registre
+        registre(username, password,profession);
     }
 
-    private class registre extends AsyncTask<String, Void, String> {//AsyncTask registre
-        InputStream stream = null;
-        String result = null;
+    public void registre(String username, final String password,String profession) {
+        RetrofitAPI servei = Globals.getInstance().getServeiRetrofit();
+        int prof=Integer.parseInt(profession);
+        if(prof>3)
+            prof=3;
+        else if(prof==0)
+            prof=1;
+        Call<Usuario> callUser = servei.regUsuario(new Usuario(username, password, prof));
+        // Fetch and print a list of the contributors to the library.
+        callUser.enqueue(new Callback<Usuario>() {
+            int resultat = -1;
 
-        @Override
-        protected String doInBackground(String... urls) {//Fa la petició al servidor
-            try {
-                String query = String.format(urls[0]);
-                URL url = new URL(query);
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                conn.setReadTimeout(10000);
-                conn.setConnectTimeout(15000 /* milliseconds */);
-                conn.setRequestMethod("POST");
-                conn.setDoInput(true);
-                conn.setDoOutput(true);
-                conn.connect();
-
-                String urlParameters = "username=" + username + "&password=" + password;
-                DataOutputStream wr = new DataOutputStream(conn.getOutputStream());
-                wr.writeBytes(urlParameters);
-                wr.flush();
-                wr.close();
-
-                stream = conn.getInputStream();
-
-                BufferedReader reader;
-
-                StringBuilder sb = new StringBuilder();
-
-                reader = new BufferedReader(new InputStreamReader(stream));
-
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    sb.append(line);
-                }
-                result = sb.toString();
-
-                //En un futur, passarem a una altra activity en funció del codi
-                Log.i("Missatge del servidor", result);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return result;
-        }
-
-        @Override
-        protected void onPostExecute(String result) {//Analitzar la resposta del servidor
-            int codi = Integer.parseInt(result);
-            if (codi == 0) {//Registre
-                AlertDialog.Builder dlgAlert = new AlertDialog.Builder(LoginActivity.this);
-                dlgAlert.setMessage("Usuari registrat correctamente");
-                dlgAlert.setTitle("Registre");
-                dlgAlert.setPositiveButton("Ok",
-                        new DialogInterface.OnClickListener() {
+            @Override
+            public void onResponse(Call<Usuario> user, Response<Usuario> resposta) {
+                    int codi = resposta.code();
+                    if (codi == 200) {
+                        AlertDialog.Builder dlgAlert = new AlertDialog.Builder(LoginActivity.this);
+                        dlgAlert.setMessage("Usuari registrat correctamente");
+                        dlgAlert.setTitle("Registre");
+                        dlgAlert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 //dismiss the dialog
                             }
                         });
-                dlgAlert.setCancelable(true);
-                dlgAlert.create().show();
-                final Button cancelar = (Button) findViewById(R.id.buttonCancelar);
-                cancelar.performClick();
-            } else {
-                AlertDialog.Builder dlgAlert = new AlertDialog.Builder(LoginActivity.this);
-                dlgAlert.setMessage("No s'ha pogut registrar, ja que el nom d'usuari ja existeix");
-                dlgAlert.setTitle("Registre");
-                dlgAlert.setPositiveButton("Ok",
-                        new DialogInterface.OnClickListener() {
+                        dlgAlert.setCancelable(true);
+                        dlgAlert.create().show();
+                        final Button cancelar = (Button) findViewById(R.id.buttonCancelar);
+                        cancelar.performClick();
+
+                    } else if (codi == 204) {
+                        AlertDialog.Builder dlgAlert = new AlertDialog.Builder(LoginActivity.this);
+                        dlgAlert.setMessage("Error en el registre");
+                        dlgAlert.setTitle("El nom d'usuari ja existeix");
+                        dlgAlert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 //dismiss the dialog
                             }
                         });
-                dlgAlert.setCancelable(true);
-                dlgAlert.create().show();
+                        dlgAlert.setCancelable(true);
+                        dlgAlert.create().show();
+                    }
             }
-        }
+            @Override
+            public void onFailure(Call<Usuario> call, Throwable t) {
+                // log error here since request failed
+                Log.d("Request: ", "error loading API" + t.toString());
+
+            }
+        });
     }
 
-    public void iniciarMainActivity(){
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
-    }
+
 }

@@ -90,7 +90,7 @@ public class Escena {
                     case "Cofre":simbol=escenas[3];
                     case "Rio":simbol=escenas[4];
                 }
-                canvas.drawBitmap(simbol,i*altoSprite,j*altoSprite,null);
+                canvas.drawBitmap(simbol,i*altoSprite,j*anchoSprite,null);
             }
         }
     }

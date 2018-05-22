@@ -1,7 +1,10 @@
 package projecte.dsa.com.world_of_eetac_android.Mon;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
 import projecte.dsa.com.world_of_eetac_android.Objectes.Objeto;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -91,5 +94,10 @@ public class Usuario {
         {
             //Stats iniciales mago
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Usuario{" + "nickname='" + nickname + '\'' + ", password='" + password + '\'' + ", level=" + level + ", profession=" + profession + ", attack=" + attack + ", defense=" + defense + ", magicAttack=" + magicAttack + ", magicDefense=" + magicDefense + ", listaAmigos=" + Arrays.toString(listaAmigos) + ", inventario=" + inventario + '}';
     }
 }

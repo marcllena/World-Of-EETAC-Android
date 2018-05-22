@@ -5,7 +5,7 @@ import projecte.dsa.com.world_of_eetac_android.Mon.*;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
-import projecte.dsa.com.world_of_eetac_android.Services.ServeiRetrofit;
+import projecte.dsa.com.world_of_eetac_android.Services.RetrofitAPI;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -15,7 +15,7 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
 
 
 public class Main {
-    public static final String API_URL = "http://localhost:8080";
+    public static  String API_URL = "http://localhost:8080";
 
     public static void pintar(Escena escena)
     {
@@ -39,12 +39,11 @@ public class Main {
                 .build();
 
         // Create an instance of our GitHub API interface.
-        ServeiRetrofit servei = retrofit.create(ServeiRetrofit.class);
+        RetrofitAPI servei = retrofit.create(RetrofitAPI.class);
 
         // Create a call instance for looking up Retrofit contributors.
         Call<Escena> call = servei.escenas("2");
         Call<Usuario> call2 = servei.regUsuario(new Usuario("Jordi","noob",1));
-        Call<Usuario> call3 = servei.consultarUsuarioJSON("Jordi");
 
         // Fetch and print a list of the contributors to the library.
         Response resposta=null;
@@ -79,7 +78,16 @@ public class Main {
         else{
             System.out.printf("Error desconegut\n");
         }
-        resposta = call3.execute();
+        */
+        Call<Usuario> call3 = servei.consultarUsuarioJSON("Marc");
+        try
+        {
+            resposta = call3.execute();
+        }
+        catch (IOException excepcio)
+        {
+
+        }
         codi= resposta.code();
         if(codi==200) {
             Usuario user = (Usuario) resposta.body();
@@ -90,7 +98,7 @@ public class Main {
         }
         else{
             System.out.printf("Error desconegut\n");
-        }*/
+        }
     }
 }
 

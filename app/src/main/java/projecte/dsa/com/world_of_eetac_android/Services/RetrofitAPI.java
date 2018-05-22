@@ -8,7 +8,7 @@ import retrofit2.http.*;
 
 import java.util.List;
 
-public interface ServeiRetrofit {
+public interface RetrofitAPI {
 
     @GET("/myapp/service/escenaris/{id}")
     Call<Escena> escenas(
@@ -22,4 +22,7 @@ public interface ServeiRetrofit {
 
     @POST("/myapp/service/objecte/add/{nombre}")
     Call<Response> newObjeto(@Path("nombre") String nombre);
+
+    @GET("/myapp/service/usuaris")
+    Call<List<Usuario>> obtindreUsuaris();
 }

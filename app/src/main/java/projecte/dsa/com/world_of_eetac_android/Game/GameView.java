@@ -1,23 +1,23 @@
 package projecte.dsa.com.world_of_eetac_android.Game;
 
+import projecte.dsa.com.world_of_eetac_android.Mon.Globals;
 import projecte.dsa.com.world_of_eetac_android.Mon.Escena;
-import projecte.dsa.com.world_of_eetac_android.Services.FuncionsRetrofit;
-import projecte.dsa.com.world_of_eetac_android.Services.ServeiRetrofit;
+import projecte.dsa.com.world_of_eetac_android.Services.RetrofitAPI;
 import projecte.dsa.com.world_of_eetac_android.R;
 import retrofit2.Call;
+import retrofit2.Response;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.view.Display;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.View;
-import android.view.WindowManager;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -103,9 +103,21 @@ public class GameView extends SurfaceView {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        FuncionsRetrofit.init();
-        Escena escena= FuncionsRetrofit.ObtindreEscena(2);
-        escena.setEscenas(celdas);
+        RetrofitAPI servei = Globals.getInstance().getServeiRetrofit();
+        Call<Escena> callUser = servei.escenas("2");
+        Response resposta=null;
+        try
+        {
+            resposta = callUser.execute();
+        }
+        catch (IOException excepcio)
+        {
+
+        }
+        int resultat = resposta.code();
+        Log.d("Proba ", "Codi agafat" + resultat);
+        //Escena escena= FuncionsRetrofit.obtindreEscena(2);
+        //escena.setEscenas(celdas);
         //int altoSprite= getHeight()/escena.getAlto();
         //int anchoSprite=getWidth()/escena.getAncho();
         //escena.onDraw(canvas,altoSprite,anchoSprite);*/

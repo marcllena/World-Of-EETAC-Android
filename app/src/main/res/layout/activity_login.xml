@@ -12,31 +12,19 @@
         android:id="@+id/buttonLogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="140dp"
+        android:layout_marginBottom="12dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:layout_weight="1"
-        android:onClick="login"
+        android:onClick="loginClick"
         android:text="Login"
         android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/buttonRegistrar"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/passwordEditText" />
-
-    <TextView
-        android:id="@+id/debugText"
-        android:layout_width="246dp"
-        android:layout_height="72dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="68dp"
-        android:layout_marginTop="348dp"
-        android:layout_weight="1"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.59" />
+        app:layout_constraintVertical_bias="0.865" />
 
     <Button
         android:id="@+id/buttonRegistrar"
@@ -45,26 +33,29 @@
         android:layout_marginBottom="240dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
+        android:layout_marginTop="24dp"
         android:layout_weight="1"
         android:onClick="registre_button"
         android:text="Registrar"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/password2EditText"
+        app:layout_constraintVertical_bias="0.0" />
 
     <EditText
         android:id="@+id/nomEditText"
         android:layout_width="150dp"
         android:layout_height="46dp"
         android:layout_marginBottom="8dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="8dp"
         android:ems="10"
         android:inputType="text"
         app:layout_constraintBottom_toTopOf="@+id/passwordEditText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/textViewDefensa"
+        app:layout_constraintStart_toEndOf="@+id/textView"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.203" />
 
@@ -83,7 +74,7 @@
         app:layout_constraintTop_toBottomOf="@+id/nomEditText" />
 
     <TextView
-        android:id="@+id/textViewDefensa"
+        android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="24dp"
         android:layout_marginBottom="8dp"
@@ -104,7 +95,7 @@
         android:layout_marginTop="96dp"
         android:text="Contrasenya"
         android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="@+id/textViewDefensa"
+        app:layout_constraintEnd_toEndOf="@+id/textView"
         app:layout_constraintEnd_toStartOf="@+id/passwordEditText"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -123,17 +114,50 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="47dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:text="Professió"
+        android:textSize="18sp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/buttonRegistrar"
+        app:layout_constraintHorizontal_bias="0.489"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.375" />
+
     <EditText
         android:id="@+id/password2EditText"
         android:layout_width="150dp"
         android:layout_height="46dp"
+        android:layout_marginEnd="44dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="44dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="20dp"
         android:ems="10"
         android:inputType="textPassword"
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/buttonLogin"
+        app:layout_constraintTop_toBottomOf="@+id/passwordEditText" />
+
+    <EditText
+        android:id="@+id/professionEditText"
+        android:layout_width="150dp"
+        android:layout_height="46dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="76dp"
+        android:ems="10"
+        android:inputType="textPassword|number"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.12"
         app:layout_constraintStart_toEndOf="@+id/textView3"
         app:layout_constraintTop_toBottomOf="@+id/passwordEditText" />
 
@@ -141,14 +165,17 @@
         android:id="@+id/buttonCancelar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="72dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="76dp"
+        android:layout_marginRight="76dp"
+        android:layout_marginTop="8dp"
         android:onClick="cancelar_button"
         android:text="Cancelar"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.58" />
+        app:layout_constraintVertical_bias="0.577" />
 
     <Button
         android:id="@+id/buttonRegister2"
@@ -158,14 +185,14 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:onClick="registrar"
+        android:onClick="registrarClick"
         android:text="Registrar"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/buttonCancelar"
-        app:layout_constraintHorizontal_bias="0.407"
+        app:layout_constraintHorizontal_bias="0.707"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.583" />
+        app:layout_constraintVertical_bias="0.577" />
 
 </android.support.constraint.ConstraintLayout>

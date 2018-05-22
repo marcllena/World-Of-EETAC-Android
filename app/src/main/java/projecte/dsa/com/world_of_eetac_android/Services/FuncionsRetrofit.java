@@ -15,9 +15,10 @@ import java.io.IOException;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
 public class FuncionsRetrofit {
-    public static final String API_URL = "http://10.0.2.2:8080";
+    //public static final String API_URL = "http://10.0.2.2:8080";
+    public static final String API_URL = "http://localhost:8080";
     public static final String tag = "Retrofit:";
-    private static ServeiRetrofit servei;
+    private static RetrofitAPI servei;
 
     public static void pintar(Escena escena)
     {
@@ -40,7 +41,7 @@ public class FuncionsRetrofit {
                 .build();
 
         // Create an instance of our GitHub API interface.
-        servei = retrofit.create(ServeiRetrofit.class);
+        servei = retrofit.create(RetrofitAPI.class);
     }
     public static Escena ObtindreEscena(int id){
         Call<Escena> call = servei.escenas("2");
