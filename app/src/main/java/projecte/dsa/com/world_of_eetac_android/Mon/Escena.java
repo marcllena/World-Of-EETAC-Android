@@ -85,11 +85,14 @@ public class Escena {
                 String simbolo=this.getDatos()[i][j].getSimbolo();
                 Bitmap simbol=null;
                 switch(simbolo){
-                    case "Hierba":simbol=escenas[1];
-                    case "Puerta":simbol=escenas[2];
-                    case "Cofre":simbol=escenas[3];
-                    case "Rio":simbol=escenas[4];
+                    case "0":simbol=escenas[1];
+                    case "-":simbol=escenas[2];
+                    case "X":simbol=escenas[2];
+                    case "G":simbol=escenas[1];
+                    default:simbol=escenas[0];
                 }
+                //Falta
+                //simbol= Bitmap.createScaledBitmap(simbol, altoSprite, anchoSprite, true);
                 canvas.drawBitmap(simbol,i*altoSprite,j*anchoSprite,null);
             }
         }

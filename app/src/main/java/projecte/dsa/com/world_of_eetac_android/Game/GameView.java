@@ -1,13 +1,18 @@
 package projecte.dsa.com.world_of_eetac_android.Game;
 
+import projecte.dsa.com.world_of_eetac_android.Activities.LoginActivity;
 import projecte.dsa.com.world_of_eetac_android.Mon.Globals;
 import projecte.dsa.com.world_of_eetac_android.Mon.Escena;
+import projecte.dsa.com.world_of_eetac_android.Mon.Usuario;
 import projecte.dsa.com.world_of_eetac_android.Services.RetrofitAPI;
 import projecte.dsa.com.world_of_eetac_android.R;
 import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.Response;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -16,6 +21,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.widget.Button;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -30,6 +36,7 @@ public class GameView extends SurfaceView {
     private List<Sprite> sprites = new ArrayList<Sprite>();
     private long lastClick;
     private Bitmap[] celdas=new Bitmap[4];
+    Escena actual;
 
 
     public GameView(Context context) {
@@ -43,6 +50,7 @@ public class GameView extends SurfaceView {
         holder.addCallback(new SurfaceHolder.Callback() {
             @Override
             public void surfaceCreated(SurfaceHolder holder) {
+                obtindreEscena("2");
                 createSprites();
                 createCeldas();
                 gameLoopThread.setRunning(true);
@@ -93,41 +101,30 @@ public class GameView extends SurfaceView {
     }
 
     private void createCeldas(){
-        celdas[0]= BitmapFactory.decodeResource(getResources(), R.drawable.bad1);
-        celdas[1]=BitmapFactory.decodeResource(getResources(), R.drawable.bad1);
-        celdas[2]=BitmapFactory.decodeResource(getResources(), R.drawable.bad1);
-        celdas[3]=BitmapFactory.decodeResource(getResources(), R.drawable.bad1);
+        celdas[0]= BitmapFactory.decodeResource(getResources(), R.drawable.hierba);
+        celdas[1]=BitmapFactory.decodeResource(getResources(), R.drawable.rio);
+        //celdas[2]=BitmapFactory.decodeResource(getResources(), R.drawable.cofre);
+        //celdas[3]=BitmapFactory.decodeResource(getResources(), R.drawable.puerta);
     }
 
 
 
     @Override
     protected void onDraw(Canvas canvas) {
-        RetrofitAPI servei = Globals.getInstance().getServeiRetrofit();
-        Call<Escena> callUser = servei.escenas("2");
-        Response resposta=null;
-        try
-        {
-            resposta = callUser.execute();
-        }
-        catch (IOException excepcio)
-        {
-
-        }
-        int resultat = resposta.code();
-        Log.d("Proba ", "Codi agafat" + resultat);
-        //Escena escena= FuncionsRetrofit.obtindreEscena(2);
-        //escena.setEscenas(celdas);
-        //int altoSprite= getHeight()/escena.getAlto();
-        //int anchoSprite=getWidth()/escena.getAncho();
-        //escena.onDraw(canvas,altoSprite,anchoSprite);*/
-        //Fixem el fons
-        canvas.drawColor(Color.BLACK);
-        for (int i = temps.size() - 1; i >= 0; i--) {
-            temps.get(i).onDraw(canvas);
-        }
-        for (Sprite sprite : sprites) {
-            sprite.onDraw(canvas);
+        //Mirem si ja hem rebut la escena
+        if(actual!=null) {
+            int altoSprite = getHeight() / actual.getAlto();
+            int anchoSprite = getWidth() / actual.getAncho();
+            actual.setEscenas(celdas);
+            actual.onDraw(canvas, altoSprite, anchoSprite);
+            //Fixem el fons*/
+            //canvas.drawColor(Color.BLACK);
+            for (int i = temps.size() - 1; i >= 0; i--) {
+                temps.get(i).onDraw(canvas);
+            }
+            for (Sprite sprite : sprites) {
+                sprite.onDraw(canvas);
+            }
         }
     }
 
@@ -149,5 +146,30 @@ public class GameView extends SurfaceView {
             }
         }
         return true;
+    }
+    public void obtindreEscena(String id) {
+        RetrofitAPI servei = Globals.getInstance().getServeiRetrofit();
+        Call<Escena> callEscena = servei.escenas(id);
+        // Fetch and print a list of the contributors to the library.
+        callEscena.enqueue(new Callback<Escena>() {
+
+            @Override
+            public void onResponse(Call<Escena> Escena, Response<Escena> resposta) {
+                int codi = resposta.code();
+                if (codi == 200) {
+                    actual = (Escena) resposta.body();
+
+                } else if (codi == 204) {
+                    Log.e("Escena", "Id no trobat");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Escena> call, Throwable t) {
+                // log error here since request failed
+                Log.d("Request: ", "error loading API" + t.toString());
+
+            }
+        });
     }
 }

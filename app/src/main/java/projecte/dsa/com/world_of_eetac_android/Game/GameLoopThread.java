@@ -4,7 +4,7 @@ package projecte.dsa.com.world_of_eetac_android.Game;
 import android.graphics.Canvas;
 
 public class GameLoopThread extends Thread {
-    static final long FPS = 10;
+    static final long FPS = 30;
     private GameView view;
     private boolean running = false;
 

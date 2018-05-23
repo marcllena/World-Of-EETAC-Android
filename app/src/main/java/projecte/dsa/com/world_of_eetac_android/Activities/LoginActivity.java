@@ -191,7 +191,6 @@ public class LoginActivity extends AppCompatActivity {
         Call<Usuario> callUser = servei.regUsuario(new Usuario(username, password, prof));
         // Fetch and print a list of the contributors to the library.
         callUser.enqueue(new Callback<Usuario>() {
-            int resultat = -1;
 
             @Override
             public void onResponse(Call<Usuario> user, Response<Usuario> resposta) {
