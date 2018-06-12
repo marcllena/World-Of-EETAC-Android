@@ -30,18 +30,18 @@ public class Sprite {
         this.width = bmp.getWidth() / BMP_COLUMNS;
         this.height = bmp.getHeight() / BMP_ROWS;
         Random rnd = new Random();
-        x = rnd.nextInt(gameView.getWidth() - width);
-        y = rnd.nextInt(gameView.getHeight() - height);
+        x = rnd.nextInt(gameView.getAnchoSurface() - width);
+        y = rnd.nextInt(gameView.getAltoSurface()- height);
         xSpeed = rnd.nextInt(MAX_SPEED * 2) - MAX_SPEED;
         ySpeed = rnd.nextInt(MAX_SPEED * 2) - MAX_SPEED;
     }
 
     private void update() {
-        if (x > gameView.getWidth() - width - xSpeed || x + xSpeed < 0) {
+        if (x > gameView.getAnchoSurface() - width - xSpeed || x + xSpeed < 0) {
             xSpeed = -xSpeed;
         }
         x = x + xSpeed;
-        if (y > gameView.getHeight() - height - ySpeed || y + ySpeed < 0) {
+        if (y > gameView.getAltoSurface() - height - ySpeed || y + ySpeed < 0) {
             ySpeed = -ySpeed;
         }
         y = y + ySpeed;

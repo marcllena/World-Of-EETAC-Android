@@ -14,6 +14,7 @@ public class Globals {
 
     // Global variables
     public static String API_URL = "http://10.0.2.2:8080";
+    //public static String API_URL = "http://192.168.43.9:8080";
     RetrofitAPI serveiRetrofit;
     List<Usuario> usuaris;
     int usuariSeleccionat=-1;

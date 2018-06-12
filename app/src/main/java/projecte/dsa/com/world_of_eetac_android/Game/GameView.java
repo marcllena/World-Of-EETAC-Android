@@ -37,6 +37,10 @@ public class GameView extends SurfaceView {
     private long lastClick;
     private Bitmap[] celdas=new Bitmap[4];
     Escena actual;
+    private int anchoSurface;
+    private int altoSurface;
+    private int anchoSprite;
+    private int altoSprite;
 
 
     public GameView(Context context) {
@@ -51,7 +55,6 @@ public class GameView extends SurfaceView {
             @Override
             public void surfaceCreated(SurfaceHolder holder) {
                 obtindreEscena("2");
-                createSprites();
                 createCeldas();
                 gameLoopThread.setRunning(true);
                 gameLoopThread.start();
@@ -80,6 +83,14 @@ public class GameView extends SurfaceView {
         bmpBlood = BitmapFactory.decodeResource(getResources(), R.drawable.blood1);
     }
 
+    public int getAnchoSurface() {
+        return anchoSurface;
+    }
+
+    public int getAltoSurface() {
+        return altoSurface;
+    }
+
     private void createSprites() {
         sprites.add(createSprite(R.drawable.bad1));
         sprites.add(createSprite(R.drawable.bad2));
@@ -103,8 +114,8 @@ public class GameView extends SurfaceView {
     private void createCeldas(){
         celdas[0]= BitmapFactory.decodeResource(getResources(), R.drawable.hierba);
         celdas[1]=BitmapFactory.decodeResource(getResources(), R.drawable.rio);
-        //celdas[2]=BitmapFactory.decodeResource(getResources(), R.drawable.cofre);
-        //celdas[3]=BitmapFactory.decodeResource(getResources(), R.drawable.puerta);
+        celdas[2]=BitmapFactory.decodeResource(getResources(), R.drawable.cofre);
+        celdas[3]=BitmapFactory.decodeResource(getResources(), R.drawable.puerta);
     }
 
 
@@ -113,9 +124,6 @@ public class GameView extends SurfaceView {
     protected void onDraw(Canvas canvas) {
         //Mirem si ja hem rebut la escena
         if(actual!=null) {
-            int altoSprite = getHeight() / actual.getAlto();
-            int anchoSprite = getWidth() / actual.getAncho();
-            actual.setEscenas(celdas);
             actual.onDraw(canvas, altoSprite, anchoSprite);
             //Fixem el fons*/
             //canvas.drawColor(Color.BLACK);
@@ -158,6 +166,12 @@ public class GameView extends SurfaceView {
                 int codi = resposta.code();
                 if (codi == 200) {
                     actual = (Escena) resposta.body();
+                    altoSurface= getHeight();
+                    anchoSurface=getHeight();
+                    altoSprite = altoSurface/ actual.getAlto();
+                    anchoSprite = anchoSurface / actual.getAncho();
+                    actual.setEscenas(celdas);
+                    createSprites();
 
                 } else if (codi == 204) {
                     Log.e("Escena", "Id no trobat");

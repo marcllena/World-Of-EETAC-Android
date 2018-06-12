@@ -83,16 +83,28 @@ public class Escena {
         for(int i=0;i<this.getAlto();i++) {
             for (int j = 0; j < this.getAncho();j++) {
                 String simbolo=this.getDatos()[i][j].getSimbolo();
-                Bitmap simbol=null;
-                switch(simbolo){
-                    case "0":simbol=escenas[1];
-                    case "-":simbol=escenas[2];
-                    case "X":simbol=escenas[2];
-                    case "G":simbol=escenas[1];
-                    default:simbol=escenas[0];
+                Bitmap simbol;
+                if ("0".equals(simbolo)) {
+                    simbol=escenas[0];
                 }
-                //Falta
-                //simbol= Bitmap.createScaledBitmap(simbol, altoSprite, anchoSprite, true);
+                else if ("-".equals(simbolo)) {
+                   simbol=escenas[1];
+                }
+                else if ("X".equals(simbolo)) {
+                    simbol=escenas[2];
+                }
+                else {
+                    simbol=escenas[3];
+                }
+                //No funciona switch amb strings
+                /*switch(simbolo){
+                    case "0":simbol=escenas[0];
+                    case "-":simbol=escenas[1];
+                    case "X":simbol=escenas[2];
+                    case "G":simbol=escenas[3];
+                    default:simbol=escenas[0];
+                }*/
+                simbol= Bitmap.createScaledBitmap(simbol, altoSprite, anchoSprite, true);
                 canvas.drawBitmap(simbol,i*altoSprite,j*anchoSprite,null);
             }
         }

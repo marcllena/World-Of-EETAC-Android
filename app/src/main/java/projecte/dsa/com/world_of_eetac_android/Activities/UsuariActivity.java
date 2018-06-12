@@ -42,9 +42,6 @@ public class UsuariActivity extends AppCompatActivity {
         TextView textViewDef = (TextView) findViewById(R.id.textDef);
         textViewDef.setText("Defensa: "+String.valueOf(usuario.getDefense()));
 
-        ObjectesListArrayAdapter adapter = new ObjectesListArrayAdapter(UsuariActivity.this,usuario.getInventario());
-        ListView listView = (ListView) findViewById(R.id.jugadorsList);
-        listView.setAdapter(adapter);
 
 
     }
