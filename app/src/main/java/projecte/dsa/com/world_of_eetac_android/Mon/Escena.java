@@ -104,8 +104,8 @@ public class Escena {
                     case "G":simbol=escenas[3];
                     default:simbol=escenas[0];
                 }*/
-                simbol= Bitmap.createScaledBitmap(simbol, altoSprite, anchoSprite, true);
-                canvas.drawBitmap(simbol,i*altoSprite,j*anchoSprite,null);
+                simbol= Bitmap.createScaledBitmap(simbol, anchoSprite, altoSprite, true);
+                canvas.drawBitmap(simbol,j*anchoSprite,i*altoSprite,null);
             }
         }
     }

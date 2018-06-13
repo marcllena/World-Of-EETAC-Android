@@ -143,6 +143,19 @@ public class GameView extends SurfaceView {
             synchronized (getHolder()) {
                 float x=event.getX();
                 float y=event.getY();
+                for(int i=0;i<actual.getAlto();i++) {
+                    for (int j = 0; j < actual.getAncho(); j++) {
+                        if(actual.getDatos()[i][j].getInteractuable()==1)
+                        {
+                            int res =isCollision(i,j,x,y);
+                            if(res==1)
+                            {
+                                //Tocamos Cofre
+                                break;
+                            }
+                        }
+                    }
+                }
                 for (int i = sprites.size() - 1; i >= 0; i--) {
                     Sprite sprite = sprites.get(i);
                     if (sprite.isCollision(x,y)) {
@@ -167,7 +180,7 @@ public class GameView extends SurfaceView {
                 if (codi == 200) {
                     actual = (Escena) resposta.body();
                     altoSurface= getHeight();
-                    anchoSurface=getHeight();
+                    anchoSurface= (int) (getHeight()*1.5);
                     altoSprite = altoSurface/ actual.getAlto();
                     anchoSprite = anchoSurface / actual.getAncho();
                     actual.setEscenas(celdas);
@@ -182,8 +195,16 @@ public class GameView extends SurfaceView {
             public void onFailure(Call<Escena> call, Throwable t) {
                 // log error here since request failed
                 Log.d("Request: ", "error loading API" + t.toString());
-
             }
         });
+    }
+
+    public int isCollision(int i, int j,float x2, float y2) {
+        if (y2 < (i+1) * altoSprite && y2 > (i * altoSprite) && x2 < (j+1) * anchoSprite && x2 > (j * anchoSprite)) {
+            if (actual.getDatos()[i][j].getSimbolo().equals("X")) return 1;
+            else if (actual.getDatos()[i][j].getSimbolo().equals("G")) return 2;
+            else return 0;
+        }
+        return -1;
     }
 }

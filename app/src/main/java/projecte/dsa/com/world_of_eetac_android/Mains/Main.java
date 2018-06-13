@@ -53,7 +53,7 @@ public class Main {
         }
         catch (IOException excepcio)
         {
-
+            System.out.print("Error");
         }
         int codi= resposta.code();
         if(codi==200) {

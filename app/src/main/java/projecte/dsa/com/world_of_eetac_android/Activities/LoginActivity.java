@@ -8,9 +8,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import projecte.dsa.com.world_of_eetac_android.Mon.Globals;
 import projecte.dsa.com.world_of_eetac_android.Mon.Usuario;
@@ -26,15 +32,35 @@ import retrofit2.Response;
 public class LoginActivity extends AppCompatActivity {
     String username;
     String password;
-
+    Spinner spinnerProf;
+    int spinnerPos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         Globals.setApiUrl("http://10.0.2.2:8080");
-    }
+        spinnerProf = (Spinner) findViewById(R.id.spinnerProf);
+        List<String> list = new ArrayList<String>();
+        list.add("Guerrero");
+        list.add("Arquero");
+        list.add("Mago");
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, list);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerProf.setAdapter(dataAdapter);
+        spinnerProf.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+        {
+            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id)
+            {
+                spinnerPos=pos;
+            }
+            public void onNothingSelected(AdapterView<?> parent)
+            {
+            }
+        });
 
+    }
 
     public void loginClick(View view) {//Funció que s'activa al fer click al login, i comprova el password i la contrasenya
         EditText nomText = (EditText) findViewById(R.id.nomEditText);
@@ -60,18 +86,18 @@ public class LoginActivity extends AppCompatActivity {
     }
     public void login(String username, final String password) {
         RetrofitAPI servei = Globals.getInstance().getServeiRetrofit();
-        Call<Usuario> callUser = servei.consultarUsuarioJSON(username);
-        callUser.enqueue(new Callback<Usuario>() {
+        Call<Usuario> callResponse = servei.logUsuario(new Usuario(username, password));
+        callResponse.enqueue(new Callback<Usuario>() {
             int resultat = -1;
 
             @Override
             public void onResponse(Call<Usuario> call, Response<Usuario> resposta) {
                 int codi = resposta.code();
-                Log.d("Proba ", "Codi agafat" + codi);
                 if (codi == 200) {
                     Usuario usuario = (Usuario) resposta.body();
                     if (usuario.getPassword().equals(password)) {
                         resultat=0;
+                        Globals.getInstance().setUsuari(usuario);
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         startActivity(intent);
                     } else resultat = -1;
@@ -109,7 +135,6 @@ public class LoginActivity extends AppCompatActivity {
         Button registrar = (Button) findViewById(R.id.buttonRegistrar);
         Button registrar2 = (Button) findViewById(R.id.buttonRegister2);
         TextView profe = (TextView) findViewById(R.id.textView4);
-        EditText prof = (EditText) findViewById(R.id.professionEditText);
         login.setVisibility(View.INVISIBLE);
         cancelar.setVisibility(View.VISIBLE);
         registrar.setVisibility(View.INVISIBLE);
@@ -117,7 +142,7 @@ public class LoginActivity extends AppCompatActivity {
         nomPassword2.setVisibility(View.VISIBLE);
         password2.setVisibility(View.VISIBLE);
         profe.setVisibility(View.VISIBLE);
-        prof.setVisibility(View.VISIBLE);
+        spinnerProf.setVisibility(View.VISIBLE);
 
     }
 
@@ -129,7 +154,6 @@ public class LoginActivity extends AppCompatActivity {
         Button registrar = (Button) findViewById(R.id.buttonRegistrar);
         Button registrar2 = (Button) findViewById(R.id.buttonRegister2);
         TextView profe = (TextView) findViewById(R.id.textView4);
-        EditText prof = (EditText) findViewById(R.id.professionEditText);
         login.setVisibility(View.VISIBLE);
         cancelar.setVisibility(View.INVISIBLE);
         registrar.setVisibility(View.VISIBLE);
@@ -138,7 +162,7 @@ public class LoginActivity extends AppCompatActivity {
         nomPassword2.setVisibility(View.INVISIBLE);
         password2.setVisibility(View.INVISIBLE);
         profe.setVisibility(View.INVISIBLE);
-        prof.setVisibility(View.INVISIBLE);
+        spinnerProf.setVisibility(View.INVISIBLE);
 
     }
 
@@ -146,14 +170,12 @@ public class LoginActivity extends AppCompatActivity {
         EditText nomText = (EditText) findViewById(R.id.nomEditText);
         EditText nomPassword = (EditText) findViewById(R.id.passwordEditText);
         EditText nomPassword2 = (EditText) findViewById(R.id.password2EditText);
-        EditText prof= (EditText) findViewById(R.id.professionEditText);
         username = nomText.getText().toString();
         password = nomPassword.getText().toString();
-        String profession = prof.getText().toString();
         String password2 = nomPassword2.getText().toString();
         nomPassword.setText("");
         nomPassword2.setText("");
-        if (username.equals("") || password.equals("") || password2.equals("")||profession.equals("")) {//Mirem que hagi emplenat els camps
+        if (username.equals("") || password.equals("") || password2.equals("")) {//Mirem que hagi emplenat els camps
             AlertDialog.Builder dlgAlert = new AlertDialog.Builder(this);
             dlgAlert.setMessage("Emplena tots els camps");
             dlgAlert.setTitle("Error");
@@ -178,17 +200,12 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
         //Registre
-        registre(username, password,profession);
+        registre(username, password,spinnerPos+1);
     }
 
-    public void registre(String username, final String password,String profession) {
+    public void registre(String username, final String password,int profession) {
         RetrofitAPI servei = Globals.getInstance().getServeiRetrofit();
-        int prof=Integer.parseInt(profession);
-        if(prof>3)
-            prof=3;
-        else if(prof==0)
-            prof=1;
-        Call<Usuario> callUser = servei.regUsuario(new Usuario(username, password, prof));
+        Call<Usuario> callUser = servei.regUsuario(new Usuario(username, password, profession));
         // Fetch and print a list of the contributors to the library.
         callUser.enqueue(new Callback<Usuario>() {
 

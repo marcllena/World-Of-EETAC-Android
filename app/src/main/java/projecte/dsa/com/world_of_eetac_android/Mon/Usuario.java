@@ -1,5 +1,6 @@
 package projecte.dsa.com.world_of_eetac_android.Mon;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import projecte.dsa.com.world_of_eetac_android.Objectes.Objeto;
@@ -60,6 +61,10 @@ public class Usuario {
 
     public Usuario()
     {
+    }
+    public Usuario(String nick, String password){
+        this.nickname = nick;
+        this.password = password;
     }
     public Usuario(String nick, String password, int profession){
         this.nickname = nick;

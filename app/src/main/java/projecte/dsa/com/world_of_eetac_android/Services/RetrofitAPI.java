@@ -13,9 +13,11 @@ public interface RetrofitAPI {
     @GET("/myapp/service/escenaris/{id}")
     Call<Escena> escenas(
             @Path("id") String id);
-
     @POST("/myapp/service/usuari/register/")
     Call<Usuario> regUsuario(@Body Usuario user);
+
+    @POST("/myapp/service/usuari/login/")
+    Call<Usuario> logUsuario(@Body Usuario user);
 
     @GET("/myapp/service/usuari/{nombre}")
     Call<Usuario> consultarUsuarioJSON(@Path("nombre") String nombre);

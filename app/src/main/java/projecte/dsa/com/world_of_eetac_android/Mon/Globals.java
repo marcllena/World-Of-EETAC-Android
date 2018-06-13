@@ -18,6 +18,7 @@ public class Globals {
     RetrofitAPI serveiRetrofit;
     List<Usuario> usuaris;
     int usuariSeleccionat=-1;
+    Usuario usuari;
 
 
     // Restrict the constructor from being instantiated
@@ -72,6 +73,12 @@ public class Globals {
 
     public void setUsuaris(List<Usuario> usuaris) {
         this.usuaris = usuaris;
+    }
+    public Usuario getUsuari() {
+        return usuari;
+    }
+    public void setUsuari(Usuario usuari) {
+        this.usuari = usuari;
     }
 }
 
