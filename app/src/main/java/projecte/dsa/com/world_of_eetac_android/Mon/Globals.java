@@ -14,12 +14,32 @@ public class Globals {
 
     // Global variables
     public static String API_URL = "http://10.0.2.2:8080";
+
+
+
     //public static String API_URL = "http://192.168.43.9:8080";
+    Usuario user;
     RetrofitAPI serveiRetrofit;
     List<Usuario> usuaris;
+
+
+    Partida game;
     int usuariSeleccionat=-1;
+    public Partida getGame() {
+        return game;
+    }
 
+    public void setGame(Partida game) {
+        this.game = game;
+    }
 
+    public Usuario getUser() {
+        return user;
+    }
+
+    public void setUser(Usuario user) {
+        this.user = user;
+    }
     // Restrict the constructor from being instantiated
     private Globals(){
         Retrofit retrofit = new Retrofit.Builder()
