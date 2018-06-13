@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 
 import projecte.dsa.com.world_of_eetac_android.Celes.Celda;
+import projecte.dsa.com.world_of_eetac_android.Celes.Cofre;
 import projecte.dsa.com.world_of_eetac_android.R;
 
 public class Escena {
@@ -91,7 +92,11 @@ public class Escena {
                    simbol=escenas[1];
                 }
                 else if ("X".equals(simbolo)) {
-                    simbol=escenas[2];
+                    Cofre cofre= (Cofre) this.getDatos()[i][j];
+                    if(cofre.getAbierto())
+                    simbol=escenas[4];
+                    else
+                        simbol=escenas[2];
                 }
                 else {
                     simbol=escenas[3];

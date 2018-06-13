@@ -1,4 +1,6 @@
 package projecte.dsa.com.world_of_eetac_android.Celes;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import projecte.*;
 import projecte.dsa.com.world_of_eetac_android.Objectes.Objeto;
 
@@ -13,6 +15,13 @@ public class Cofre extends Celda {
     }
 
     private List<Objeto> contenido;
+    @JsonIgnore
+    private boolean abierto;
+
+    public Cofre() {
+        abierto=false;
+    }
+
     public int getPisable() {
         return 0;
     }
@@ -23,4 +32,14 @@ public class Cofre extends Celda {
         return this.contenido;
     }
     public void abrir(){getContenido();}
+
+    public void setContenido(List<Objeto> contenido) {
+        this.contenido = contenido;
+    }
+    public boolean getAbierto() {
+        return abierto;
+    }
+    public void setAbierto(boolean abierto) {
+        this.abierto = abierto;
+    }
 }

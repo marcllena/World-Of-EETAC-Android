@@ -98,7 +98,7 @@ public class LoginActivity extends AppCompatActivity {
                     Usuario usuario = (Usuario) resposta.body();
                     if (usuario.getPassword().equals(password)) {
                         resultat=0;
-                        Globals.getInstance().setUsuari(usuario);
+                        Globals.getInstance().setUser(usuario);
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         Globals.getInstance().setUser(usuario);
                         startActivity(intent);

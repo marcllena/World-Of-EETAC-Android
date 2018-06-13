@@ -1,6 +1,7 @@
 package projecte.dsa.com.world_of_eetac_android.Game;
 
 import projecte.dsa.com.world_of_eetac_android.Activities.LoginActivity;
+import projecte.dsa.com.world_of_eetac_android.Celes.Cofre;
 import projecte.dsa.com.world_of_eetac_android.Mon.Globals;
 import projecte.dsa.com.world_of_eetac_android.Mon.Escena;
 import projecte.dsa.com.world_of_eetac_android.Mon.Usuario;
@@ -35,7 +36,7 @@ public class GameView extends SurfaceView {
     private GameLoopThread gameLoopThread;
     private List<Sprite> sprites = new ArrayList<Sprite>();
     private long lastClick;
-    private Bitmap[] celdas=new Bitmap[4];
+    private Bitmap[] celdas=new Bitmap[5];
     Escena actual;
     private int anchoSurface;
     private int altoSurface;
@@ -116,6 +117,7 @@ public class GameView extends SurfaceView {
         celdas[1]=BitmapFactory.decodeResource(getResources(), R.drawable.rio);
         celdas[2]=BitmapFactory.decodeResource(getResources(), R.drawable.cofre);
         celdas[3]=BitmapFactory.decodeResource(getResources(), R.drawable.puerta);
+        celdas[4]=BitmapFactory.decodeResource(getResources(), R.drawable.cofre2);
     }
 
 
@@ -150,7 +152,8 @@ public class GameView extends SurfaceView {
                             int res =isCollision(i,j,x,y);
                             if(res==1)
                             {
-                                //Tocamos Cofre
+                                Cofre cofre= (Cofre) actual.getDatos()[i][j];
+                                cofre.setAbierto(true);
                                 break;
                             }
                         }
