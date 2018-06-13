@@ -3,6 +3,7 @@ package projecte.dsa.com.world_of_eetac_android.Activities;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 
 import android.os.Bundle;
@@ -99,6 +100,7 @@ public class LoginActivity extends AppCompatActivity {
                         resultat=0;
                         Globals.getInstance().setUsuari(usuario);
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        Globals.getInstance().setUser(usuario);
                         startActivity(intent);
                     } else resultat = -1;
                 } else if (codi == 204) {

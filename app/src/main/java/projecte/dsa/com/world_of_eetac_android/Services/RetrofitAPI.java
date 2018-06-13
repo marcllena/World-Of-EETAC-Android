@@ -27,4 +27,13 @@ public interface RetrofitAPI {
 
     @GET("/myapp/service/usuaris")
     Call<List<Usuario>> obtindreUsuaris();
+
+    @POST("/myapp/service/partida/start/")
+    Call<Partida> startGame(@Body Partida partida);
+
+    @POST("/myapp/service/partida/nextRound/")
+    Call<Partida> nextRoundGame(@Body Partida partida);
+
+    @POST("/myapp/service/usuari/finish/")
+    Call<Partida> endedGame(@Body Partida partida);
 }
