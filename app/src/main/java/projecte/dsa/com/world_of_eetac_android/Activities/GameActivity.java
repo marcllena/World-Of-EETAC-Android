@@ -5,6 +5,7 @@ import projecte.dsa.com.world_of_eetac_android.Mon.Escena;
 import projecte.dsa.com.world_of_eetac_android.Mon.Globals;
 import projecte.dsa.com.world_of_eetac_android.Mon.Partida;
 import projecte.dsa.com.world_of_eetac_android.Mon.Usuario;
+import projecte.dsa.com.world_of_eetac_android.R;
 import projecte.dsa.com.world_of_eetac_android.Services.RetrofitAPI;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -16,16 +17,17 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.RatingBar;
 
 import java.util.List;
 
-public class GameActivity extends AppCompatActivity {
+public class GameActivity extends AppCompatActivity implements JoystickView.JoystickListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_main);
-        setContentView(new GameView(this));
+        setContentView(R.layout.activity_game);
+        //setContentView(new GameView(this));
     }
     public void startGame(List<Escena> escenaList) {
         Partida game = new Partida(Globals.getInstance().getUser(),escenaList);
@@ -147,5 +149,10 @@ public class GameActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    public void onJoystickMoved(float xPercent, float yPercent, int source) {
+
     }
 }
