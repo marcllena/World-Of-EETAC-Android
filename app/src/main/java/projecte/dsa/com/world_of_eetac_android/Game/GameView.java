@@ -34,7 +34,8 @@ public class GameView extends SurfaceView {
     private SurfaceHolder holder;
     Context context;
     private GameLoopThread gameLoopThread;
-    private List<Sprite> sprites = new ArrayList<Sprite>();
+    //private List<Sprite> sprites = new ArrayList<Sprite>();
+    private List<Zombie> zombies = new ArrayList<Zombie>();
     private long lastClick;
     private Bitmap[] celdas=new Bitmap[5];
     Escena actual;
@@ -42,6 +43,9 @@ public class GameView extends SurfaceView {
     private int altoSurface;
     private int anchoSprite;
     private int altoSprite;
+
+    private static final int ZOMBIESINICIALS_MULTIPLIER= 3;
+    private Jugador jugador;
 
 
     public GameView(Context context) {
@@ -92,7 +96,39 @@ public class GameView extends SurfaceView {
         return altoSurface;
     }
 
-    private void createSprites() {
+    public void setAnchoSurface(int anchoSurface) {
+        this.anchoSurface = anchoSurface;
+    }
+
+    public void setAltoSurface(int altoSurface) {
+        this.altoSurface = altoSurface;
+    }
+
+    public int getAnchoSprite() {
+        return anchoSprite;
+    }
+
+    public void setAnchoSprite(int anchoSprite) {
+        this.anchoSprite = anchoSprite;
+    }
+
+    public int getAltoSprite() {
+        return altoSprite;
+    }
+
+    public void setAltoSprite(int altoSprite) {
+        this.altoSprite = altoSprite;
+    }
+
+    public Jugador getJugador() {
+        return jugador;
+    }
+
+    public void setJugador(Jugador jugador) {
+        this.jugador = jugador;
+    }
+
+    /* private void createSprites() {
         sprites.add(createSprite(R.drawable.bad1));
         sprites.add(createSprite(R.drawable.bad2));
         sprites.add(createSprite(R.drawable.bad3));
@@ -105,7 +141,7 @@ public class GameView extends SurfaceView {
         sprites.add(createSprite(R.drawable.good4));
         sprites.add(createSprite(R.drawable.good5));
         sprites.add(createSprite(R.drawable.good6));
-    }
+    }*/
 
     private Sprite createSprite(int resouce) {
         Bitmap bmp = BitmapFactory.decodeResource(getResources(), resouce);
@@ -127,13 +163,17 @@ public class GameView extends SurfaceView {
         //Mirem si ja hem rebut la escena
         if(actual!=null) {
             actual.onDraw(canvas, altoSprite, anchoSprite);
+            jugador.onDraw(canvas);
             //Fixem el fons*/
             //canvas.drawColor(Color.BLACK);
             for (int i = temps.size() - 1; i >= 0; i--) {
                 temps.get(i).onDraw(canvas);
             }
-            for (Sprite sprite : sprites) {
+            /*for (Sprite sprite : sprites) {
                 sprite.onDraw(canvas);
+            }*/
+            for (Zombie zombie : zombies) {
+                zombie.onDraw(canvas);
             }
         }
     }
@@ -159,10 +199,10 @@ public class GameView extends SurfaceView {
                         }
                     }
                 }
-                for (int i = sprites.size() - 1; i >= 0; i--) {
-                    Sprite sprite = sprites.get(i);
+                for (int i = zombies.size() - 1; i >= 0; i--) {
+                    Zombie sprite = zombies.get(i);
                     if (sprite.isCollision(x,y)) {
-                        sprites.remove(sprite);
+                        zombies.remove(sprite);
                         temps.add(new TempSprite(temps, this, x, y, bmpBlood));
                         break;
                     }
@@ -187,7 +227,9 @@ public class GameView extends SurfaceView {
                     altoSprite = altoSurface/ actual.getAlto();
                     anchoSprite = anchoSurface / actual.getAncho();
                     actual.setEscenas(celdas);
-                    createSprites();
+                    //createSprites();
+                    jugador=new Jugador(GameView.this,1,context);
+                    startRonda(1);
 
                 } else if (codi == 204) {
                     Log.e("Escena", "Id no trobat");
@@ -210,4 +252,12 @@ public class GameView extends SurfaceView {
         }
         return -1;
     }
+
+    public void startRonda(int numRonda){
+        //Creem els primes zombies
+        for (int i = 0; i < 10+ZOMBIESINICIALS_MULTIPLIER*numRonda; i++) {
+            zombies.add(new Zombie(this,(int)numRonda/5+1,context));
+        }
+    }
+
 }
