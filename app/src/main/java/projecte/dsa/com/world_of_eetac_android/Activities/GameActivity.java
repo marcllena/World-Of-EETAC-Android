@@ -29,7 +29,7 @@ public class GameActivity extends AppCompatActivity {
     }
     public void startGame(List<Escena> escenaList) {
         Partida game = new Partida(Globals.getInstance().getUser(),escenaList);
-
+        //AQUI SHA DE TRIAR EL MAPA
         RetrofitAPI servei = Globals.getInstance().getServeiRetrofit();
         Call<Partida> callPartida = servei.startGame(game);
         callPartida.enqueue(new Callback<Partida>() {
