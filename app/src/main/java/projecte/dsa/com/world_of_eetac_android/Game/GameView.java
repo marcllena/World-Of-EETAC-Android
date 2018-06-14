@@ -19,6 +19,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -64,6 +65,45 @@ public class GameView extends SurfaceView {
 
     public GameView(Context context) {
         super(context);
+        this.context = context;
+        gameLoopThread = new GameLoopThread(this);
+
+        //Fixem el Bitmap
+        holder = getHolder();
+
+        holder.addCallback(new SurfaceHolder.Callback() {
+            @Override
+            public void surfaceCreated(SurfaceHolder holder) {
+                obtindreEscena("2");
+                createCeldas();
+                gameLoopThread.setRunning(true);
+                gameLoopThread.start();
+            }
+
+            @Override
+            public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+
+            }
+
+            @Override
+            public void surfaceDestroyed(SurfaceHolder holder) {
+                boolean retry = true;
+                gameLoopThread.setRunning(false);
+                while (retry) {
+                    try {
+                        gameLoopThread.join();
+                        retry = false;
+                    } catch (InterruptedException e) {
+
+                    }
+
+                }
+            }
+        });
+        bmpBlood = BitmapFactory.decodeResource(getResources(), R.drawable.blood1);
+    }
+    public GameView(Context context, AttributeSet attrs) {
+        super(context, attrs);
         this.context = context;
         gameLoopThread = new GameLoopThread(this);
 
