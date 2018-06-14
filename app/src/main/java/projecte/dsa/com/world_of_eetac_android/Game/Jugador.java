@@ -38,13 +38,11 @@ public class Jugador {
         bmp = BitmapFactory.decodeResource(context.getResources(),id);
         this.width = bmp.getWidth() / BMP_COLUMNS;
         this.height = bmp.getHeight() / BMP_ROWS;
-        //Fixem la posició aleatoria
-        x=50;
-        y=200;
-        //Fixem que vagi cap al usuari amb velocitat en funció del nivell
-        xSpeed = 10;
-        ySpeed = 0;
-        //Fixem que tingui salut aleatoria
+        Random rnd = new Random();
+        x = rnd.nextInt(gameView.getAnchoSurface() - width);
+        y = rnd.nextInt(gameView.getAltoSurface()- height);
+        xSpeed = rnd.nextInt(10 * 2) - 10;
+        ySpeed = rnd.nextInt(10 * 2) - 10;
     }
 
     public int getX() {

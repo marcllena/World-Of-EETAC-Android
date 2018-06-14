@@ -36,7 +36,8 @@ public class GameActivity extends AppCompatActivity implements JoystickView.Joys
         gameView.setAnchoSurface(this.getWindow().getDecorView().getBottom());
         gameView.setAltoSurface((int)(this.getWindow().getDecorView().getHeight()*4/6));
 
-        gameView.layoutCreado();
+        gameView=new GameView(this);
+        joystickView= new JoystickView(this);
 
         //setContentView(new GameView(this));
     }
