@@ -1,5 +1,6 @@
 package projecte.dsa.com.world_of_eetac_android.Game;
 
+import projecte.dsa.com.world_of_eetac_android.Activities.GameActivity;
 import projecte.dsa.com.world_of_eetac_android.Activities.LoginActivity;
 import projecte.dsa.com.world_of_eetac_android.Celes.Cofre;
 import projecte.dsa.com.world_of_eetac_android.Mon.Globals;
@@ -26,11 +27,16 @@ import android.widget.Button;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class GameView extends SurfaceView {
     private final Bitmap bmpBlood;
-    private List<TempSprite> temps = new ArrayList<TempSprite>();
+    //private List<TempSprite> temps = new ArrayList<TempSprite>();
+    private List<ZombieMort> morts = new ArrayList<ZombieMort>();
     private SurfaceHolder holder;
     Context context;
     private GameLoopThread gameLoopThread;
@@ -45,7 +51,15 @@ public class GameView extends SurfaceView {
     private int altoSprite;
 
     private static final int ZOMBIESINICIALS_MULTIPLIER= 3;
+    private static final int ZOMBIESMINIMS= 3;
+    private static final int ZOMBIESRESPAWN_MULTIPLIER= 2;
+    private static final int ZOMBIESRESPAWN_DELAY= 20000;//ms
+    private static final int ZOMBIESRESPAWN_RATE=5000;
     private Jugador jugador;
+    private Iterator<Zombie> iterator;
+    private ListIterator<Zombie> listIterator=zombies.listIterator();
+    //private ListIterator<TempSprite> listIteratorSang=temps.listIterator();
+    private ListIterator<ZombieMort> listIteratorMorts=morts.listIterator();
 
 
     public GameView(Context context) {
@@ -166,14 +180,12 @@ public class GameView extends SurfaceView {
             jugador.onDraw(canvas);
             //Fixem el fons*/
             //canvas.drawColor(Color.BLACK);
-            for (int i = temps.size() - 1; i >= 0; i--) {
-                temps.get(i).onDraw(canvas);
+
+            for (listIteratorMorts=morts.listIterator();listIteratorMorts.hasNext();) {
+                listIteratorMorts.next().onDraw(canvas);
             }
-            /*for (Sprite sprite : sprites) {
-                sprite.onDraw(canvas);
-            }*/
-            for (Zombie zombie : zombies) {
-                zombie.onDraw(canvas);
+            for (int i = zombies.size() - 1; i >= 0; i--) {
+                zombies.get(i).onDraw(canvas);
             }
         }
     }
@@ -199,11 +211,11 @@ public class GameView extends SurfaceView {
                         }
                     }
                 }
-                for (int i = zombies.size() - 1; i >= 0; i--) {
-                    Zombie sprite = zombies.get(i);
+                for (listIterator= zombies.listIterator(); listIterator.hasNext(); ) {
+                    Zombie sprite = listIterator.next();
                     if (sprite.isCollision(x,y)) {
-                        zombies.remove(sprite);
-                        temps.add(new TempSprite(temps, this, x, y, bmpBlood));
+                        listIterator.remove();
+                        listIteratorMorts.add(new ZombieMort(morts,listIteratorMorts, this, x, y, bmpBlood));
                         break;
                     }
                 }
@@ -253,11 +265,23 @@ public class GameView extends SurfaceView {
         return -1;
     }
 
-    public void startRonda(int numRonda){
+    public void startRonda(final int numRonda){
         //Creem els primes zombies
-        for (int i = 0; i < 10+ZOMBIESINICIALS_MULTIPLIER*numRonda; i++) {
-            zombies.add(new Zombie(this,(int)numRonda/5+1,context));
+        for (int i = 0; i < ZOMBIESMINIMS+ZOMBIESINICIALS_MULTIPLIER*numRonda; i++) {
+                listIterator.add(new Zombie(this,(int)numRonda/5+1,context));
         }
+
+        //Creem els de respawn
+        Timer timer = new Timer();
+        TimerTask timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                for (int i = 0; i < ZOMBIESRESPAWN_MULTIPLIER*numRonda; i++) {
+                    listIterator.add(new Zombie(GameView.this,(int)numRonda/5+1,context));
+                }
+            }
+        };
+        timer.schedule(timerTask,ZOMBIESRESPAWN_DELAY,ZOMBIESRESPAWN_RATE);
     }
 
 }
