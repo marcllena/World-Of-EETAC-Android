@@ -23,10 +23,21 @@ import java.util.List;
 
 public class GameActivity extends AppCompatActivity implements JoystickView.JoystickListener{
 
+    GameView gameView;
+    JoystickView joystickView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
+
+        gameView=(GameView) findViewById(R.id.gameView);
+        joystickView=(JoystickView) findViewById(R.id.joystickView);
+        gameView.setAnchoSurface(this.getWindow().getDecorView().getBottom());
+        gameView.setAltoSurface((int)(this.getWindow().getDecorView().getHeight()*4/6));
+
+        gameView.layoutCreado();
+
         //setContentView(new GameView(this));
     }
     public void startGame(List<Escena> escenaList) {

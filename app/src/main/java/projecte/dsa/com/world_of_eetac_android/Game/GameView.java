@@ -1,5 +1,6 @@
 package projecte.dsa.com.world_of_eetac_android.Game;
 
+import projecte.dsa.com.world_of_eetac_android.Activities.GameActivity;
 import projecte.dsa.com.world_of_eetac_android.Activities.LoginActivity;
 import projecte.dsa.com.world_of_eetac_android.Celes.Cofre;
 import projecte.dsa.com.world_of_eetac_android.Mon.Globals;
@@ -53,18 +54,21 @@ public class GameView extends SurfaceView  /*implements SurfaceHolder.Callback, 
     public GameView(Context context) {
         super(context);
         this.context = context;
-        gameLoopThread = new GameLoopThread(this);
 
+        //this.setAnchoSurface(GameActivity.getWindow().getDecorView().getBottom());
+        //this.setAltoSurface((int)(GameActivity.getWindow().getDecorView().getWidth()*4/6));
         //Fixem el Bitmap
         holder = getHolder();
 
         holder.addCallback(new SurfaceHolder.Callback() {
             @Override
             public void surfaceCreated(SurfaceHolder holder) {
+                /*
                 obtindreEscena("2");
                 createCeldas();
                 gameLoopThread.setRunning(true);
                 gameLoopThread.start();
+                */
             }
 
             @Override
@@ -93,7 +97,7 @@ public class GameView extends SurfaceView  /*implements SurfaceHolder.Callback, 
     public GameView(Context context, AttributeSet attrs) {
         super(context,attrs);
         this.context = context;
-        gameLoopThread = new GameLoopThread(this);
+        //gameLoopThread = new GameLoopThread(this);
 
         //Fixem el Bitmap
         holder = getHolder();
@@ -101,10 +105,6 @@ public class GameView extends SurfaceView  /*implements SurfaceHolder.Callback, 
         holder.addCallback(new SurfaceHolder.Callback() {
             @Override
             public void surfaceCreated(SurfaceHolder holder) {
-                obtindreEscena("2");
-                createCeldas();
-                gameLoopThread.setRunning(true);
-                gameLoopThread.start();
             }
 
             @Override
@@ -133,7 +133,7 @@ public class GameView extends SurfaceView  /*implements SurfaceHolder.Callback, 
     public GameView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context,attrs);
         this.context = context;
-        gameLoopThread = new GameLoopThread(this);
+        //gameLoopThread = new GameLoopThread(this);
 
         //Fixem el Bitmap
         holder = getHolder();
@@ -141,10 +141,6 @@ public class GameView extends SurfaceView  /*implements SurfaceHolder.Callback, 
         holder.addCallback(new SurfaceHolder.Callback() {
             @Override
             public void surfaceCreated(SurfaceHolder holder) {
-                obtindreEscena("2");
-                createCeldas();
-                gameLoopThread.setRunning(true);
-                gameLoopThread.start();
             }
 
             @Override
@@ -340,6 +336,14 @@ public class GameView extends SurfaceView  /*implements SurfaceHolder.Callback, 
         for (int i = 0; i < 10+ZOMBIESINICIALS_MULTIPLIER*numRonda; i++) {
             zombies.add(new Zombie(this,(int)numRonda/5+1,context));
         }
+    }
+
+    public void layoutCreado(){
+        gameLoopThread = new GameLoopThread(this);
+        obtindreEscena("2");
+        createCeldas();
+        gameLoopThread.setRunning(true);
+        gameLoopThread.start();
     }
 
 }

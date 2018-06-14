@@ -3,6 +3,7 @@ package projecte.dsa.com.world_of_eetac_android.Mon;
 
 import java.util.List;
 
+import projecte.dsa.com.world_of_eetac_android.Activities.GameActivity;
 import projecte.dsa.com.world_of_eetac_android.Services.RetrofitAPI;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
