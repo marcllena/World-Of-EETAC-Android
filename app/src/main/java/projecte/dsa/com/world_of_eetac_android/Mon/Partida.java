@@ -3,18 +3,18 @@ package projecte.dsa.com.world_of_eetac_android.Mon;
 import java.util.List;
 
 public class Partida {
-    Mapa map;
+    Mapa map=null;
     int mapSelection;
-    Usuario jugador;
+    String jugador;
     String nom;
-    List<Escena> mapaFull;
     int ronda=0;
-    int enemics;
+    public List<Escena> mapaFull;
+    int enemics=0;
     long score=0;
-    public Partida(Usuario jug, List<Escena> mapa){
+    public Partida(String jug, int i){
 
         jugador=jug;
-        mapaFull=mapa;
+        this.mapSelection = i;
     }
 
     public Partida() {

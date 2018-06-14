@@ -178,45 +178,6 @@ public class GameView extends SurfaceView  /*implements SurfaceHolder.Callback, 
         });
         bmpBlood = BitmapFactory.decodeResource(getResources(), R.drawable.blood1);
     }
-    public GameView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        this.context = context;
-        gameLoopThread = new GameLoopThread(this);
-
-        //Fixem el Bitmap
-        holder = getHolder();
-
-        holder.addCallback(new SurfaceHolder.Callback() {
-            @Override
-            public void surfaceCreated(SurfaceHolder holder) {
-                obtindreEscena("2");
-                createCeldas();
-                gameLoopThread.setRunning(true);
-                gameLoopThread.start();
-            }
-
-            @Override
-            public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-
-            }
-
-            @Override
-            public void surfaceDestroyed(SurfaceHolder holder) {
-                boolean retry = true;
-                gameLoopThread.setRunning(false);
-                while (retry) {
-                    try {
-                        gameLoopThread.join();
-                        retry = false;
-                    } catch (InterruptedException e) {
-
-                    }
-
-                }
-            }
-        });
-        bmpBlood = BitmapFactory.decodeResource(getResources(), R.drawable.blood1);
-    }
 
     public int getAnchoSurface() {
         return anchoSurface;
