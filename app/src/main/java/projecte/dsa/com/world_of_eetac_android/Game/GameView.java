@@ -50,7 +50,7 @@ public class GameView extends SurfaceView {
     private int anchoSprite;
     private int altoSprite;
 
-    private static final int ZOMBIESINICIALS_MULTIPLIER= 3;
+    private static final int ZOMBIESINICIALS_MULTIPLIER= 1;
     private static final int ZOMBIESMINIMS= 3;
     private static final int ZOMBIESRESPAWN_MULTIPLIER= 2;
     private static final int ZOMBIESRESPAWN_DELAY= 20000;//ms

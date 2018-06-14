@@ -31,10 +31,13 @@ public class Zombie {
     private static final int SALUT_MULTIPLIER= 3;
     private static final int LAG_MULTIPLIER= 4;
     private static final double LAG_MAXIM= 0.5;
-    private static final double LAG_DIREC= 3;
-    private static final double MIN_SPRITES_SEPARACIO=3;
+    private static final int LAG_DIREC= 0;
+    private static final int MIN_SPRITES_SEPARACIO=3;
+    private static final int DETECCTIO_OBS=20;//FPS
+    private static final double DIVERGENCIA_OBS=0.9;//FPS
     private int nivell;
     private int salut;
+    int obstacle=0;
     Context context;
 
     public Zombie(GameView gameView,int nivell, Context context) {
@@ -55,7 +58,7 @@ public class Zombie {
                 break;
         }
 
-        double lagSpeed =  LAG_MAXIM + (1 - LAG_MAXIM)*LAG_MULTIPLIER*rnd.nextDouble();
+        double lagSpeed =  LAG_MAXIM + (1 - LAG_MAXIM)*rnd.nextDouble();
 
         //Fixem que vagi cap al usuari amb velocitat en funció del nivell
         double theta = Math.atan2(gameView.getJugador().getY() - y,gameView.getJugador().getX() - x);
@@ -66,21 +69,47 @@ public class Zombie {
 
     private void update() {
         //Detectem si la celda a la que va es pisable
-        int i = (y+ySpeed)/gameView.getAltoSprite();
-        int j = (x+xSpeed)/gameView.getAnchoSprite();
-       /* if(gameView.actual.getDatos()[i][j].getPisable()==0)
+        int a = ((y + (ySpeed / 2)+(height) )/ gameView.getAltoSprite());
+        int b;
+        if(xSpeed>0){
+            b = ((x + (xSpeed / 2)+(width) )/ gameView.getAnchoSprite());
+        }
+       else{
+            b = (x + (xSpeed / 2)/ gameView.getAnchoSprite());
+        }
+        boolean perseguir=false;
+        if (x > gameView.getAnchoSurface() - width - xSpeed || x + xSpeed < 0) {
+            xSpeed = -xSpeed;
+            perseguir=false;
+            obstacle=0;
+        } else if (y > gameView.getAltoSurface() - height - ySpeed || y + ySpeed < 0) {
+            ySpeed = -ySpeed;
+            perseguir=false;
+            obstacle=0;
+        }
+        else if (a>-1&&b>-1&&a<gameView.actual.getAlto()&&b<gameView.actual.getAncho()&&gameView.actual.getDatos()[a][b].getPisable() == 0) {
+            perseguir=false;
+           obstacle=DETECCTIO_OBS;
+        } else {
+            if(obstacle>0)
+                obstacle--;
+            perseguir=true;
+        }
+        if(obstacle==DETECCTIO_OBS)
         {
-         xSpeed=-xSpeed;
-         ySpeed=-ySpeed;
-        }*/
-       // else {
             Random rnd = new Random();
-            double lagDirec =  LAG_MAXIM + (LAG_DIREC - LAG_MAXIM)*LAG_MULTIPLIER*rnd.nextDouble();
+            xSpeed = (int) (-(DIVERGENCIA_OBS + (1 - DIVERGENCIA_OBS)* rnd.nextDouble())*xSpeed);
+            ySpeed = (int) (-(DIVERGENCIA_OBS + (1 - DIVERGENCIA_OBS)* rnd.nextDouble())*xSpeed);
+            obstacle--;
+        }
+        else if(perseguir&&obstacle==0){
+            Random rnd = new Random();
+            double lagDirec = LAG_MAXIM + (LAG_DIREC - LAG_MAXIM) * LAG_MULTIPLIER * rnd.nextDouble();
             double theta = Math.atan2((gameView.getJugador().getY() - lagDirec * gameView.getJugador().getySpeed()) - y, (gameView.getJugador().getX() - lagDirec * gameView.getJugador().getxSpeed()) - x);
-            double lagSpeed =  LAG_MAXIM + (1 - LAG_MAXIM)*LAG_MULTIPLIER*rnd.nextDouble();
-            xSpeed = (int) ((2 + lagSpeed*SPEED_MULTIPLIER * nivell) * Math.cos(theta));
-            ySpeed = (int) ((2 + lagSpeed*SPEED_MULTIPLIER * nivell) * Math.sin(theta));
-        //}
+            double lagSpeed = LAG_MAXIM + (1 - LAG_MAXIM) * LAG_MULTIPLIER * rnd.nextDouble();
+            xSpeed = (int) ((2 + lagSpeed * SPEED_MULTIPLIER * nivell) * Math.cos(theta));
+            ySpeed = (int) ((2 + lagSpeed * SPEED_MULTIPLIER * nivell) * Math.sin(theta));
+        }
         x = x + xSpeed;
         y = y + ySpeed;
         currentFrame = ++currentFrame % BMP_COLUMNS;
