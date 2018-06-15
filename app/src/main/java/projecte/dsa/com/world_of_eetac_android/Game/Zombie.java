@@ -35,6 +35,9 @@ public class Zombie {
     private static final int MIN_SPRITES_SEPARACIO=3;
     private static final int DETECCTIO_OBS=20;//FPS
     private static final double DIVERGENCIA_OBS=0.9;//FPS
+    private static final int SPRITES_SEPARACIO_DANY=2;
+    private static final double DANY_MINIM=1.5;
+    private static final double DANY_MULTIPLIER=0.5;
     private int nivell;
     private int salut;
     int obstacle=0;
@@ -113,6 +116,15 @@ public class Zombie {
         x = x + xSpeed;
         y = y + ySpeed;
         currentFrame = ++currentFrame % BMP_COLUMNS;
+        //Calculem si fa dany al jugador
+        int disX=((gameView.getJugador().getX()+(gameView.getJugador().getWidth()/2)) - (x+(bmp.getWidth()/2)));
+        int disY=((gameView.getJugador().getY()+(gameView.getJugador().getHeight()/2)) - (y+bmp.getHeight()/2));
+        double dis= Math.sqrt(Math.pow(disX,2)+Math.pow(disY,2));
+        if(((dis)/gameView.getAltoSprite())<SPRITES_SEPARACIO_DANY)
+        {
+            double dany=DANY_MINIM+DANY_MULTIPLIER*nivell;
+            gameView.getJugador().restarSalut(dany);
+        }
     }
 
 

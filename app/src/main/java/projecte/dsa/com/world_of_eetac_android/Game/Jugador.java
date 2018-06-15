@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.graphics.Rect;
 
 import java.util.Random;
@@ -28,8 +29,8 @@ public class Jugador {
     private int currentFrame;
 
     private int nivell;
-    private int salut;
-    Context context;
+    private double salut;
+    Canvas canvas;
 
     public Jugador(GameView gameView,int nivell, Context context) {
         this.gameView=gameView;
@@ -38,7 +39,7 @@ public class Jugador {
         bmp = BitmapFactory.decodeResource(context.getResources(),id);
         this.width = bmp.getWidth() / BMP_COLUMNS;
         this.height = bmp.getHeight() / BMP_ROWS;
-        salut=100;
+        salut=1000;
         Random rnd = new Random();
         x = rnd.nextInt(gameView.getAnchoSurface() - width);
         y = rnd.nextInt(gameView.getAltoSurface()- height);
@@ -70,12 +71,19 @@ public class Jugador {
         return ySpeed;
     }
 
-    public int getSalut() {
+    public double getSalut() {
         return salut;
     }
 
     public void setSalut(int salut) {
         this.salut = salut;
+    }
+
+    public int getWidth() {
+        return bmp.getWidth();
+    }
+    public int getHeight() {
+        return bmp.getHeight();
     }
 
     private void update() {
@@ -95,6 +103,7 @@ public class Jugador {
 
 
     public void onDraw(Canvas canvas) {
+        this.canvas=canvas;
         update();
         int srcX = currentFrame * width;
         int srcY = getAnimationRow() * height;
@@ -113,6 +122,19 @@ public class Jugador {
 
     public boolean isCollision(float x2, float y2) {
         return x2 > x && x2 < x + width && y2 > y && y2 < y + height;
+    }
+
+    public void restarSalut(double daño) {
+        this.salut = this.salut-daño;
+        GameActivity.setSalut(salut);
+        if(salut<0) {
+            //Jugador muerto
+            Paint textPaint = new Paint();
+            textPaint.setARGB(200, 254, 0, 0);
+            textPaint.setTextAlign(Paint.Align.CENTER);
+            textPaint.setTextSize(100);
+            canvas.drawText("GAME OVER", canvas.getWidth()/2, canvas.getHeight()/2  , textPaint);
+        }
     }
 }
 

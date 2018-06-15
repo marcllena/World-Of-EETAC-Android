@@ -143,15 +143,15 @@ public class GameActivity extends AppCompatActivity implements JoystickView.Joys
 
     }
 
-    public static void setSalutMax(int max)
+    public static void setSalutMax(double max)
     {
         progressBarSalut.setMinimumHeight(20);
         progressBarSalut.setVisibility(View.VISIBLE);
-        progressBarSalut.setMax(max);
+        progressBarSalut.setMax((int)max);
     }
 
-    public static void setSalut(int val)
+    public static void setSalut(double val)
     {
-        progressBarSalut.setProgress(val);
+        progressBarSalut.setProgress((int)val);
     }
 }
