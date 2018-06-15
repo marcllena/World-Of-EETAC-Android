@@ -24,7 +24,6 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.View;
 import android.widget.Button;
 
 import java.io.IOException;
@@ -35,7 +34,7 @@ import java.util.ListIterator;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class GameView extends SurfaceView  /*implements SurfaceHolder.Callback, View.OnTouchListener*/{
+public class GameView extends SurfaceView {
     private final Bitmap bmpBlood;
     //private List<TempSprite> temps = new ArrayList<TempSprite>();
     private List<ZombieMort> morts = new ArrayList<ZombieMort>();
@@ -67,93 +66,18 @@ public class GameView extends SurfaceView  /*implements SurfaceHolder.Callback, 
     public GameView(Context context) {
         super(context);
         this.context = context;
+        gameLoopThread = new GameLoopThread(this);
 
-        //this.setAnchoSurface(GameActivity.getWindow().getDecorView().getBottom());
-        //this.setAltoSurface((int)(GameActivity.getWindow().getDecorView().getWidth()*4/6));
         //Fixem el Bitmap
         holder = getHolder();
 
         holder.addCallback(new SurfaceHolder.Callback() {
             @Override
             public void surfaceCreated(SurfaceHolder holder) {
-                /*
                 obtindreEscena("2");
                 createCeldas();
                 gameLoopThread.setRunning(true);
                 gameLoopThread.start();
-                */
-            }
-
-            @Override
-            public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-
-            }
-
-            @Override
-            public void surfaceDestroyed(SurfaceHolder holder) {
-                boolean retry = true;
-                gameLoopThread.setRunning(false);
-                while (retry) {
-                    try {
-                        gameLoopThread.join();
-                        retry = false;
-                    } catch (InterruptedException e) {
-
-                    }
-
-                }
-            }
-        });
-        bmpBlood = BitmapFactory.decodeResource(getResources(), R.drawable.blood1);
-    }
-
-    public GameView(Context context, AttributeSet attrs) {
-        super(context,attrs);
-        this.context = context;
-        //gameLoopThread = new GameLoopThread(this);
-
-        //Fixem el Bitmap
-        holder = getHolder();
-
-        holder.addCallback(new SurfaceHolder.Callback() {
-            @Override
-            public void surfaceCreated(SurfaceHolder holder) {
-            }
-
-            @Override
-            public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-
-            }
-
-            @Override
-            public void surfaceDestroyed(SurfaceHolder holder) {
-                boolean retry = true;
-                gameLoopThread.setRunning(false);
-                while (retry) {
-                    try {
-                        gameLoopThread.join();
-                        retry = false;
-                    } catch (InterruptedException e) {
-
-                    }
-
-                }
-            }
-        });
-        bmpBlood = BitmapFactory.decodeResource(getResources(), R.drawable.blood1);
-    }
-
-    public GameView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context,attrs);
-        this.context = context;
-        //gameLoopThread = new GameLoopThread(this);
-
-        //Fixem el Bitmap
-        holder = getHolder();
-
-        holder.addCallback(new SurfaceHolder.Callback() {
-            @Override
-            public void surfaceCreated(SurfaceHolder holder) {
             }
 
             @Override
@@ -384,7 +308,7 @@ public class GameView extends SurfaceView  /*implements SurfaceHolder.Callback, 
     public void startRonda(final int numRonda){
         //Creem els primes zombies
         for (int i = 0; i < ZOMBIESMINIMS+ZOMBIESINICIALS_MULTIPLIER*numRonda; i++) {
-                listIterator.add(new Zombie(this,(int)numRonda/5+1,context));
+            listIterator.add(new Zombie(this,(int)numRonda/5+1,context));
         }
 
         //Creem els de respawn
@@ -398,14 +322,6 @@ public class GameView extends SurfaceView  /*implements SurfaceHolder.Callback, 
             }
         };
         timer.schedule(timerTask,ZOMBIESRESPAWN_DELAY,ZOMBIESRESPAWN_RATE);
-    }
-
-    public void layoutCreado(){
-        gameLoopThread = new GameLoopThread(this);
-        obtindreEscena("2");
-        createCeldas();
-        gameLoopThread.setRunning(true);
-        gameLoopThread.start();
     }
 
 }
