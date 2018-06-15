@@ -98,9 +98,22 @@ public class Escena {
                     else
                         simbol=escenas[2];
                 }
+                else if("D".equals(simbolo)){
+                    simbol=escenas[3];
+                }
+                else if("W".equals(simbolo)){
+                    simbol=escenas[7];
+                }
+                else if("T".equals(simbolo)){
+                    simbol=escenas[6];
+                }
+                else if("P".equals(simbolo)){
+                    simbol=escenas[5];
+                }
                 else {
                     simbol=escenas[3];
                 }
+
                 //No funciona switch amb strings
                 /*switch(simbolo){
                     case "0":simbol=escenas[0];

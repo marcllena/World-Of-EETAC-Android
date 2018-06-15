@@ -45,7 +45,7 @@ public class GameView extends SurfaceView {
     //private List<Sprite> sprites = new ArrayList<Sprite>();
     private List<Zombie> zombies = new ArrayList<Zombie>();
     private long lastClick;
-    private Bitmap[] celdas=new Bitmap[5];
+    private Bitmap[] celdas=new Bitmap[9];
     Escena actual;
     private int anchoSurface;
     private int altoSurface;
@@ -76,8 +76,19 @@ public class GameView extends SurfaceView {
         holder.addCallback(new SurfaceHolder.Callback() {
             @Override
             public void surfaceCreated(SurfaceHolder holder) {
-                obtindreEscena("4"); //MAPA VELL
-                //Globals.getInstance().getGame().map.getPantalles().get(0); MAPA NOU
+                //obtindreEscena("4"); //MAPA VELL
+                actual = Globals.getInstance().getGame().map.getPantalles().get(0); //MAPA NOU
+                altoSurface= getHeight();
+                anchoSurface= (int) (getHeight()*1.5);
+                altoSprite = altoSurface/ actual.getAlto();
+                anchoSprite = anchoSurface / actual.getAncho();
+                actual.setEscenas(celdas);
+                //createSprites();
+                jugador=new Jugador(GameView.this,1,context);
+                //Posem el marcador de salut
+                GameActivity.setSalutMax(jugador.getSalut());
+                GameActivity.setSalut(jugador.getSalut());
+                startRonda(1);
                 createCeldas();
                 gameLoopThread.setRunning(true);
                 gameLoopThread.start();
@@ -116,8 +127,19 @@ public class GameView extends SurfaceView {
         holder.addCallback(new SurfaceHolder.Callback() {
             @Override
             public void surfaceCreated(SurfaceHolder holder) {
-                obtindreEscena("4"); //MAPA VELL
-                //Globals.getInstance().getGame().map.getPantalles().get(0); MAPA NOU
+                //obtindreEscena("4"); //MAPA VELL
+                actual = Globals.getInstance().getGame().map.getPantalles().get(0); //MAPA NOU
+                altoSurface= getHeight();
+                anchoSurface= (int) (getHeight()*1.5);
+                altoSprite = altoSurface/ actual.getAlto();
+                anchoSprite = anchoSurface / actual.getAncho();
+                actual.setEscenas(celdas);
+                //createSprites();
+                jugador=new Jugador(GameView.this,1,context);
+                //Posem el marcador de salut
+                GameActivity.setSalutMax(jugador.getSalut());
+                GameActivity.setSalut(jugador.getSalut());
+                startRonda(1);
                 createCeldas();
                 gameLoopThread.setRunning(true);
                 gameLoopThread.start();
@@ -197,6 +219,10 @@ public class GameView extends SurfaceView {
         celdas[2]=BitmapFactory.decodeResource(getResources(), R.drawable.cofre);
         celdas[3]=BitmapFactory.decodeResource(getResources(), R.drawable.puerta);
         celdas[4]=BitmapFactory.decodeResource(getResources(), R.drawable.cofre2);
+        celdas[5]=BitmapFactory.decodeResource(getResources(), R.drawable.wall);
+        celdas[6]=BitmapFactory.decodeResource(getResources(), R.drawable.forat);
+        celdas[7]=BitmapFactory.decodeResource(getResources(), R.drawable.window);
+
     }
 
 
