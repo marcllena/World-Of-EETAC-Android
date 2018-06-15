@@ -25,6 +25,7 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.widget.Button;
+import android.widget.ProgressBar;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -61,6 +62,7 @@ public class GameView extends SurfaceView {
     private ListIterator<Zombie> listIterator=zombies.listIterator();
     //private ListIterator<TempSprite> listIteratorSang=temps.listIterator();
     private ListIterator<ZombieMort> listIteratorMorts=morts.listIterator();
+
 
 
     public GameView(Context context) {
@@ -281,6 +283,9 @@ public class GameView extends SurfaceView {
                     actual.setEscenas(celdas);
                     //createSprites();
                     jugador=new Jugador(GameView.this,1,context);
+                    //Posem el marcador de salut
+                    GameActivity.setSalutMax(jugador.getSalut());
+                    GameActivity.setSalut(jugador.getSalut());
                     startRonda(1);
 
                 } else if (codi == 204) {

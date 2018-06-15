@@ -38,6 +38,7 @@ public class Jugador {
         bmp = BitmapFactory.decodeResource(context.getResources(),id);
         this.width = bmp.getWidth() / BMP_COLUMNS;
         this.height = bmp.getHeight() / BMP_ROWS;
+        salut=100;
         Random rnd = new Random();
         x = rnd.nextInt(gameView.getAnchoSurface() - width);
         y = rnd.nextInt(gameView.getAltoSurface()- height);
@@ -67,6 +68,14 @@ public class Jugador {
 
     public int getySpeed() {
         return ySpeed;
+    }
+
+    public int getSalut() {
+        return salut;
+    }
+
+    public void setSalut(int salut) {
+        this.salut = salut;
     }
 
     private void update() {

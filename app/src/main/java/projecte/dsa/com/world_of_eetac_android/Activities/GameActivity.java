@@ -19,6 +19,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.SurfaceHolder;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RatingBar;
 
 import java.util.List;
@@ -27,6 +30,7 @@ public class GameActivity extends AppCompatActivity implements JoystickView.Joys
 
     GameView gameView;
     JoystickView joystickView;
+    static ProgressBar progressBarSalut;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +38,7 @@ public class GameActivity extends AppCompatActivity implements JoystickView.Joys
         setContentView(R.layout.activity_game);
 
         gameView=(GameView) findViewById(R.id.gameView);
-        gameView.setZOrderOnTop(true);
+        gameView.setZOrderOnTop(false);
         gameView.getHolder().setFormat(PixelFormat.TRANSPARENT);
 
         joystickView=(JoystickView) findViewById(R.id.joystickView);
@@ -44,10 +48,12 @@ public class GameActivity extends AppCompatActivity implements JoystickView.Joys
         SurfaceHolder jvHolder=joystickView.getHolder();
         jvHolder.setFormat(PixelFormat.TRANSPARENT);
 
+        progressBarSalut=(ProgressBar) findViewById(R.id.progressBarSalut);
+
         //gameView.setAnchoSurface(this.getWindow().getDecorView().getBottom());
         //gameView.setAltoSurface((int)(this.getWindow().getDecorView().getHeight()*4/6));
 
-        //gameView=new GameView(this);
+        gameView=new GameView(this);
         //joystickView= new JoystickView(this);
 
         //setContentView(new GameView(this));
@@ -135,5 +141,17 @@ public class GameActivity extends AppCompatActivity implements JoystickView.Joys
     @Override
     public void onJoystickMoved(float xPercent, float yPercent, int source) {
 
+    }
+
+    public static void setSalutMax(int max)
+    {
+        progressBarSalut.setMinimumHeight(20);
+        progressBarSalut.setVisibility(View.VISIBLE);
+        progressBarSalut.setMax(max);
+    }
+
+    public static void setSalut(int val)
+    {
+        progressBarSalut.setProgress(val);
     }
 }
