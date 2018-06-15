@@ -15,6 +15,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.PixelFormat;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -50,10 +51,18 @@ public class GameActivity extends AppCompatActivity implements JoystickView.Joys
 
         progressBarSalut=(ProgressBar) findViewById(R.id.progressBarSalut);
 
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+               gameView.atacar();
+            }
+        });
+
         //gameView.setAnchoSurface(this.getWindow().getDecorView().getBottom());
         //gameView.setAltoSurface((int)(this.getWindow().getDecorView().getHeight()*4/6));
 
-        gameView=new GameView(this);
+        //gameView=new GameView(this);
         //joystickView= new JoystickView(this);
 
         //setContentView(new GameView(this));
@@ -154,4 +163,5 @@ public class GameActivity extends AppCompatActivity implements JoystickView.Joys
     {
         progressBarSalut.setProgress((int)val);
     }
+
 }

@@ -12,17 +12,14 @@ public class ZombieMort {
     private Bitmap bmp;
     private int life = 15;//En ticks de vida
     List<ZombieMort> morts;
-    ListIterator<ZombieMort> listIteratorSang;
 
-    public ZombieMort(List<ZombieMort> morts,ListIterator<ZombieMort> listIteratorSang, GameView gameView, float x,
-                      float y, Bitmap bmp) {
+    public ZombieMort(List<ZombieMort> morts,GameView gameView, float x, float y, Bitmap bmp) {
         this.x = Math.min(Math.max(x - bmp.getWidth() / 2, 0),
                 gameView.getWidth() - bmp.getWidth());
         this.y = Math.min(Math.max(y - bmp.getHeight() / 2, 0),
                 gameView.getHeight() - bmp.getHeight());
         this.bmp = bmp;
         this.morts = morts;
-        this.listIteratorSang=listIteratorSang;
 
     }
 
@@ -33,7 +30,7 @@ public class ZombieMort {
 
     private void update() {
         if (--life < 1) {
-            for (listIteratorSang = morts.listIterator(); listIteratorSang.hasNext(); ) {
+            for (ListIterator<ZombieMort> listIteratorSang = morts.listIterator(); listIteratorSang.hasNext(); ) {
                 ZombieMort mort = listIteratorSang.next();
                 if (mort.x==x&&mort.y==y) {
                     listIteratorSang.remove();

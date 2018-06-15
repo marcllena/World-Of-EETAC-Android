@@ -57,13 +57,15 @@ public class GameView extends SurfaceView {
     private static final int ZOMBIESRESPAWN_MULTIPLIER= 2;
     private static final int ZOMBIESRESPAWN_DELAY= 20000;//ms
     private static final int ZOMBIESRESPAWN_RATE=5000;
+    private static final int JUGADOR_DIRECCIOATAC=5;
+    private static final int JUGADORMIN_SPRITES_SEPARACIO=2;
+    private static final double JUGADOR_DANY_MINIM=5;
+    private static final double JUGADOR_DANY_MULTIPLIER=1;
     private Jugador jugador;
     private Iterator<Zombie> iterator;
     private ListIterator<Zombie> listIterator=zombies.listIterator();
     //private ListIterator<TempSprite> listIteratorSang=temps.listIterator();
     private ListIterator<ZombieMort> listIteratorMorts=morts.listIterator();
-
-
 
     public GameView(Context context) {
         super(context);
@@ -179,15 +181,18 @@ public class GameView extends SurfaceView {
     public Jugador getJugador() {
         return jugador;
     }
+    public List<ZombieMort> getMorts() {
+        return morts;
+    }
+
+    public List<Zombie> getZombies() {
+        return zombies;
+    }
 
     public void setJugador(Jugador jugador) {
         this.jugador = jugador;
     }
 
-    private Sprite createSprite(int resouce) {
-        Bitmap bmp = BitmapFactory.decodeResource(getResources(), resouce);
-        return new Sprite(this, bmp);
-    }
 
     private void createCeldas(){
         celdas[0]= BitmapFactory.decodeResource(getResources(), R.drawable.hierba);
@@ -240,7 +245,7 @@ public class GameView extends SurfaceView {
                     if (sprite.isCollision(x,y)) {
                         listIterator.remove();
                         ListIterator<ZombieMort> iterator= morts.listIterator();
-                        iterator.add(new ZombieMort(morts,listIteratorMorts, this, x, y, bmpBlood));
+                        iterator.add(new ZombieMort(morts, this, x, y, bmpBlood));
                         break;
                     }
                 }
@@ -312,4 +317,53 @@ public class GameView extends SurfaceView {
         timer.schedule(timerTask,ZOMBIESRESPAWN_DELAY,ZOMBIESRESPAWN_RATE);
     }
 
+    /*public void atacar(){
+        //Mirem cap on es dirigeix el jugador
+        int jugadorX=jugador.getX()+(jugador.getWidth()/2)+JUGADOR_DIRECCIOATAC*jugador.getxSpeed();
+        int jugadorY=jugador.getY()+(jugador.getHeight()/2)+JUGADOR_DIRECCIOATAC*jugador.getySpeed();
+        for (listIterator= zombies.listIterator(); listIterator.hasNext(); ) {
+            Zombie objectiu = listIterator.next();
+            int zombieX=objectiu.getX()+(objectiu.getWidth()/2);
+            int zombieY=objectiu.getY()+(objectiu.getHeight()/2);
+            double dis= Math.sqrt(Math.pow(jugadorX-zombieX,2)+Math.pow(jugadorY-zombieY,2));
+            if(((dis)/this.getAltoSprite())<JUGADORMIN_SPRITES_SEPARACIO)
+            {
+                double dany=JUGADOR_DANY_MINIM+JUGADOR_DANY_MULTIPLIER;//Depenent de l'arma que utilitzi
+                objectiu.restarSalut(dany);
+                if(objectiu.getSalut()<0) {
+                    for (listIterator= zombies.listIterator(); listIterator.hasNext(); ) {
+                        Zombie zombie = listIterator.next();
+                        if (zombie.getX()==objectiu.getX()&&zombie.getY()==objectiu.getY()) {
+                            listIterator.remove();
+                            ListIterator<ZombieMort> iterator= morts.listIterator();
+                            iterator.add(new ZombieMort(morts, this, objectiu.getX(), objectiu.getY(), bmpBlood));
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }*/
+    public void atacar(){
+        //Mirem cap on es dirigeix el jugador
+        int jugadorX=jugador.getX()+(jugador.getWidth()/2)+JUGADOR_DIRECCIOATAC*jugador.getxSpeed();
+        int jugadorY=jugador.getY()+(jugador.getHeight()/2)+JUGADOR_DIRECCIOATAC*jugador.getySpeed();
+        for (listIterator= zombies.listIterator(); listIterator.hasNext(); ) {
+            Zombie objectiu = listIterator.next();
+            int zombieX=objectiu.getX()+(objectiu.getWidth()/2);
+            int zombieY=objectiu.getY()+(objectiu.getHeight()/2);
+            double dis= Math.sqrt(Math.pow(jugadorX-zombieX,2)+Math.pow(jugadorY-zombieY,2));
+            if(((dis)/this.getAltoSprite())<JUGADORMIN_SPRITES_SEPARACIO)
+            {
+                double dany=JUGADOR_DANY_MINIM+JUGADOR_DANY_MULTIPLIER;//Depenent de l'arma que utilitzi
+                objectiu.restarSalut(dany);
+                if(objectiu.getSalut()<0) {
+                    listIterator.remove();
+                    ListIterator<ZombieMort> iterator= morts.listIterator();
+                    iterator.add(new ZombieMort(morts, this, objectiu.getX(), objectiu.getY(), bmpBlood));
+                    break;
+                }
+            }
+        }
+    }
 }

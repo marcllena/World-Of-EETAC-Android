@@ -6,9 +6,11 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 
+import java.util.ListIterator;
 import java.util.Random;
 
 import projecte.dsa.com.world_of_eetac_android.Activities.GameActivity;
+import projecte.dsa.com.world_of_eetac_android.R;
 
 
 public class Zombie {
@@ -28,7 +30,7 @@ public class Zombie {
     private int currentFrame;
 
     private static final int SPEED_MULTIPLIER= 3;
-    private static final int SALUT_MULTIPLIER= 3;
+    private static final int SALUT_MULTIPLIER= 5;
     private static final int LAG_MULTIPLIER= 4;
     private static final double LAG_MAXIM= 0.5;
     private static final int LAG_DIREC= 0;
@@ -38,10 +40,11 @@ public class Zombie {
     private static final int SPRITES_SEPARACIO_DANY=2;
     private static final double DANY_MINIM=1.5;
     private static final double DANY_MULTIPLIER=0.5;
+    private static final double SALUT_MINIMA=20;
     private int nivell;
-    private int salut;
+    private double salut;
     int obstacle=0;
-    Context context;
+    private Bitmap bmpBlood=null;
 
     public Zombie(GameView gameView,int nivell, Context context) {
         this.gameView=gameView;
@@ -67,7 +70,30 @@ public class Zombie {
         double theta = Math.atan2(gameView.getJugador().getY() - y,gameView.getJugador().getX() - x);
         xSpeed = (int) ((int) (lagSpeed*10+SPEED_MULTIPLIER*nivell)* Math.cos(theta));
         ySpeed = (int) ((int) (lagSpeed*10+SPEED_MULTIPLIER*nivell) * Math.sin(theta));
-        //Fixem que tingui salut aleatoria
+
+        //Fixem Salut en funció del nivell
+        salut=SALUT_MINIMA+SALUT_MULTIPLIER*nivell;
+         bmpBlood = BitmapFactory.decodeResource(context.getResources(), R.drawable.blood1);
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public int getWidth() {
+        return bmp.getWidth();
+    }
+
+    public int getHeight() {
+        return bmp.getHeight();
+    }
+
+    public double getSalut() {
+        return salut;
     }
 
     private void update() {
@@ -148,6 +174,20 @@ public class Zombie {
 
     public boolean isCollision(float x2, float y2) {
         return x2 > x && x2 < x + width && y2 > y && y2 < y + height;
+    }
+    public void restarSalut(double daño) {
+        this.salut = this.salut-daño;
+        /*if(salut<0) {
+            for (ListIterator<Zombie> listIterator= gameView.getZombies().listIterator(); listIterator.hasNext(); ) {
+                Zombie zombie = listIterator.next();
+                if (zombie.getX()==x&&zombie.getY()==y) {
+                    listIterator.remove();
+                    ListIterator<ZombieMort> iterator= gameView.getMorts().listIterator();
+                    iterator.add(new ZombieMort(gameView.getMorts(), gameView, x, y, bmpBlood));
+                    break;
+                }
+            }
+        }*/
     }
 }
 
