@@ -32,6 +32,8 @@ public class MainActivity extends AppCompatActivity {
     List<Usuario> usuaris;
     Globals dades;
     int eleccio;
+    private Intent intent;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,7 +66,6 @@ public class MainActivity extends AppCompatActivity {
                     resultat=0;
                     Partida game = (Partida) resposta.body();
                     Globals.getInstance().setGame(game);
-                    //INICIAR PARTIDA
                 } else if (codi == 204) {
                     resultat = -1;
                 }
@@ -95,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
         this.eleccio = i;
     }
     public void iniciarGameActivity(View view){
-        Intent intent = new Intent(this, GameActivity.class);
+        intent = new Intent(this, GameActivity.class);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Selecció de mapa")
                 .setMessage("Mazmorra o laberint?")
