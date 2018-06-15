@@ -223,8 +223,11 @@ public class GameView extends SurfaceView {
             //Fixem el fons*/
             //canvas.drawColor(Color.BLACK);
 
-            for (listIteratorMorts=morts.listIterator();listIteratorMorts.hasNext();) {
+            /*for (listIteratorMorts=morts.listIterator();listIteratorMorts.hasNext();) {
                 listIteratorMorts.next().onDraw(canvas);
+            }*/
+            for (int i = 0; i <morts.size(); i++) {
+                morts.get(i).onDraw(canvas);
             }
             for (int i = zombies.size() - 1; i >= 0; i--) {
                 zombies.get(i).onDraw(canvas);
@@ -257,7 +260,8 @@ public class GameView extends SurfaceView {
                     Zombie sprite = listIterator.next();
                     if (sprite.isCollision(x,y)) {
                         listIterator.remove();
-                        listIteratorMorts.add(new ZombieMort(morts,listIteratorMorts, this, x, y, bmpBlood));
+                        ListIterator<ZombieMort> iterator= morts.listIterator();
+                        iterator.add(new ZombieMort(morts,listIteratorMorts, this, x, y, bmpBlood));
                         break;
                     }
                 }
