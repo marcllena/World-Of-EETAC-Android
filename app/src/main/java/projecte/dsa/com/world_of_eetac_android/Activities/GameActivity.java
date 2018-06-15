@@ -14,9 +14,11 @@ import retrofit2.Response;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.PixelFormat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.SurfaceHolder;
 import android.widget.RatingBar;
 
 import java.util.List;
@@ -32,12 +34,21 @@ public class GameActivity extends AppCompatActivity implements JoystickView.Joys
         setContentView(R.layout.activity_game);
 
         gameView=(GameView) findViewById(R.id.gameView);
-        joystickView=(JoystickView) findViewById(R.id.joystickView);
-        gameView.setAnchoSurface(this.getWindow().getDecorView().getBottom());
-        gameView.setAltoSurface((int)(this.getWindow().getDecorView().getHeight()*4/6));
+        gameView.setZOrderOnTop(true);
+        gameView.getHolder().setFormat(PixelFormat.TRANSPARENT);
 
-        gameView=new GameView(this);
-        joystickView= new JoystickView(this);
+        joystickView=(JoystickView) findViewById(R.id.joystickView);
+        int size=Math.min(this.getWindow().getDecorView().getWidth(),this.getWindow().getDecorView().getHeight());
+        joystickView.getHolder().setFixedSize((size/4), (size/4));
+        joystickView.setZOrderOnTop(true);
+        SurfaceHolder jvHolder=joystickView.getHolder();
+        jvHolder.setFormat(PixelFormat.TRANSPARENT);
+
+        //gameView.setAnchoSurface(this.getWindow().getDecorView().getBottom());
+        //gameView.setAltoSurface((int)(this.getWindow().getDecorView().getHeight()*4/6));
+
+        //gameView=new GameView(this);
+        //joystickView= new JoystickView(this);
 
         //setContentView(new GameView(this));
     }
