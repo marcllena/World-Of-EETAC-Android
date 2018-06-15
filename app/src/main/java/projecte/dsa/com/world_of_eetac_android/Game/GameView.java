@@ -184,21 +184,6 @@ public class GameView extends SurfaceView {
         this.jugador = jugador;
     }
 
-    /* private void createSprites() {
-        sprites.add(createSprite(R.drawable.bad1));
-        sprites.add(createSprite(R.drawable.bad2));
-        sprites.add(createSprite(R.drawable.bad3));
-        sprites.add(createSprite(R.drawable.bad4));
-        sprites.add(createSprite(R.drawable.bad5));
-        sprites.add(createSprite(R.drawable.bad6));
-        sprites.add(createSprite(R.drawable.good1));
-        sprites.add(createSprite(R.drawable.good2));
-        sprites.add(createSprite(R.drawable.good3));
-        sprites.add(createSprite(R.drawable.good4));
-        sprites.add(createSprite(R.drawable.good5));
-        sprites.add(createSprite(R.drawable.good6));
-    }*/
-
     private Sprite createSprite(int resouce) {
         Bitmap bmp = BitmapFactory.decodeResource(getResources(), resouce);
         return new Sprite(this, bmp);
@@ -219,16 +204,10 @@ public class GameView extends SurfaceView {
         //Mirem si ja hem rebut la escena
         if(actual!=null) {
             actual.onDraw(canvas, altoSprite, anchoSprite);
-            jugador.onDraw(canvas);
-            //Fixem el fons*/
-            //canvas.drawColor(Color.BLACK);
-
-            /*for (listIteratorMorts=morts.listIterator();listIteratorMorts.hasNext();) {
-                listIteratorMorts.next().onDraw(canvas);
-            }*/
             for (int i = 0; i <morts.size(); i++) {
                 morts.get(i).onDraw(canvas);
             }
+            jugador.onDraw(canvas);
             for (int i = zombies.size() - 1; i >= 0; i--) {
                 zombies.get(i).onDraw(canvas);
             }
