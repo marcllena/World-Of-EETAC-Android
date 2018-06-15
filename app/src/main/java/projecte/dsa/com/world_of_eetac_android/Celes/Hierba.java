@@ -9,7 +9,10 @@ public class Hierba extends Celda {
         return "0";
     }
 
-    public int getPisable() {
+    public int getPisablePersonaje() {
+        return 1;
+    }
+    public int getPisableZombie() {
         return 1;
     }
     public int getInteractuable() {

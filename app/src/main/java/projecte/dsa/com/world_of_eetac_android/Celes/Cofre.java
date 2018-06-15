@@ -22,7 +22,10 @@ public class Cofre extends Celda {
         abierto=false;
     }
 
-    public int getPisable() {
+    public int getPisablePersonaje() {
+        return 0;
+    }
+    public int getPisableZombie() {
         return 0;
     }
     public int getInteractuable() {

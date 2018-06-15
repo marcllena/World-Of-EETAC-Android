@@ -57,7 +57,7 @@ public class Zombie {
             y = rnd.nextInt(gameView.getAltoSurface()- height);
             int i = y/gameView.getAltoSprite();
             int j = x/gameView.getAnchoSprite();
-            if(gameView.actual.getDatos()[i][j].getPisable()==1&&MIN_SPRITES_SEPARACIO*gameView.getAnchoSprite()<Math.abs(x-gameView.getJugador().getX())&&MIN_SPRITES_SEPARACIO*gameView.getAltoSprite()<Math.abs(y-gameView.getJugador().getY()))
+            if(gameView.actual.getDatos()[i][j].getPisableZombie()==1&&MIN_SPRITES_SEPARACIO*gameView.getAnchoSprite()<Math.abs(x-gameView.getJugador().getX())&&MIN_SPRITES_SEPARACIO*gameView.getAltoSprite()<Math.abs(y-gameView.getJugador().getY()))
                 break;
         }
 
@@ -90,7 +90,7 @@ public class Zombie {
             perseguir=false;
             obstacle=0;
         }
-        else if (a>-1&&b>-1&&a<gameView.actual.getAlto()&&b<gameView.actual.getAncho()&&gameView.actual.getDatos()[a][b].getPisable() == 0) {
+        else if (a>-1&&b>-1&&a<gameView.actual.getAlto()&&b<gameView.actual.getAncho()&&gameView.actual.getDatos()[a][b].getPisableZombie() == 0) {
             perseguir=false;
            obstacle=DETECCTIO_OBS;
         } else {

@@ -58,14 +58,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Partida> call, Response<Partida> resposta) {
                 int codi = resposta.code();
-                Intent intent = new Intent(getApplicationContext(), GameActivity.class);
-                startActivity(intent);
                 //Tot aixo no funciona perque no tenim la partida
                 Log.d("Proba ", "Codi agafat" + codi);
                 if (codi == 200) {
                     resultat=0;
                     Partida game = (Partida) resposta.body();
                     Globals.getInstance().setGame(game);
+                    Intent intent = new Intent(getApplicationContext(), GameActivity.class);
+                    startActivity(intent);
                 } else if (codi == 204) {
                     resultat = -1;
                 }
