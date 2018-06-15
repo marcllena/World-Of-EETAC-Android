@@ -22,8 +22,6 @@ public class Globals {
     Usuario user;
     RetrofitAPI serveiRetrofit;
     List<Usuario> usuaris;
-
-
     Partida game;
     int usuariSeleccionat=-1;
     public Partida getGame() {

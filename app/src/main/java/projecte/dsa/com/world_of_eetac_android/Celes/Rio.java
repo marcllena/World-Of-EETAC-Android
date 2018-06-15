@@ -5,7 +5,10 @@ public class Rio extends Celda{
         return "-";
     }
 
-    public int getPisable() {
+    public int getPisablePersonaje() {
+        return 0;
+    }
+    public int getPisableZombie() {
         return 0;
     }
     public int getInteractuable() {

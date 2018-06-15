@@ -11,16 +11,17 @@ public class Puerta extends Celda {
         return "G";
     }
 
-    private Transicion teleport = new Transicion();
+    private Transicion teleport;
     public void setTeleport(Transicion door){
         this.teleport = door;
     }
     public int getInteractuable() {
         return 1;
     }
-    public int getPisable(){
+    public int getPisablePersonaje(){
         return 0;
     }
+    public int getPisableZombie(){return 0;}
     public Puerta(Transicion door){
         setTeleport(door);
     }
