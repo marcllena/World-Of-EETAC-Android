@@ -76,7 +76,7 @@ public class GameView extends SurfaceView {
         holder.addCallback(new SurfaceHolder.Callback() {
             @Override
             public void surfaceCreated(SurfaceHolder holder) {
-                obtindreEscena("2"); //MAPA VELL
+                obtindreEscena("4"); //MAPA VELL
                 //Globals.getInstance().getGame().map.getPantalles().get(0); MAPA NOU
                 createCeldas();
                 gameLoopThread.setRunning(true);
@@ -116,7 +116,7 @@ public class GameView extends SurfaceView {
         holder.addCallback(new SurfaceHolder.Callback() {
             @Override
             public void surfaceCreated(SurfaceHolder holder) {
-                obtindreEscena("2"); //MAPA VELL
+                obtindreEscena("4"); //MAPA VELL
                 //Globals.getInstance().getGame().map.getPantalles().get(0); MAPA NOU
                 createCeldas();
                 gameLoopThread.setRunning(true);
