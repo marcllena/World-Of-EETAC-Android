@@ -265,17 +265,7 @@ public class GameView extends SurfaceView {
                             {
                                 Puerta porta = (Puerta) actual.getDatos()[i][j];
                                 actual = Globals.getInstance().getGame().map.getPantalles().get(porta.getTeleport().idEscenario); //MAPA NOU
-                                altoSurface= getHeight();
-                                anchoSurface= (int) (getHeight()*1.5);
-                                altoSprite = altoSurface/ actual.getAlto();
-                                anchoSprite = anchoSurface / actual.getAncho();
                                 actual.setEscenas(celdas);
-                                GameActivity.setSalutMax(jugador.getSalut());
-                                GameActivity.setSalut(jugador.getSalut());
-                                startRonda(1);
-                                createCeldas();
-                                gameLoopThread.setRunning(true);
-                                gameLoopThread.start();
 
                             }
                         }
