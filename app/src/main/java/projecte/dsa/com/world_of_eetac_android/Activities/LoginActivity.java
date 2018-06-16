@@ -40,7 +40,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        Globals.setApiUrl("http://10.0.2.2:8080");
+        //Globals.setApiUrl("http://10.0.2.2:8080");
         spinnerProf = (Spinner) findViewById(R.id.spinnerProf);
         List<String> list = new ArrayList<String>();
         list.add("Guerrero");

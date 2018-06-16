@@ -149,7 +149,7 @@ public class GameActivity extends AppCompatActivity implements JoystickView.Joys
 
     @Override
     public void onJoystickMoved(float xPercent, float yPercent, int source) {
-
+        gameView.getJugador().setMoviment(xPercent,yPercent);
     }
 
     public static void setSalutMax(double max)

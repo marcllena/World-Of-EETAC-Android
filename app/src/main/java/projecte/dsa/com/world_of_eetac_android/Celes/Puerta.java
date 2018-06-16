@@ -19,7 +19,7 @@ public class Puerta extends Celda {
         return 1;
     }
     public int getPisablePersonaje(){
-        return 0;
+        return 1;
     }
     public int getPisableZombie(){return 0;}
     public Puerta(Transicion door){

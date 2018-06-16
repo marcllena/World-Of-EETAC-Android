@@ -32,15 +32,17 @@ public class Zombie {
     private static final int SPEED_MULTIPLIER= 3;
     private static final int SALUT_MULTIPLIER= 5;
     private static final int LAG_MULTIPLIER= 4;
-    private static final double LAG_MAXIM= 0.5;
+    private static final double LAG_MAXIM= 0.5;//Els zombies no miron on esta, si no on ha estat
     private static final int LAG_DIREC= 0;
-    private static final int MIN_SPRITES_SEPARACIO=3;
-    private static final int DETECCTIO_OBS=20;//FPS
-    private static final double DIVERGENCIA_OBS=0.9;//FPS
+    private static final int MIN_SPRITES_SEPARACIO=3;//Entre el jugador i els zombies
+    private static final int DETECCIO_OBS=20;//FPS en mode obstacle
+    private static final double DIVERGENCIA_OBS=0.9;//RANDOM AL REBOTAR
     private static final int SPRITES_SEPARACIO_DANY=2;
     private static final double DANY_MINIM=1.5;
     private static final double DANY_MULTIPLIER=0.5;
-    private static final double SALUT_MINIMA=20;
+    private static final int SALUT_MINIMA=20;
+    private static final int REINTENTS_RESPAWN=30;
+    private static final int TENDENCIA_OBJECTES=4;//Te en compte la velocitat dels zombies per veure si van a un objecte
     private int nivell;
     private double salut;
     int obstacle=0;
@@ -55,11 +57,11 @@ public class Zombie {
         this.height = bmp.getHeight() / BMP_ROWS;
         //Fixem la posició aleatoria
         Random rnd = new Random();
-        for (int k = 0; k < 10; k++) {
+        for (int k = 0; k < REINTENTS_RESPAWN; k++) {
             x = rnd.nextInt(gameView.getAnchoSurface() - width);
             y = rnd.nextInt(gameView.getAltoSurface()- height);
-            int i = y/gameView.getAltoSprite();
-            int j = x/gameView.getAnchoSprite();
+            int i = (y/gameView.getAltoSprite());
+            int j = (x/gameView.getAnchoSprite());
             if(gameView.actual.getDatos()[i][j].getPisableZombie()==1&&MIN_SPRITES_SEPARACIO*gameView.getAnchoSprite()<Math.abs(x-gameView.getJugador().getX())&&MIN_SPRITES_SEPARACIO*gameView.getAltoSprite()<Math.abs(y-gameView.getJugador().getY()))
                 break;
         }
@@ -98,14 +100,35 @@ public class Zombie {
 
     private void update() {
         //Detectem si la celda a la que va es pisable
-        int a = ((y + (ySpeed / 2)+(height) )/ gameView.getAltoSprite());
+        //Els zombies no passen cap celda, pero s'encallen en el rebot
+        int a ;
+        if(ySpeed>0){//Va cap abaix
+            a= ((y +(height) )/ gameView.getAltoSprite());
+        }
+        else{
+            a = (y / gameView.getAnchoSprite());
+        }
         int b;
         if(xSpeed>0){
-            b = ((x + (xSpeed / 2)+(width) )/ gameView.getAnchoSprite());
+            b = ((x +(width) )/ gameView.getAnchoSprite());
         }
        else{
-            b = (x + (xSpeed / 2)/ gameView.getAnchoSprite());
+            b = (x/ gameView.getAnchoSprite());
         }
+        /*int a ;
+        if(ySpeed>0){//Va cap abaix
+            a= ((y + (ySpeed / TENDENCIA_OBJECTES)+(height) )/ gameView.getAltoSprite());
+        }
+        else{
+            a = ((y +(ySpeed / TENDENCIA_OBJECTES))/gameView.getAnchoSprite());
+        }
+        int b;
+        if(xSpeed>0){
+            b = ((x + (xSpeed / TENDENCIA_OBJECTES)+(width) )/ gameView.getAnchoSprite());
+        }
+        else{
+            b = (x + (xSpeed / TENDENCIA_OBJECTES)/ gameView.getAnchoSprite());
+        }*/
         boolean perseguir=false;
         if (x > gameView.getAnchoSurface() - width - xSpeed || x + xSpeed < 0) {
             xSpeed = -xSpeed;
@@ -118,13 +141,13 @@ public class Zombie {
         }
         else if (a>-1&&b>-1&&a<gameView.actual.getAlto()&&b<gameView.actual.getAncho()&&gameView.actual.getDatos()[a][b].getPisableZombie() == 0) {
             perseguir=false;
-           obstacle=DETECCTIO_OBS;
+           obstacle=DETECCIO_OBS;
         } else {
             if(obstacle>0)
                 obstacle--;
             perseguir=true;
         }
-        if(obstacle==DETECCTIO_OBS)
+        if(obstacle==DETECCIO_OBS)
         {
             Random rnd = new Random();
             xSpeed = (int) (-(DIVERGENCIA_OBS + (1 - DIVERGENCIA_OBS)* rnd.nextDouble())*xSpeed);

@@ -12,7 +12,7 @@ import java.util.Random;
 import projecte.dsa.com.world_of_eetac_android.Activities.GameActivity;
 
 
-public class Jugador {
+public class Jugador{
     // direction = 0 up, 1 left, 2 down, 3 right,
     // animation = 3 back, 1 left, 0 front, 2 right
     int[] DIRECTION_TO_ANIMATION_MAP = { 3, 1, 0, 2 };
@@ -31,6 +31,7 @@ public class Jugador {
     private int nivell;
     private double salut;
     Canvas canvas;
+    private static final int JUGADOR_VELOCITAT_MAX=12;
 
     public Jugador(GameView gameView,int nivell, Context context) {
         this.gameView=gameView;
@@ -41,10 +42,17 @@ public class Jugador {
         this.height = bmp.getHeight() / BMP_ROWS;
         salut=1000;
         Random rnd = new Random();
-        x = rnd.nextInt(gameView.getAnchoSurface() - width);
-        y = rnd.nextInt(gameView.getAltoSurface()- height);
-        xSpeed = rnd.nextInt(10 * 2) - 10;
-        ySpeed = rnd.nextInt(10 * 2) - 10;
+        for (int k = 0; k < 10; k++) {
+            x = rnd.nextInt(gameView.getAnchoSurface() - width);
+            y = rnd.nextInt(gameView.getAltoSurface()- height);
+            int i = y/gameView.getAltoSprite();
+            int j = x/gameView.getAnchoSprite();
+            if(gameView.actual.getDatos()[i][j].getPisablePersonaje()==1)
+                break;
+        }
+        xSpeed=0;
+        ySpeed=0;
+
     }
 
     public int getX() {
@@ -87,20 +95,34 @@ public class Jugador {
     }
 
     private void update() {
-        if(xSpeed!=0||ySpeed!=0) {
-            if (x > gameView.getAnchoSurface() - width - xSpeed || x + xSpeed < 0) {
-                xSpeed = -xSpeed;
-            }
-            x = x + xSpeed;
-            if (y > gameView.getAltoSurface() - height - ySpeed || y + ySpeed < 0) {
-                ySpeed = -ySpeed;
-            }
-            y = y + ySpeed;
-            currentFrame = ++currentFrame % BMP_COLUMNS;
+        //Detectem si la celda a la que va es pisable
+        int a ;
+        if(ySpeed>0){//Va cap abaix
+            a= ((y + (ySpeed / 2)+(height) )/ gameView.getAltoSprite());
         }
+        else{
+            a = (y / gameView.getAltoSprite());
+        }
+        int b;
+        if(xSpeed>0){
+            b = ((x + (xSpeed / 2)+(width) )/ gameView.getAnchoSprite());
+        }
+        else{
+            b = (x / gameView.getAnchoSprite());
+        }
+        if (x > gameView.getAnchoSurface() - width - xSpeed || x + xSpeed < 0) {
+            xSpeed=0;
+        } else if (y > gameView.getAltoSurface() - height - ySpeed || y + ySpeed < 0) {
+            ySpeed=0;
+        }
+        else if (a>-1&&b>-1&&a<gameView.actual.getAlto()&&b<gameView.actual.getAncho()&&gameView.actual.getDatos()[a][b].getPisablePersonaje() == 0) {
+            xSpeed=0;
+            ySpeed=0;
+        }
+        x = x + xSpeed;
+        y = y + ySpeed;
+        currentFrame = ++currentFrame % BMP_COLUMNS;
     }
-
-
 
     public void onDraw(Canvas canvas) {
         this.canvas=canvas;
@@ -135,6 +157,10 @@ public class Jugador {
             textPaint.setTextSize(100);
             canvas.drawText("GAME OVER", canvas.getWidth()/2, canvas.getHeight()/2  , textPaint);
         }
+    }
+    public void setMoviment(float xPercent, float yPercent){
+        xSpeed= (int) (JUGADOR_VELOCITAT_MAX*xPercent);
+        ySpeed= (int) (JUGADOR_VELOCITAT_MAX*yPercent);
     }
 }
 

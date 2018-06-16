@@ -36,7 +36,7 @@ import java.util.ListIterator;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class GameView extends SurfaceView {
+public class GameView extends SurfaceView{
     private final Bitmap bmpBlood;
     //private List<TempSprite> temps = new ArrayList<TempSprite>();
     private List<ZombieMort> morts = new ArrayList<ZombieMort>();
@@ -374,4 +374,5 @@ public class GameView extends SurfaceView {
             }
         }
     }
+
 }
