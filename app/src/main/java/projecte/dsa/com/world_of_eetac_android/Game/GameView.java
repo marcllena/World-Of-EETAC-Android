@@ -3,6 +3,7 @@ package projecte.dsa.com.world_of_eetac_android.Game;
 import projecte.dsa.com.world_of_eetac_android.Activities.GameActivity;
 import projecte.dsa.com.world_of_eetac_android.Activities.LoginActivity;
 import projecte.dsa.com.world_of_eetac_android.Celes.Cofre;
+import projecte.dsa.com.world_of_eetac_android.Celes.Puerta;
 import projecte.dsa.com.world_of_eetac_android.Mon.Globals;
 import projecte.dsa.com.world_of_eetac_android.Mon.Escena;
 import projecte.dsa.com.world_of_eetac_android.Mon.Usuario;
@@ -260,6 +261,23 @@ public class GameView extends SurfaceView {
                                 cofre.setAbierto(true);
                                 break;
                             }
+                            else if(res==2)
+                            {
+                                Puerta porta = (Puerta) actual.getDatos()[i][j];
+                                actual = Globals.getInstance().getGame().map.getPantalles().get(porta.getTeleport().idEscenario); //MAPA NOU
+                                altoSurface= getHeight();
+                                anchoSurface= (int) (getHeight()*1.5);
+                                altoSprite = altoSurface/ actual.getAlto();
+                                anchoSprite = anchoSurface / actual.getAncho();
+                                actual.setEscenas(celdas);
+                                GameActivity.setSalutMax(jugador.getSalut());
+                                GameActivity.setSalut(jugador.getSalut());
+                                startRonda(1);
+                                createCeldas();
+                                gameLoopThread.setRunning(true);
+                                gameLoopThread.start();
+
+                            }
                         }
                     }
                 }
@@ -276,7 +294,7 @@ public class GameView extends SurfaceView {
         }
         return true;
     }
-    public void obtindreEscena(String id) {
+    /*public void obtindreEscena(String id) {
         RetrofitAPI servei = Globals.getInstance().getServeiRetrofit();
         Call<Escena> callEscena = servei.escenas(id);
         // Fetch and print a list of the contributors to the library.
@@ -310,7 +328,7 @@ public class GameView extends SurfaceView {
                 Log.d("Request: ", "error loading API" + t.toString());
             }
         });
-    }
+    }*/
 
     public int isCollision(int i, int j,float x2, float y2) {
         if (y2 < (i+1) * altoSprite && y2 > (i * altoSprite) && x2 < (j+1) * anchoSprite && x2 > (j * anchoSprite)) {
