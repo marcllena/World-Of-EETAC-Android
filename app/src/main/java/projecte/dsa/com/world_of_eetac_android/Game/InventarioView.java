@@ -92,7 +92,7 @@ public class InventarioView extends SurfaceView implements SurfaceHolder.Callbac
         holder.addCallback(new SurfaceHolder.Callback() {
             @Override
             public void surfaceCreated(SurfaceHolder holder) {
-                setupDimensions();
+                startInventario();
                 cargarCeldas();
                 Canvas canvas = holder.lockCanvas();
                 drawFondo(canvas);
@@ -152,10 +152,10 @@ public class InventarioView extends SurfaceView implements SurfaceHolder.Callbac
 
     private void setupDimensions()
     {
-        width=getWidth()*3/4;
-        height=getHeight()*3/4;
-        initwidth=(getWidth()-width)/2;
-        initHeight=(getHeight()-height)/2;
+        width=getWidth();
+        height=getHeight();
+        initwidth=0;
+        initHeight=0;
         
         
         tamañoBordes=11*width/227;

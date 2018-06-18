@@ -57,7 +57,7 @@ public class GameActivity extends AppCompatActivity implements JoystickView.Joys
         inventarioView.getHolder().setFormat(PixelFormat.TRANSPARENT);
 
         //si comentais la linea de abajo va, pero mirad si veis donde peta que la linea esta es para establecer el tamaño del inventario
-        inventarioView.startInventario();
+        //inventarioView.startInventario();
 
         progressBarSalut=(ProgressBar) findViewById(R.id.progressBarSalut);
 
@@ -66,6 +66,16 @@ public class GameActivity extends AppCompatActivity implements JoystickView.Joys
             @Override
             public void onClick(View view) {
                gameView.atacar();
+            }
+        });
+        FloatingActionButton fab2 = findViewById(R.id.fab2);
+        fab2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(inventarioView.getVisibility()==View.VISIBLE)
+                    inventarioView.setVisibility(View.INVISIBLE);
+                else
+                    inventarioView.setVisibility(View.VISIBLE);
             }
         });
 
