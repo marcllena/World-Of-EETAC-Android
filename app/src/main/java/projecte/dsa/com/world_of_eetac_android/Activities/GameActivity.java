@@ -32,6 +32,7 @@ public class GameActivity extends AppCompatActivity implements JoystickView.Joys
     GameView gameView;
     JoystickView joystickView;
     static ProgressBar progressBarSalut;
+    InventarioView inventarioView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +49,15 @@ public class GameActivity extends AppCompatActivity implements JoystickView.Joys
         joystickView.setZOrderOnTop(true);
         SurfaceHolder jvHolder=joystickView.getHolder();
         jvHolder.setFormat(PixelFormat.TRANSPARENT);
+
+        inventarioView=(InventarioView) findViewById(R.id.inventarioView);
+        inventarioView.setVisibility(View.INVISIBLE);
+        joystickView.getHolder().setFixedSize((int)(this.getWindow().getDecorView().getWidth()*2/3),(int)(this.getWindow().getDecorView().getHeight()*2/3));
+        inventarioView.setZOrderOnTop(true);
+        inventarioView.getHolder().setFormat(PixelFormat.TRANSPARENT);
+
+        //si comentais la linea de abajo va, pero mirad si veis donde peta que la linea esta es para establecer el tamaño del inventario
+        inventarioView.startInventario();
 
         progressBarSalut=(ProgressBar) findViewById(R.id.progressBarSalut);
 

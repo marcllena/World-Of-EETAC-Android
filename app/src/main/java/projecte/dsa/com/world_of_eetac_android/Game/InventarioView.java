@@ -1,5 +1,6 @@
 package projecte.dsa.com.world_of_eetac_android.Game;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -139,6 +140,14 @@ public class InventarioView extends SurfaceView implements SurfaceHolder.Callbac
             public void surfaceDestroyed(SurfaceHolder holder) {
             }
         });
+    }
+
+    public void startInventario(){
+        setupDimensions();
+        Canvas canvas=holder.lockCanvas();
+        drawFondo(canvas);
+        drawInventario(canvas,-1,0,0,null);
+        holder.unlockCanvasAndPost(canvas);
     }
 
     private void setupDimensions()
@@ -282,6 +291,7 @@ public class InventarioView extends SurfaceView implements SurfaceHolder.Callbac
 
     }
 
+    @SuppressLint("WrongCall")
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         if(v.equals(this)){
@@ -299,13 +309,13 @@ public class InventarioView extends SurfaceView implements SurfaceHolder.Callbac
                 }
                 moving = true;
                 if (canvas!=null) {
-                    if(posX<=4) {
+                    //if(posX<=4) {
                         drawFondo(canvas);
 
 
-                        drawInventario(canvas, movingItem, (int) event.getX(), (int) event.getY(), Globals.getInstance().getUser().getObjetos());
+                        drawInventario(canvas, movingItem, (int) event.getX(), (int) event.getY(), Globals.getInstance().getObjetos());
                         holder.unlockCanvasAndPost(canvas);
-                    }
+                    //}
                 }
 
             }
@@ -314,7 +324,17 @@ public class InventarioView extends SurfaceView implements SurfaceHolder.Callbac
                 int posY= (int)((event.getY()-startInventarioHeight)/altoCelda);
                 moving=false;
                 movingItem=-1;
-                InventarioCallback.onItemReleased(posX,posY,movingItem,getId());
+                if (posX>0||posY<0||posY>2){
+                if (posX>4){
+                //InventarioCallback.onItemReleased(posX,posY,movingItem,getId());
+
+                    posX=-((int)((event.getX()-(startInventarioWidht+5*anchoCelda+tamañoSeparador))/anchoCelda)-1);
+                }
+                //InventarioCallback.onItemReleased(posX);
+                }
+                else{
+                    onDraw(-1,0,0,Globals.getInstance().getObjetos());
+                }
             }
         }
         return true;

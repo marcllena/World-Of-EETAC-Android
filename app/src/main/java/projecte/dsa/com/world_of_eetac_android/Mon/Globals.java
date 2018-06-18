@@ -4,6 +4,7 @@ package projecte.dsa.com.world_of_eetac_android.Mon;
 import java.util.List;
 
 import projecte.dsa.com.world_of_eetac_android.Activities.GameActivity;
+import projecte.dsa.com.world_of_eetac_android.Objectes.Objeto;
 import projecte.dsa.com.world_of_eetac_android.Services.RetrofitAPI;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
@@ -21,6 +22,7 @@ public class Globals {
 
     //public static String API_URL = "http://192.168.43.9:8080";
     Usuario user;
+    Objeto[] objetos;
     RetrofitAPI serveiRetrofit;
     List<Usuario> usuaris;
     Partida game;
@@ -92,6 +94,14 @@ public class Globals {
 
     public void setUsuaris(List<Usuario> usuaris) {
         this.usuaris = usuaris;
+    }
+
+    public Objeto[] getObjetos() {
+        return objetos;
+    }
+
+    public void setObjetos(Objeto[] objetos) {
+        this.objetos = objetos;
     }
 }
 
