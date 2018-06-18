@@ -28,6 +28,7 @@ public class Globals {
     RetrofitAPI serveiRetrofit;
     List<Usuario> usuaris;
     Partida game;
+    GameActivity gameActivity;
     int usuariSeleccionat=-1;
     public Partida getGame() {
         return game;
@@ -109,6 +110,14 @@ public class Globals {
 
     public void setObjetos(Objeto[] objetos) {
         this.objetos = objetos;
+    }
+
+    public GameActivity getGameActivity() {
+        return gameActivity;
+    }
+
+    public void setGameActivity(GameActivity gameActivity) {
+        this.gameActivity = gameActivity;
     }
 }
 

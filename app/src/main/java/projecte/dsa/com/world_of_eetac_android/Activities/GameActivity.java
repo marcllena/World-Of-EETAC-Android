@@ -5,6 +5,7 @@ import projecte.dsa.com.world_of_eetac_android.Mon.Escena;
 import projecte.dsa.com.world_of_eetac_android.Mon.Globals;
 import projecte.dsa.com.world_of_eetac_android.Mon.Partida;
 import projecte.dsa.com.world_of_eetac_android.Mon.Usuario;
+import projecte.dsa.com.world_of_eetac_android.Objectes.Objeto;
 import projecte.dsa.com.world_of_eetac_android.R;
 import projecte.dsa.com.world_of_eetac_android.Services.RetrofitAPI;
 import retrofit2.Call;
@@ -37,6 +38,8 @@ public class GameActivity extends AppCompatActivity implements JoystickView.Joys
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setFormat(PixelFormat.TRANSLUCENT);
+        Globals.getInstance().setGameActivity(this);
         setContentView(R.layout.activity_game);
 
         gameView=(GameView) findViewById(R.id.gameView);
@@ -46,15 +49,17 @@ public class GameActivity extends AppCompatActivity implements JoystickView.Joys
         joystickView=(JoystickView) findViewById(R.id.joystickView);
         int size=Math.min(this.getWindow().getDecorView().getWidth(),this.getWindow().getDecorView().getHeight());
         joystickView.getHolder().setFixedSize((size/4), (size/4));
-        joystickView.setZOrderOnTop(true);
+        joystickView.setZOrderMediaOverlay(true);
         SurfaceHolder jvHolder=joystickView.getHolder();
         jvHolder.setFormat(PixelFormat.TRANSPARENT);
 
         inventarioView=(InventarioView) findViewById(R.id.inventarioView);
-        inventarioView.setVisibility(View.INVISIBLE);
-        joystickView.getHolder().setFixedSize((int)(this.getWindow().getDecorView().getWidth()*2/3),(int)(this.getWindow().getDecorView().getHeight()*2/3));
+        //inventarioView.setVisibility(View.INVISIBLE);
+
+
+        //inventarioView.getHolder().setFixedSize((int)(this.getWindow().getDecorView().getWidth()*3/4),(int)(this.getWindow().getDecorView().getHeight()*3/4));
         inventarioView.setZOrderOnTop(true);
-        inventarioView.getHolder().setFormat(PixelFormat.TRANSPARENT);
+        //inventarioView.getHolder().setFormat(PixelFormat.TRANSPARENT);
 
         //si comentais la linea de abajo va, pero mirad si veis donde peta que la linea esta es para establecer el tamaño del inventario
         //inventarioView.startInventario();
@@ -191,11 +196,24 @@ public class GameActivity extends AppCompatActivity implements JoystickView.Joys
 
     @Override
     public void onItemReleased(int posX, int posY,int itemPos, int source) {
-        //comparar si posX+posY esta ocupado en el inventario
-        //si lo esta intercambiar los dos objetos
-        //si es negativo es que lo intenta equipar
+        if(Globals.getInstance().getObjetos()[posX+posY]==null)//comparar si posX+posY esta ocupado en el inventario
+        {
+            Globals.getInstance().getObjetos()[posX+posY]=Globals.getInstance().getObjetos()[itemPos];
+        }
+        else//si lo esta intercambiar los dos objetos
+        {
+            Objeto o=Globals.getInstance().getObjetos()[posX+posY];
+            Globals.getInstance().getObjetos()[posX+posY]=Globals.getInstance().getObjetos()[itemPos];
+            Globals.getInstance().getObjetos()[itemPos]=o;
+        }
+        //si es negativo posX, es que lo intenta equipar
         //comprobar que se puede equipar en ese hueco
         //intercambiar los items
 
+    }
+
+    @Override
+    public void exitInventario(int source) {
+        inventarioView.setVisibility(View.INVISIBLE);
     }
 }
