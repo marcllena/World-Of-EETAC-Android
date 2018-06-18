@@ -19,6 +19,8 @@ public class Usuario {
     private int defense;
     private int magicAttack;
     private int magicDefense;
+    private Objeto[] objetos;
+
     public String getNickname(){
         return this.nickname;
     }
@@ -81,5 +83,13 @@ public class Usuario {
         {
             //Stats iniciales mago
         }
+    }
+
+    public Objeto[] getObjetos() {
+        return objetos;
+    }
+
+    public void setObjetos(Objeto[] objetos) {
+        this.objetos = objetos;
     }
 }

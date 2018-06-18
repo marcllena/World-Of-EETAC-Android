@@ -1,6 +1,7 @@
 package projecte.dsa.com.world_of_eetac_android.Game;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -10,6 +11,8 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 
+import projecte.dsa.com.world_of_eetac_android.Mon.Globals;
+import projecte.dsa.com.world_of_eetac_android.Objectes.Objeto;
 import projecte.dsa.com.world_of_eetac_android.R;
 
 /**
@@ -62,7 +65,7 @@ public class InventarioView extends SurfaceView implements SurfaceHolder.Callbac
                 cargarCeldas();
                 Canvas canvas = holder.lockCanvas();
                 drawFondo(canvas);
-                drawInventario(canvas,-1,3,4);
+                drawInventario(canvas,-1,3,4,null);
                 getHolder().unlockCanvasAndPost(canvas);
             }
 
@@ -92,7 +95,7 @@ public class InventarioView extends SurfaceView implements SurfaceHolder.Callbac
                 cargarCeldas();
                 Canvas canvas = holder.lockCanvas();
                 drawFondo(canvas);
-                drawInventario(canvas,-1,0,0);
+                drawInventario(canvas,-1,0,0,null);
                 getHolder().unlockCanvasAndPost(canvas);
             }
 
@@ -123,7 +126,7 @@ public class InventarioView extends SurfaceView implements SurfaceHolder.Callbac
                 cargarCeldas();
                 Canvas canvas = holder.lockCanvas();
                 drawFondo(canvas);
-                drawInventario(canvas,-1,0,0);
+                drawInventario(canvas,-1,0,0,null);
                 getHolder().unlockCanvasAndPost(canvas);
             }
 
@@ -181,32 +184,39 @@ public class InventarioView extends SurfaceView implements SurfaceHolder.Callbac
 
 
 
-    private void drawInventario(Canvas canvas, int posItem, int posX, int posY){
-        if(getHolder().getSurface().isValid()) {
-            //Canvas canvas = this.getHolder().lockCanvas();
-            Bitmap simbol;
-            Bitmap objeto= BitmapFactory.decodeResource(getResources(), R.drawable.hacha_bombero);
-            simbol= Bitmap.createScaledBitmap(objeto,(int)anchoObjeto, (int) altoObjeto, true);
-            canvas.drawBitmap(simbol, startInventarioWidht + 3 * anchoCelda + anchoCelda / 10, startInventarioHeight + 1 * altoCelda + altoCelda / 10, null);
+    private void drawInventario(Canvas canvas, int posItem, int posX, int posY, Objeto[] objetos){
+        if(objetos!=null) {
+            if (getHolder().getSurface().isValid()) {
+                //Canvas canvas = this.getHolder().lockCanvas();
+                Bitmap simbol;
+                String nombreResource;
+                int idObjeto;
+                Bitmap objeto;
 
-
-            for(int j=0;j<3;j++) {
-                for (int i = 0; i < 5; i++) {
-                    if((i+j*5)==posItem){
-                        canvas.drawBitmap(simbol, posX, posY, null);
-                    }
-                    else {
-                        canvas.drawBitmap(simbol, startInventarioWidht + i * anchoCelda + anchoCelda / 10, startInventarioHeight + j * altoCelda + altoCelda / 10, null);
+                for (int j = 0; j < 3; j++) {
+                    for (int i = 0; i < 5; i++) {
+                        nombreResource = "hacha_bombero";
+                        idObjeto = getResources().getIdentifier(nombreResource, "drawable", "projecte.dsa.com.world_of_eetac_android");
+                        objeto = BitmapFactory.decodeResource(getResources(), idObjeto);
+                        simbol = Bitmap.createScaledBitmap(objeto, (int) anchoObjeto, (int) altoObjeto, true);
+                        if ((i + j * 5) == posItem) {
+                            canvas.drawBitmap(simbol, posX-anchoObjeto/2, posY-altoObjeto/2, null);
+                        } else {
+                            canvas.drawBitmap(simbol, startInventarioWidht + i * anchoCelda + anchoCelda / 10, startInventarioHeight + j * altoCelda + altoCelda / 10, null);
+                        }
                     }
                 }
+
             }
-
-
-
-
-
         }
 
+    }
+
+    private void onDraw(int posItem,int posX,int posY, Objeto[] objetos){
+        Canvas canvas=holder.lockCanvas();
+        drawFondo(canvas);
+        drawInventario(canvas,posItem,posX,posY,objetos);
+        holder.unlockCanvasAndPost(canvas);
     }
 
 
@@ -258,7 +268,7 @@ public class InventarioView extends SurfaceView implements SurfaceHolder.Callbac
         cargarCeldas();
         Canvas canvas = holder.lockCanvas();
         drawFondo(canvas);
-        drawInventario(canvas,-1,0,0);
+        drawInventario(canvas,-1,0,0,null);
         getHolder().unlockCanvasAndPost(canvas);
     }
 
@@ -293,14 +303,8 @@ public class InventarioView extends SurfaceView implements SurfaceHolder.Callbac
                         drawFondo(canvas);
 
 
-                        drawInventario(canvas, movingItem, (int) event.getX(), (int) event.getY());
+                        drawInventario(canvas, movingItem, (int) event.getX(), (int) event.getY(), Globals.getInstance().getUser().getObjetos());
                         holder.unlockCanvasAndPost(canvas);
-                    }
-                    else{
-                        drawFondo(canvas);
-                        drawInventario(canvas, movingItem, (int) event.getX(), (int) event.getY());
-                        holder.unlockCanvasAndPost(canvas);
-
                     }
                 }
 
@@ -310,7 +314,7 @@ public class InventarioView extends SurfaceView implements SurfaceHolder.Callbac
                 int posY= (int)((event.getY()-startInventarioHeight)/altoCelda);
                 moving=false;
                 movingItem=-1;
-                InventarioCallback.onItemReleased(posX,posY,getId());
+                InventarioCallback.onItemReleased(posX,posY,movingItem,getId());
             }
         }
         return true;
@@ -321,6 +325,6 @@ public class InventarioView extends SurfaceView implements SurfaceHolder.Callbac
 
         void onItemMoved(int posX, int posY, boolean moving, int source);
 
-        void onItemReleased(int posX, int posY, int source);
+        void onItemReleased(int posX, int posY,int itemPos, int source);
     }
 }

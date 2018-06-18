@@ -27,7 +27,7 @@ import android.widget.RatingBar;
 
 import java.util.List;
 
-public class GameActivity extends AppCompatActivity implements JoystickView.JoystickListener{
+public class GameActivity extends AppCompatActivity implements JoystickView.JoystickListener,InventarioView.InventarioListener{
 
     GameView gameView;
     JoystickView joystickView;
@@ -164,4 +164,18 @@ public class GameActivity extends AppCompatActivity implements JoystickView.Joys
         progressBarSalut.setProgress((int)val);
     }
 
+    @Override
+    public void onItemMoved(int posX, int posY, boolean moving, int source) {
+        //Toast.makeText(this,"X: "+xPercent+" Y: "+yPercent,Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onItemReleased(int posX, int posY,int itemPos, int source) {
+        //comparar si posX+posY esta ocupado en el inventario
+        //si lo esta intercambiar los dos objetos
+        //si es negativo es que lo intenta equipar
+        //comprobar que se puede equipar en ese hueco
+        //intercambiar los items
+
+    }
 }
