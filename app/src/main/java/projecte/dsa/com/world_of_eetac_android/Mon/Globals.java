@@ -3,6 +3,8 @@ package projecte.dsa.com.world_of_eetac_android.Mon;
 
 import java.util.List;
 
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import projecte.dsa.com.world_of_eetac_android.Activities.GameActivity;
 import projecte.dsa.com.world_of_eetac_android.Objectes.Objeto;
 import projecte.dsa.com.world_of_eetac_android.Services.RetrofitAPI;
@@ -45,8 +47,13 @@ public class Globals {
     }
     // Restrict the constructor from being instantiated
     private Globals(){
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
+        //Creem el Retrofit
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(API_URL)
+                .client(client)
                 .addConverterFactory(ScalarsConverterFactory.create())
                 .addConverterFactory(JacksonConverterFactory.create())
                 .build();
