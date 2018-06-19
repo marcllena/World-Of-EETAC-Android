@@ -84,20 +84,15 @@ public class GameActivity extends AppCompatActivity implements JoystickView.Joys
             @Override
             public void onClick(View view) {
                 if(inventarioView.getVisibility()==View.VISIBLE) {
-                    inventarioView.setVisibility(View.INVISIBLE);
                     gameView.setVisibility(View.VISIBLE);
-                    joystickView.setZOrderMediaOverlay(true);
-                    SurfaceHolder jvHolder=joystickView.getHolder();
-                    jvHolder.setFormat(PixelFormat.TRANSPARENT);
-                    gameView.setZOrderOnTop(false);
-                    gameView.getHolder().setFormat(PixelFormat.TRANSPARENT);
+                    inventarioView.setVisibility(View.INVISIBLE);
+
+
                 }
                 else{
                     gameView.setVisibility(View.INVISIBLE);
                     inventarioView.setVisibility(View.VISIBLE);
-                    joystickView.setZOrderMediaOverlay(true);
-                    SurfaceHolder jvHolder=joystickView.getHolder();
-                    jvHolder.setFormat(PixelFormat.TRANSPARENT);
+
                 }
             }
         });

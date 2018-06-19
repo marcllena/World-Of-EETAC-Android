@@ -196,8 +196,8 @@ public class InventarioView extends SurfaceView implements SurfaceHolder.Callbac
         left= BitmapFactory.decodeResource(getResources(), R.drawable.borde_izq);
         right= BitmapFactory.decodeResource(getResources(), R.drawable.borde_der);
         separador= BitmapFactory.decodeResource(getResources(),R.drawable.separador);
-
         topCofre= BitmapFactory.decodeResource(getResources(), R.drawable.cofre_title);
+
     }
 
 
