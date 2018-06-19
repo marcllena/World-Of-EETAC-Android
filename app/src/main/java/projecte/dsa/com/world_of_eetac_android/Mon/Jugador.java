@@ -16,7 +16,8 @@ public class Jugador {
     public int attack;
     public int defense;
     public int magicAttack;
-    public List<Objeto> inventario = new LinkedList<Objeto>();
+    @JsonIgnore
+    public Objeto[] inventario = new Objeto[15];
     public Jugador(String nick, int profession){
         this.nickname = nick;
         this.profession = profession;

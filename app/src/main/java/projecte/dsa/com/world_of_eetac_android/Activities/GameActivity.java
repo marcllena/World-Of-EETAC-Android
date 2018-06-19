@@ -54,7 +54,7 @@ public class GameActivity extends AppCompatActivity implements JoystickView.Joys
         jvHolder.setFormat(PixelFormat.TRANSPARENT);
 
         inventarioView=(InventarioView) findViewById(R.id.inventarioView);
-        //inventarioView.setVisibility(View.INVISIBLE);
+        inventarioView.setVisibility(View.INVISIBLE);
 
 
         //inventarioView.getHolder().setFixedSize((int)(this.getWindow().getDecorView().getWidth()*3/4),(int)(this.getWindow().getDecorView().getHeight()*3/4));
@@ -77,10 +77,14 @@ public class GameActivity extends AppCompatActivity implements JoystickView.Joys
         fab2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(inventarioView.getVisibility()==View.VISIBLE)
+                if(inventarioView.getVisibility()==View.VISIBLE) {
                     inventarioView.setVisibility(View.INVISIBLE);
-                else
+                    gameView.setVisibility(View.VISIBLE);
+                }
+                else{
                     inventarioView.setVisibility(View.VISIBLE);
+                    gameView.setVisibility(View.INVISIBLE);
+                }
             }
         });
 
@@ -215,5 +219,6 @@ public class GameActivity extends AppCompatActivity implements JoystickView.Joys
     @Override
     public void exitInventario(int source) {
         inventarioView.setVisibility(View.INVISIBLE);
+        gameView.setVisibility(View.VISIBLE);
     }
 }
