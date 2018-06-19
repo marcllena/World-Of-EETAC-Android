@@ -49,7 +49,7 @@ public class InventarioView extends SurfaceView implements SurfaceHolder.Callbac
     private InventarioListener InventarioCallback;
     private boolean moving;
     private int movingItem;
-    private boolean cofre;
+   // private boolean cofre;
 
     /*//public InventarioView(Context context) {
         super(context);
@@ -69,7 +69,7 @@ public class InventarioView extends SurfaceView implements SurfaceHolder.Callbac
                 setupDimensions();
                 cargarCeldas();
                 Canvas canvas = holder.lockCanvas();
-                drawFondo(canvas);
+                drawFondo(canvas,false);
                 drawInventario(canvas,-1,3,4/*,null*/);
                 getHolder().unlockCanvasAndPost(canvas);
             }
@@ -99,7 +99,7 @@ public class InventarioView extends SurfaceView implements SurfaceHolder.Callbac
                 startInventario();
                 cargarCeldas();
                 Canvas canvas = holder.lockCanvas();
-                drawFondo(canvas);
+                drawFondo(canvas,false);
                 drawInventario(canvas,-1,0,0/*,null*/);
                 getHolder().unlockCanvasAndPost(canvas);
             }
@@ -130,7 +130,7 @@ public class InventarioView extends SurfaceView implements SurfaceHolder.Callbac
                 setupDimensions();
                 cargarCeldas();
                 Canvas canvas = holder.lockCanvas();
-                drawFondo(canvas);
+                drawFondo(canvas,false);
                 drawInventario(canvas,-1,0,0/*,null*/);
                 getHolder().unlockCanvasAndPost(canvas);
             }
@@ -149,7 +149,7 @@ public class InventarioView extends SurfaceView implements SurfaceHolder.Callbac
     public void startInventario(){
         setupDimensions();
         Canvas canvas=holder.lockCanvas();
-        drawFondo(canvas);
+        drawFondo(canvas,false);
         drawInventario(canvas,-1,0,0/*,null*/);
         holder.unlockCanvasAndPost(canvas);
     }
@@ -235,13 +235,41 @@ public class InventarioView extends SurfaceView implements SurfaceHolder.Callbac
 
     private void onDraw(int posItem,int posX,int posY, Objeto[] objetos){
         Canvas canvas=holder.lockCanvas();
-        drawFondo(canvas);
+        drawFondo(canvas,false);
         drawInventario(canvas,posItem,posX,posY/*,objetos*/);
         holder.unlockCanvasAndPost(canvas);
     }
 
+    public void onDrawCofre(List<Objeto> objetosCofre,int posItem,int posX,int posY)//si posItem -1 es que es l'item del cofre
+    {
+        Canvas canvas=holder.lockCanvas();
+        drawFondo(canvas,true);
+        drawInventario(canvas,posItem,posX,posY);
+        if(posItem==-1)
+            DrawCofreItem(canvas,true,objetosCofre.get(0),posX,posY);
+        else
+            DrawCofreItem(canvas,false,objetosCofre.get(0),posX,posY);
 
-    private void drawFondo(Canvas canvas){
+        holder.unlockCanvasAndPost(canvas);
+
+    }
+
+    private void DrawCofreItem(Canvas canvas,boolean mov, Objeto o,int posX,int posY){
+        if(o!=null) {
+            String nombreResource = o.getNombre();//"hacha_bombero";
+            int idObjeto = getResources().getIdentifier(nombreResource, "drawable", "projecte.dsa.com.world_of_eetac_android");
+            Bitmap objeto = BitmapFactory.decodeResource(getResources(), idObjeto);
+            Bitmap simbol = Bitmap.createScaledBitmap(objeto, (int) (2 * anchoObjeto), (int) (2 * altoObjeto), true);
+            if (mov) {
+                canvas.drawBitmap(simbol, posX - anchoObjeto, posY - altoObjeto, null);
+            } else {
+                canvas.drawBitmap(simbol, 5 * (int) anchoCelda + tamañoBordes + initwidth + tamañoSeparador + anchoCelda * 1 / 5, tamañoTop + initHeight + (altoBordes - 2 * altoCelda) / 2 + altoCelda * 1 / 5, null);
+            }
+        }
+
+    }
+
+    private void drawFondo(Canvas canvas, boolean cofre){
         Bitmap simbol;
         if(!cofre) {
             simbol = Bitmap.createScaledBitmap(top, width, (int) tamañoTop, true);
@@ -308,7 +336,7 @@ public class InventarioView extends SurfaceView implements SurfaceHolder.Callbac
         setupDimensions();
         cargarCeldas();
         Canvas canvas = holder.lockCanvas();
-        drawFondo(canvas);
+        drawFondo(canvas,false);
         drawInventario(canvas,-1,0,0/*,null*/);
         getHolder().unlockCanvasAndPost(canvas);
     }
@@ -350,7 +378,7 @@ public class InventarioView extends SurfaceView implements SurfaceHolder.Callbac
                 moving = true;
                 if (canvas!=null) {
                     //if(posX<=4) {
-                        drawFondo(canvas);
+                        drawFondo(canvas,false);
 
 
                         drawInventario(canvas, movingItem, (int) event.getX(), (int) event.getY()/*, Globals.getInstance().getObjetos()*/);
@@ -380,13 +408,6 @@ public class InventarioView extends SurfaceView implements SurfaceHolder.Callbac
         return true;
     }
 
-    public boolean isCofre() {
-        return cofre;
-    }
-
-    public void setCofre(boolean cofre) {
-        this.cofre = cofre;
-    }
 
     public interface InventarioListener
     {

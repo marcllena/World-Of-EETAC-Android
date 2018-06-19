@@ -30,10 +30,10 @@ import java.util.List;
 
 public class GameActivity extends AppCompatActivity implements JoystickView.JoystickListener,InventarioView.InventarioListener{
 
-    GameView gameView;
-    JoystickView joystickView;
+    private GameView gameView;
+    private JoystickView joystickView;
     static ProgressBar progressBarSalut;
-    InventarioView inventarioView;
+    private InventarioView inventarioView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,10 +80,18 @@ public class GameActivity extends AppCompatActivity implements JoystickView.Joys
                 if(inventarioView.getVisibility()==View.VISIBLE) {
                     inventarioView.setVisibility(View.INVISIBLE);
                     gameView.setVisibility(View.VISIBLE);
+                    joystickView.setZOrderMediaOverlay(true);
+                    SurfaceHolder jvHolder=joystickView.getHolder();
+                    jvHolder.setFormat(PixelFormat.TRANSPARENT);
+                    gameView.setZOrderOnTop(false);
+                    gameView.getHolder().setFormat(PixelFormat.TRANSPARENT);
                 }
                 else{
-                    inventarioView.setVisibility(View.VISIBLE);
                     gameView.setVisibility(View.INVISIBLE);
+                    inventarioView.setVisibility(View.VISIBLE);
+                    joystickView.setZOrderMediaOverlay(true);
+                    SurfaceHolder jvHolder=joystickView.getHolder();
+                    jvHolder.setFormat(PixelFormat.TRANSPARENT);
                 }
             }
         });
@@ -220,5 +228,29 @@ public class GameActivity extends AppCompatActivity implements JoystickView.Joys
     public void exitInventario(int source) {
         inventarioView.setVisibility(View.INVISIBLE);
         gameView.setVisibility(View.VISIBLE);
+    }
+
+    public GameView getGameView() {
+        return gameView;
+    }
+
+    public void setGameView(GameView gameView) {
+        this.gameView = gameView;
+    }
+
+    public JoystickView getJoystickView() {
+        return joystickView;
+    }
+
+    public void setJoystickView(JoystickView joystickView) {
+        this.joystickView = joystickView;
+    }
+
+    public InventarioView getInventarioView() {
+        return inventarioView;
+    }
+
+    public void setInventarioView(InventarioView inventarioView) {
+        this.inventarioView = inventarioView;
     }
 }

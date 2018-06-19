@@ -25,6 +25,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 
@@ -274,6 +275,8 @@ public class GameView extends SurfaceView{
                             {
                                 Cofre cofre= (Cofre) actual.getDatos()[i][j];
                                 cofre.setAbierto(true);
+                                Globals.getInstance().getGameActivity().getInventarioView().onDrawCofre(cofre.getContenido(),-2,0,0);
+                                Globals.getInstance().getGameActivity().getInventarioView().setVisibility(View.VISIBLE);
                                 break;
                             }
                             else if(res==2)
@@ -384,5 +387,7 @@ public class GameView extends SurfaceView{
             }
         }
     }
+
+
 
 }
