@@ -6,7 +6,9 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.support.constraint.ConstraintLayout;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -16,6 +18,7 @@ import android.widget.Toast;
 import java.util.List;
 
 import projecte.dsa.com.world_of_eetac_android.Activities.GameActivity;
+import projecte.dsa.com.world_of_eetac_android.Celes.Cofre;
 import projecte.dsa.com.world_of_eetac_android.Mon.Globals;
 import projecte.dsa.com.world_of_eetac_android.Objectes.Objeto;
 import projecte.dsa.com.world_of_eetac_android.R;
@@ -51,7 +54,10 @@ public class InventarioView extends SurfaceView implements SurfaceHolder.Callbac
     private InventarioListener InventarioCallback;
     private boolean moving;
     private int movingItem;
-   // private boolean cofre;
+    private int exitX,exitY;
+    private boolean c;
+    private Cofre cofre;
+    //private List<Objeto> objetosCofre;
 
     /*//public InventarioView(Context context) {
         super(context);
@@ -71,7 +77,7 @@ public class InventarioView extends SurfaceView implements SurfaceHolder.Callbac
                 setupDimensions();
                 cargarCeldas();
                 Canvas canvas = holder.lockCanvas();
-                drawFondo(canvas,false);
+                drawFondo(canvas);
                 drawInventario(canvas,-1,3,4/*,null*/);
                 getHolder().unlockCanvasAndPost(canvas);
             }
@@ -101,7 +107,7 @@ public class InventarioView extends SurfaceView implements SurfaceHolder.Callbac
                 startInventario();
                 cargarCeldas();
                 Canvas canvas = holder.lockCanvas();
-                drawFondo(canvas,false);
+                drawFondo(canvas);
                 drawInventario(canvas,-1,0,0/*,null*/);
                 getHolder().unlockCanvasAndPost(canvas);
             }
@@ -132,7 +138,7 @@ public class InventarioView extends SurfaceView implements SurfaceHolder.Callbac
                 setupDimensions();
                 cargarCeldas();
                 Canvas canvas = holder.lockCanvas();
-                drawFondo(canvas,false);
+                drawFondo(canvas);
                 drawInventario(canvas,-1,0,0/*,null*/);
                 getHolder().unlockCanvasAndPost(canvas);
             }
@@ -151,7 +157,7 @@ public class InventarioView extends SurfaceView implements SurfaceHolder.Callbac
     public void startInventario(){
         setupDimensions();
         Canvas canvas=holder.lockCanvas();
-        drawFondo(canvas,false);
+        drawFondo(canvas);
         drawInventario(canvas,-1,0,0/*,null*/);
         holder.unlockCanvasAndPost(canvas);
     }
@@ -236,21 +242,24 @@ public class InventarioView extends SurfaceView implements SurfaceHolder.Callbac
     }
 
     public void onDraw(int posItem,int posX,int posY/*, Objeto[] objetos*/){
+        c=false;
         Canvas canvas=holder.lockCanvas();
-        drawFondo(canvas,false);
+        drawFondo(canvas);
         drawInventario(canvas,posItem,posX,posY/*,objetos*/);
         holder.unlockCanvasAndPost(canvas);
     }
 
-    public void onDrawCofre(List<Objeto> objetosCofre,int posItem,int posX,int posY)//si posItem -1 es que es l'item del cofre
+    public void onDrawCofre(Cofre cof,int posItem,int posX,int posY)//si posItem -1 es que es l'item del cofre
     {
+        cofre=cof;
+        c=true;
         Canvas canvas=holder.lockCanvas();
-        drawFondo(canvas,true);
+        drawFondo(canvas);
         drawInventario(canvas,posItem,posX,posY);
         if(posItem==-1)
-            DrawCofreItem(canvas,true,objetosCofre.get(0),posX,posY);
+            DrawCofreItem(canvas,true,cofre.getContenido().get(0),posX,posY);
         else
-            DrawCofreItem(canvas,false,objetosCofre.get(0),posX,posY);
+            DrawCofreItem(canvas,false,cof.getContenido().get(0),posX,posY);
 
         holder.unlockCanvasAndPost(canvas);
 
@@ -273,9 +282,9 @@ public class InventarioView extends SurfaceView implements SurfaceHolder.Callbac
 
     }
 
-    private void drawFondo(Canvas canvas, boolean cofre){
+    private void drawFondo(Canvas canvas){
         Bitmap simbol;
-        if(!cofre) {
+        if(!c) {
             simbol = Bitmap.createScaledBitmap(top, width, (int) tamañoTop, true);
             canvas.drawBitmap(simbol, initwidth, initHeight, null);
         }
@@ -295,7 +304,7 @@ public class InventarioView extends SurfaceView implements SurfaceHolder.Callbac
             }
         }
 
-        if(!cofre) {
+        if(!c) {
             simbol = Bitmap.createScaledBitmap(separador, (int) (tamañoSeparador * 1.1 + (int) (2.1 * anchoCelda)), (int) altoBordes, true);
             canvas.drawBitmap(simbol, 5 * (int) anchoCelda + tamañoBordes + initwidth, tamañoTop + initHeight, null);
 
@@ -331,7 +340,8 @@ public class InventarioView extends SurfaceView implements SurfaceHolder.Callbac
 
         simbol = Bitmap.createScaledBitmap(celdas[7], (int) anchoCelda / 2, (int) altoCelda / 2, true);
         canvas.drawBitmap(simbol, (int) (6.5 * anchoCelda + tamañoBordes + tamañoSeparador) + initwidth, tamañoTop + 3 * altoCelda + initHeight, null);
-
+        exitX=(int) (6.5 * anchoCelda + tamañoBordes + tamañoSeparador) + initwidth;
+        exitY= (int) (tamañoTop + 3 * altoCelda + initHeight);
 
         //this.getHolder().unlockCanvasAndPost(canvas);
 
@@ -343,7 +353,7 @@ public class InventarioView extends SurfaceView implements SurfaceHolder.Callbac
         setupDimensions();
         cargarCeldas();
         Canvas canvas = holder.lockCanvas();
-        drawFondo(canvas,false);
+        drawFondo(canvas);
         drawInventario(canvas,-1,0,0/*,null*/);
         getHolder().unlockCanvasAndPost(canvas);
     }
@@ -364,8 +374,94 @@ public class InventarioView extends SurfaceView implements SurfaceHolder.Callbac
         return false;
     }
 
-    public boolean Touch(MotionEvent event, float X, float Y){
-        InventarioCallback.onItemMoved(0,0,false,getId());
+    @SuppressLint("WrongCall")
+    public boolean Touch(MotionEvent event){
+        Resources r = getResources();
+        ConstraintLayout.LayoutParams lp = (ConstraintLayout.LayoutParams) Globals.getInstance().getGameActivity().getInventarioView().getLayoutParams();
+        int dp = lp.leftMargin;
+        float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 90, r.getDisplayMetrics());
+        int posX = 0;
+        int posY = 0;
+        int releasedItem;
+        if(!c) {
+            if (event.getAction() != event.ACTION_UP) {
+                if (event.getAction() == event.ACTION_DOWN) {
+                    if (((event.getX() - px > exitX) && (event.getX() - px < (exitX + 0.5 * anchoCelda))) && (event.getY() > exitY) && ((event.getY() < (exitY + 0.5 * altoCelda)))) {
+                        InventarioCallback.exitInventario(getId());
+                        findViewById(getId()).setVisibility(View.INVISIBLE);
+                    }
+                    posX = (int) ((event.getX() - startInventarioWidht) / anchoCelda);
+                    posY = (int) ((event.getY() - startInventarioHeight) / altoCelda);
+                    movingItem = (posX + 5 * posY);
+                }
+
+                //InventarioCallback.onItemMoved(posX,posY,moving,getId());
+                Canvas canvas = holder.lockCanvas();
+                if (canvas != null) {
+                    //if(posX<=4) {
+                    drawFondo(canvas);
+
+
+                    drawInventario(canvas, movingItem, (int) event.getX(), (int) event.getY()/*, Globals.getInstance().getObjetos()*/);
+                    holder.unlockCanvasAndPost(canvas);
+                    //}
+                }
+
+            } else {
+                posX = (int) ((event.getX() - startInventarioWidht) / anchoCelda);
+                posY = (int) ((event.getY() - startInventarioHeight) / altoCelda);
+                moving = false;
+                movingItem = -1;
+                if (posX > 0 || posY > 0 || posY < 2) {
+                    if (event.getX() > (tamañoBordes + 5 * anchoCelda + tamañoSeparador)) {
+                        //InventarioCallback.onItemReleased(posX,posY,movingItem,getId());
+
+                        posX = -((int) ((event.getX() - (tamañoBordes + 5 * anchoCelda + tamañoSeparador)) / anchoCelda) - 1);
+                    }
+                    //InventarioCallback.onItemReleased(posX);
+                } else {
+                    onDraw(-1, 0, 0);
+                }
+            }
+        }
+        else{
+            if (event.getAction() != event.ACTION_UP) {
+                if (event.getAction() == event.ACTION_DOWN) {
+                    if (((event.getX() - px > exitX) && (event.getX() - px < (exitX + 0.5 * anchoCelda))) && (event.getY() > exitY) && ((event.getY() < (exitY + 0.5 * altoCelda)))) {
+                        InventarioCallback.exitInventario(getId());
+                        findViewById(getId()).setVisibility(View.INVISIBLE);
+                    }
+                    posX = (int) ((event.getX() - startInventarioWidht-px) / anchoCelda);
+                    posY = (int) ((event.getY() - startInventarioHeight) / altoCelda);
+                    if((posX>0)&&(posY>0)&&(posY<2)) {
+                        if ((posX < 4))
+                            movingItem = (posX + 5 * posY);
+                        else{
+                            posX = (int) ((event.getX() - 5 * (int) anchoCelda -startInventarioWidht-tamañoSeparador-px) / (2*anchoCelda));
+                            posY=(int)((event.getY()-(tamañoTop+initHeight+(altoBordes-2*altoCelda)/2))/(2*altoCelda));
+                            if((posX==0)&&(posY==0))
+                                movingItem=-1;
+                        }
+                    }
+                }
+                onDrawCofre(cofre,movingItem,(int)(event.getX()-px),(int)(event.getY()));
+
+            } else {
+                posX = (int) ((event.getX() - startInventarioWidht) / anchoCelda);
+                posY = (int) ((event.getY() - startInventarioHeight) / altoCelda);
+                if (posX > 0 || posY > 0 || posY < 2) {
+                    if (event.getX() > (tamañoBordes + 5 * anchoCelda + tamañoSeparador)) {
+                        //InventarioCallback.onItemReleased(posX,posY,movingItem,getId());
+
+                        posX = -((int) ((event.getX() - (tamañoBordes + 5 * anchoCelda + tamañoSeparador)) / anchoCelda) - 1);
+                    }
+                    //InventarioCallback.onItemReleased(posX);
+                } else {
+                    onDraw(-1, 0, 0);
+                }
+            }
+
+        }
         return false;
     }
 
@@ -396,7 +492,7 @@ public class InventarioView extends SurfaceView implements SurfaceHolder.Callbac
                 moving = true;
                 if (canvas!=null) {
                     //if(posX<=4) {
-                        drawFondo(canvas,false);
+                        drawFondo(canvas);
 
 
                         drawInventario(canvas, movingItem, (int) event.getX(), (int) event.getY()/*, Globals.getInstance().getObjetos()*/);

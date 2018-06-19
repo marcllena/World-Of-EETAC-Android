@@ -261,8 +261,8 @@ public class GameView extends SurfaceView{
     public boolean onTouchEvent(MotionEvent event) {
         InventarioView inventarioView=Globals.getInstance().getGameActivity().getInventarioView();
         GameActivity gameActivity=Globals.getInstance().getGameActivity();
-        int min=(gameActivity.getWindow().getDecorView().getWidth()-inventarioView.getWidth())/2;
-        int max=(gameActivity.getWindow().getDecorView().getWidth()-min);
+        //int min=(gameActivity.getWindow().getDecorView().getWidth()-inventarioView.getWidth())/2;
+        //int max=(gameActivity.getWindow().getDecorView().getWidth()-min);
         if (inventarioView.getVisibility() == View.INVISIBLE) {
         if (System.currentTimeMillis() - lastClick > 300) {
 
@@ -284,7 +284,7 @@ public class GameView extends SurfaceView{
                                         iv.setVisibility(View.VISIBLE);
                                         iv.setupDimensions();
                                         iv.cargarCeldas();
-                                        iv.onDrawCofre(cofre.getContenido(), -2, 0, 0);
+                                        iv.onDrawCofre(cofre, -2, 0, 0);
 
                                         break;
                                     }
@@ -315,7 +315,7 @@ public class GameView extends SurfaceView{
             return true;
         }
         else{
-            Globals.getInstance().getGameActivity().getInventarioView().Touch(event,event.getX()-min,event.getY());
+            Globals.getInstance().getGameActivity().getInventarioView().Touch(event);
             return true;
         }
     }
