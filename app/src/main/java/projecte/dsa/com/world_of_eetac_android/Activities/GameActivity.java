@@ -87,13 +87,13 @@ public class GameActivity extends AppCompatActivity implements JoystickView.Joys
             @Override
             public void onClick(View view) {
                 if(inventarioView.getVisibility()==View.VISIBLE) {
-                    gameView.setVisibility(View.VISIBLE);
+                    //gameView.setVisibility(View.VISIBLE);
                     inventarioView.setVisibility(View.INVISIBLE);
 
 
                 }
                 else{
-                    gameView.setVisibility(View.INVISIBLE);
+                    //gameView.setVisibility(View.INVISIBLE);
                     inventarioView.setVisibility(View.VISIBLE);
                     inventarioView.setupDimensions();
                     inventarioView.cargarCeldas();

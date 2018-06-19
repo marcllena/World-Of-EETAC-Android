@@ -263,7 +263,7 @@ public class GameView extends SurfaceView{
         GameActivity gameActivity=Globals.getInstance().getGameActivity();
         int min=(gameActivity.getWindow().getDecorView().getWidth()-inventarioView.getWidth())/2;
         int max=(gameActivity.getWindow().getDecorView().getWidth()-min);
-        if ((inventarioView.getVisibility() == View.INVISIBLE)&&((event.getX()<min)||(event.getX()>max))) {
+        if (inventarioView.getVisibility() == View.INVISIBLE) {
         if (System.currentTimeMillis() - lastClick > 300) {
 
                 lastClick = System.currentTimeMillis();
