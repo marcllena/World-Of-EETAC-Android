@@ -111,7 +111,7 @@ public class GameActivity extends AppCompatActivity implements JoystickView.Joys
 
         //setContentView(new GameView(this));
     }
-    public void nextRoundGame(List<Escena> escenaList) {
+    public void nextRoundGame() {
         Partida game = Globals.getInstance().getGame();
         RetrofitAPI servei = Globals.getInstance().getServeiRetrofit();
         Call<Partida> callPartida = servei.nextRoundGame(game);
@@ -124,7 +124,7 @@ public class GameActivity extends AppCompatActivity implements JoystickView.Joys
                 Log.d("Proba ", "Codi agafat" + codi);
                 if (codi == 200) {
                     Partida game = (Partida) resposta.body();
-                    //CONTINUAR PARTIDA
+                    Globals.getInstance().setGame(game);
                 } else if (codi == 204) {
                     resultat = -1;
                 }

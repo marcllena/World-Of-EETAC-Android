@@ -425,9 +425,13 @@ public class GameView extends SurfaceView{
         }
     }
     public void novaRonda(){
-    numRonda++;
-    activity.setRonda(numRonda);
-    startRonda(numRonda);
+        numRonda++;
+        //Informa al Server que aumenta ronda
+        /*activity.nextRoundGame();
+        actual = Globals.getInstance().getGame().map.getPantalles().get(0); //MAPA NOU
+        actual.setEscenas(celdas);*/
+        activity.setRonda(numRonda);
+        startRonda(numRonda);
     }
 
 }
