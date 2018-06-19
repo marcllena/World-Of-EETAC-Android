@@ -1,45 +1,28 @@
 package projecte.dsa.com.world_of_eetac_android.Game;
 
 import projecte.dsa.com.world_of_eetac_android.Activities.GameActivity;
-import projecte.dsa.com.world_of_eetac_android.Activities.LoginActivity;
 import projecte.dsa.com.world_of_eetac_android.Celes.Cofre;
 import projecte.dsa.com.world_of_eetac_android.Celes.Puerta;
 import projecte.dsa.com.world_of_eetac_android.Mon.Globals;
 import projecte.dsa.com.world_of_eetac_android.Mon.Escena;
-import projecte.dsa.com.world_of_eetac_android.Mon.Usuario;
-import projecte.dsa.com.world_of_eetac_android.Services.RetrofitAPI;
 import projecte.dsa.com.world_of_eetac_android.R;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.os.Looper;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.logging.Handler;
 
 public class GameView extends SurfaceView{
     private final Bitmap bmpBlood;
@@ -244,14 +227,14 @@ public class GameView extends SurfaceView{
         celdas[5]=BitmapFactory.decodeResource(getResources(), R.drawable.wall);
         celdas[6]=BitmapFactory.decodeResource(getResources(), R.drawable.forat);
         celdas[7]=BitmapFactory.decodeResource(getResources(), R.drawable.window);
-        celdas[8]=BitmapFactory.decodeResource(getResources(), R.drawable.helmet);
-        celdas[9]=BitmapFactory.decodeResource(getResources(), R.drawable.chest);
-        celdas[10]=BitmapFactory.decodeResource(getResources(), R.drawable.legs);
-        celdas[11]=BitmapFactory.decodeResource(getResources(), R.drawable.boots);
-        celdas[12]=BitmapFactory.decodeResource(getResources(), R.drawable.bow);
-        celdas[13]=BitmapFactory.decodeResource(getResources(), R.drawable.sword);
-        celdas[14]=BitmapFactory.decodeResource(getResources(), R.drawable.magestick);
-        celdas[15]=BitmapFactory.decodeResource(getResources(), R.drawable.pot);
+        celdas[8]=BitmapFactory.decodeResource(getResources(), R.drawable.casco);
+        celdas[9]=BitmapFactory.decodeResource(getResources(), R.drawable.armadura);
+        celdas[10]=BitmapFactory.decodeResource(getResources(), R.drawable.malla);
+        celdas[11]=BitmapFactory.decodeResource(getResources(), R.drawable.botas);
+        celdas[12]=BitmapFactory.decodeResource(getResources(), R.drawable.arcodeflechas);
+        celdas[13]=BitmapFactory.decodeResource(getResources(), R.drawable.espadalarga);
+        celdas[14]=BitmapFactory.decodeResource(getResources(), R.drawable.bastonmagico);
+        celdas[15]=BitmapFactory.decodeResource(getResources(), R.drawable.pocion);
 
 
 
@@ -276,58 +259,65 @@ public class GameView extends SurfaceView{
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        InventarioView inventarioView=Globals.getInstance().getGameActivity().getInventarioView();
+        GameActivity gameActivity=Globals.getInstance().getGameActivity();
+        int min=(gameActivity.getWindow().getDecorView().getWidth()-inventarioView.getWidth())/2;
+        int max=(gameActivity.getWindow().getDecorView().getWidth()-min);
+        if ((inventarioView.getVisibility() == View.INVISIBLE)&&((event.getX()<min)||(event.getX()>max))) {
         if (System.currentTimeMillis() - lastClick > 300) {
-            lastClick = System.currentTimeMillis();
-            synchronized (getHolder()) {
-                float x=event.getX();
-                float y=event.getY();
-                for(int i=0;i<actual.getAlto();i++) {
-                    for (int j = 0; j < actual.getAncho(); j++) {
-                        if(actual.getDatos()[i][j].getInteractuable()==1)
-                        {
-                            int res =isCollision(i,j,x,y);
-                            if(res==1)
-                            {
-                                double dis= Math.sqrt(Math.pow(jugador.getX()-x,2)+Math.pow(jugador.getY()-y,2));
-                                if(((dis)/this.getAltoSprite())<JUGADOR_SEPARACIO_SPRITES_INTERACTUABLE) {
-                                    Cofre cofre = (Cofre) actual.getDatos()[i][j];
-                                    cofre.setAbierto(true);
-                                    InventarioView iv=Globals.getInstance().getGameActivity().getInventarioView();
 
-                                    iv.setVisibility(View.VISIBLE);
-                                    iv.setupDimensions();
-                                    iv.cargarCeldas();
-                                    iv.onDrawCofre(cofre.getContenido(),-2,0,0);
+                lastClick = System.currentTimeMillis();
+                synchronized (getHolder()) {
+                    float x = event.getX();
+                    float y = event.getY();
+                    for (int i = 0; i < actual.getAlto(); i++) {
+                        for (int j = 0; j < actual.getAncho(); j++) {
+                            if (actual.getDatos()[i][j].getInteractuable() == 1) {
+                                int res = isCollision(i, j, x, y);
+                                if (res == 1) {
+                                    double dis = Math.sqrt(Math.pow(jugador.getX() - x, 2) + Math.pow(jugador.getY() - y, 2));
+                                    if (((dis) / this.getAltoSprite()) < JUGADOR_SEPARACIO_SPRITES_INTERACTUABLE) {
+                                        Cofre cofre = (Cofre) actual.getDatos()[i][j];
+                                        cofre.setAbierto(true);
+                                        InventarioView iv = Globals.getInstance().getGameActivity().getInventarioView();
 
-                                    break;
+                                        iv.setVisibility(View.VISIBLE);
+                                        iv.setupDimensions();
+                                        iv.cargarCeldas();
+                                        iv.onDrawCofre(cofre.getContenido(), -2, 0, 0);
+
+                                        break;
+                                    }
+                                } else if (res == 2) {
+                                    double dis = Math.sqrt(Math.pow(jugador.getX() - x, 2) + Math.pow(jugador.getY() - y, 2));
+                                    if (((dis) / this.getAltoSprite()) < JUGADOR_SEPARACIO_SPRITES_INTERACTUABLE) {
+                                        Puerta porta = (Puerta) actual.getDatos()[i][j];
+                                        actual = Globals.getInstance().getGame().map.getPantalles().get(porta.getTeleport().idEscenario); //MAPA NOU
+                                        actual.setEscenas(celdas);
+                                        resetZombies();
+                                    }
+
                                 }
-                            }
-                            else if(res==2)
-                            {
-                                double dis= Math.sqrt(Math.pow(jugador.getX()-x,2)+Math.pow(jugador.getY()-y,2));
-                                if(((dis)/this.getAltoSprite())<JUGADOR_SEPARACIO_SPRITES_INTERACTUABLE) {
-                                    Puerta porta = (Puerta) actual.getDatos()[i][j];
-                                    actual = Globals.getInstance().getGame().map.getPantalles().get(porta.getTeleport().idEscenario); //MAPA NOU
-                                    actual.setEscenas(celdas);
-                                    resetZombies();
-                                }
-
                             }
                         }
                     }
-                }
-                for (listIterator= zombies.listIterator(); listIterator.hasNext(); ) {
-                    Zombie sprite = listIterator.next();
-                    if (sprite.isCollision(x,y)) {
-                        listIterator.remove();
-                        ListIterator<ZombieMort> iterator= morts.listIterator();
-                        iterator.add(new ZombieMort(morts, this, x, y, bmpBlood));
-                        break;
+                    for (listIterator = zombies.listIterator(); listIterator.hasNext(); ) {
+                        Zombie sprite = listIterator.next();
+                        if (sprite.isCollision(x, y)) {
+                            listIterator.remove();
+                            ListIterator<ZombieMort> iterator = morts.listIterator();
+                            iterator.add(new ZombieMort(morts, this, x, y, bmpBlood));
+                            break;
+                        }
                     }
                 }
             }
+            return true;
         }
-        return true;
+        else{
+            Globals.getInstance().getGameActivity().getInventarioView().Touch(event,event.getX()-min,event.getY());
+            return true;
+        }
     }
     /*public void obtindreEscena(String id) {
         RetrofitAPI servei = Globals.getInstance().getServeiRetrofit();

@@ -11,9 +11,11 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.widget.Toast;
 
 import java.util.List;
 
+import projecte.dsa.com.world_of_eetac_android.Activities.GameActivity;
 import projecte.dsa.com.world_of_eetac_android.Mon.Globals;
 import projecte.dsa.com.world_of_eetac_android.Objectes.Objeto;
 import projecte.dsa.com.world_of_eetac_android.R;
@@ -354,6 +356,17 @@ public class InventarioView extends SurfaceView implements SurfaceHolder.Callbac
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
 
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        InventarioCallback.onItemMoved(0,0,false,getId());
+        return false;
+    }
+
+    public boolean Touch(MotionEvent event, float X, float Y){
+        InventarioCallback.onItemMoved(0,0,false,getId());
+        return false;
     }
 
     @SuppressLint("WrongCall")

@@ -29,6 +29,7 @@ import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 import java.util.logging.Handler;
@@ -60,7 +61,7 @@ public class GameActivity extends AppCompatActivity implements JoystickView.Joys
         jvHolder.setFormat(PixelFormat.TRANSPARENT);
 
         inventarioView=(InventarioView) findViewById(R.id.inventarioView);
-        inventarioView.setVisibility(View.INVISIBLE);
+        inventarioView.setVisibility(View.VISIBLE);
 
 
         //inventarioView.getHolder().setFixedSize((int)(this.getWindow().getDecorView().getWidth()*3/4),(int)(this.getWindow().getDecorView().getHeight()*3/4));
@@ -219,7 +220,7 @@ public class GameActivity extends AppCompatActivity implements JoystickView.Joys
 
     @Override
     public void onItemMoved(int posX, int posY, boolean moving, int source) {
-        //Toast.makeText(this,"X: "+xPercent+" Y: "+yPercent,Toast.LENGTH_SHORT).show();
+        Toast.makeText(this,"Me tocas",Toast.LENGTH_SHORT).show();
     }
 
     @Override
