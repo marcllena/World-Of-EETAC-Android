@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
     public void startGame(int eleccio) {
-        Partida game = new Partida(Globals.getInstance().getUser().getNickname(),eleccio);
+        Partida game = new Partida(Globals.getInstance().getUser().getNickname(),eleccio,1);
         RetrofitAPI servei = Globals.getInstance().getServeiRetrofit();
         Call<Partida> callPartida = servei.startGame(game);
         callPartida.enqueue(new Callback<Partida>() {
@@ -106,12 +106,12 @@ public class MainActivity extends AppCompatActivity {
                         startGame(eleccio);
                     }
                 })
-                .setNegativeButton("Laberint", new DialogInterface.OnClickListener() {
+                /*.setNegativeButton("Laberint", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         eleccio(1);
                         startGame(eleccio);
                     }
-                })
+                })*/
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show();
     }

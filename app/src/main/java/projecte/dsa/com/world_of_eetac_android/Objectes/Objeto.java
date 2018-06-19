@@ -6,11 +6,11 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 /**
  * Created by jordi on 23/02/2018.
  */
-/*@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 @JsonSubTypes({
         @JsonSubTypes.Type(value=ObjetoConsumible.class, name="consumible"),
         @JsonSubTypes.Type(value=ObjetoEquipable.class, name="equipable"),
-})*/
+})
 public class Objeto {
     private int id;
     private String nombre;
