@@ -189,14 +189,14 @@ public class GameActivity extends AppCompatActivity implements JoystickView.Joys
         progressBarSalut.setMax((int)max);
     }
 
-    public static void setRonda(int ronda)
+    public  void setRonda(int ronda)
     {
-        /*this.runOnUiThread(new Runnable() {
+        this.runOnUiThread(new Runnable() {
             public void run() {
                 textViewRonda.setText(String.valueOf(ronda));
             }
-        });*/
-        textViewRonda.setText(String.valueOf(ronda));
+        });
+
     }
 
     public static void setSalut(double val)

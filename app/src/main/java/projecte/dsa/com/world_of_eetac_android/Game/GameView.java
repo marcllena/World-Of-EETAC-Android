@@ -76,6 +76,7 @@ public class GameView extends SurfaceView{
     private boolean fin=false;
     private int numRonda=1;
     private Canvas canvas;
+    private GameActivity activity;
 
     public GameView(Context context) {
         super(context);
@@ -99,8 +100,10 @@ public class GameView extends SurfaceView{
                 //createSprites();
                 jugador=new Jugador(GameView.this,1,context);
                 //Posem el marcador de salut
-                GameActivity.setSalutMax(jugador.getSalut());
-                GameActivity.setSalut(jugador.getSalut());
+                activity = Globals.getInstance().getGameActivity();
+                activity.setSalutMax(jugador.getSalut());
+                activity.setSalut(jugador.getSalut());
+                activity.setRonda(numRonda);
                 //startRonda(1);//Falta obtindre el numero de ronda
                 createCeldas();
                 gameLoopThread.setRunning(true);
@@ -129,7 +132,7 @@ public class GameView extends SurfaceView{
         });
         bmpBlood = BitmapFactory.decodeResource(getResources(), R.drawable.blood1);
     }
-    public GameView(Context context, AttributeSet attrs) {
+    public GameView(Context context,AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
         gameLoopThread = new GameLoopThread(this);
@@ -150,9 +153,10 @@ public class GameView extends SurfaceView{
                 //createSprites();
                 jugador=new Jugador(GameView.this,1,context);
                 //Posem el marcador de salut
-                GameActivity.setSalutMax(jugador.getSalut());
-                GameActivity.setSalut(jugador.getSalut());
-                GameActivity.setRonda(numRonda);
+                activity = Globals.getInstance().getGameActivity();
+                activity.setSalutMax(jugador.getSalut());
+                activity.setSalut(jugador.getSalut());
+                activity.setRonda(numRonda);
                 startRonda(numRonda);
                 createCeldas();
                 gameLoopThread.setRunning(true);
@@ -414,12 +418,7 @@ public class GameView extends SurfaceView{
     }
     public void novaRonda(){
     numRonda++;
-        //Indiquem Ronda
-        Paint textPaint = new Paint();
-        textPaint.setARGB(200, 254, 0, 0);
-        textPaint.setTextAlign(Paint.Align.CENTER);
-        textPaint.setTextSize(80);
-        canvas.drawText("Ronda"+numRonda, canvas.getWidth()/2, canvas.getHeight()/2  , textPaint);
+    activity.setRonda(numRonda);
     startRonda(numRonda);
     }
 
