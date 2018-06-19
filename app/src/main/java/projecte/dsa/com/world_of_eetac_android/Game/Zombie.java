@@ -36,12 +36,12 @@ public class Zombie {
     private static final int LAG_DIREC= 0;
     private static final int MIN_SPRITES_SEPARACIO=3;//Entre el jugador i els zombies
     private static final int DETECCIO_OBS=20;//FPS en mode obstacle
-    private static final double DIVERGENCIA_OBS=0.9;//RANDOM AL REBOTAR
+    private static final double DIVERGENCIA_OBS=0.3;//RANDOM AL REBOTAR
     private static final int SPRITES_SEPARACIO_DANY=2;
     private static final double DANY_MINIM=1.5;
     private static final double DANY_MULTIPLIER=0.5;
     private static final int SALUT_MINIMA=20;
-    private static final int REINTENTS_RESPAWN=30;
+    private static final int REINTENTS_RESPAWN=100;
     private static final int TENDENCIA_OBJECTES=4;//Te en compte la velocitat dels zombies per veure si van a un objecte
     private int nivell;
     private double salut;
@@ -151,7 +151,7 @@ public class Zombie {
         {
             Random rnd = new Random();
             xSpeed = (int) (-(DIVERGENCIA_OBS + (1 - DIVERGENCIA_OBS)* rnd.nextDouble())*xSpeed);
-            ySpeed = (int) (-(DIVERGENCIA_OBS + (1 - DIVERGENCIA_OBS)* rnd.nextDouble())*xSpeed);
+            ySpeed = (int) (-(DIVERGENCIA_OBS + (1 - DIVERGENCIA_OBS)* rnd.nextDouble())*ySpeed);
             obstacle--;
         }
         else if(perseguir&&obstacle==0){
@@ -211,6 +211,18 @@ public class Zombie {
                 }
             }
         }*/
+    }
+
+    public void newRespawn(){
+        Random rnd = new Random();
+        for (int k = 0; k < REINTENTS_RESPAWN; k++) {
+            x = rnd.nextInt(gameView.getAnchoSurface() - width);
+            y = rnd.nextInt(gameView.getAltoSurface()- height);
+            int i = (y/gameView.getAltoSprite());
+            int j = (x/gameView.getAnchoSprite());
+            if(gameView.actual.getDatos()[i][j].getPisableZombie()==1&&MIN_SPRITES_SEPARACIO*gameView.getAnchoSprite()<Math.abs(x-gameView.getJugador().getX())&&MIN_SPRITES_SEPARACIO*gameView.getAltoSprite()<Math.abs(y-gameView.getJugador().getY()))
+                break;
+        }
     }
 }
 

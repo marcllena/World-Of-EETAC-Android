@@ -16,6 +16,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.PixelFormat;
+import android.os.Looper;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -25,8 +26,10 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
+import android.widget.TextView;
 
 import java.util.List;
+import java.util.logging.Handler;
 
 public class GameActivity extends AppCompatActivity implements JoystickView.JoystickListener,InventarioView.InventarioListener{
 
@@ -34,6 +37,7 @@ public class GameActivity extends AppCompatActivity implements JoystickView.Joys
     JoystickView joystickView;
     static ProgressBar progressBarSalut;
     InventarioView inventarioView;
+    static TextView textViewRonda;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +58,7 @@ public class GameActivity extends AppCompatActivity implements JoystickView.Joys
         jvHolder.setFormat(PixelFormat.TRANSPARENT);
 
         inventarioView=(InventarioView) findViewById(R.id.inventarioView);
-        //inventarioView.setVisibility(View.INVISIBLE);
+        inventarioView.setVisibility(View.INVISIBLE);
 
 
         //inventarioView.getHolder().setFixedSize((int)(this.getWindow().getDecorView().getWidth()*3/4),(int)(this.getWindow().getDecorView().getHeight()*3/4));
@@ -65,6 +69,7 @@ public class GameActivity extends AppCompatActivity implements JoystickView.Joys
         //inventarioView.startInventario();
 
         progressBarSalut=(ProgressBar) findViewById(R.id.progressBarSalut);
+        textViewRonda =(TextView) findViewById(R.id.textViewRonda);
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -182,6 +187,16 @@ public class GameActivity extends AppCompatActivity implements JoystickView.Joys
         progressBarSalut.setMinimumHeight(20);
         progressBarSalut.setVisibility(View.VISIBLE);
         progressBarSalut.setMax((int)max);
+    }
+
+    public static void setRonda(int ronda)
+    {
+        /*this.runOnUiThread(new Runnable() {
+            public void run() {
+                textViewRonda.setText(String.valueOf(ronda));
+            }
+        });*/
+        textViewRonda.setText(String.valueOf(ronda));
     }
 
     public static void setSalut(double val)

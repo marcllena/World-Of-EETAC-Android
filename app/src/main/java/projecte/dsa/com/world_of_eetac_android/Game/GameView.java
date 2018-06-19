@@ -20,6 +20,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.os.Looper;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -27,6 +29,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -35,6 +38,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.logging.Handler;
 
 public class GameView extends SurfaceView{
     private final Bitmap bmpBlood;
@@ -58,15 +62,20 @@ public class GameView extends SurfaceView{
     private static final int ZOMBIESRESPAWN_MULTIPLIER= 2;
     private static final int ZOMBIESRESPAWN_DELAY= 20000;//ms
     private static final int ZOMBIESRESPAWN_RATE=5000;
+    private static final int ZOMBIESRESPAWN_NUMERO=2;
     private static final int JUGADOR_DIRECCIOATAC=5;
     private static final int JUGADORMIN_SPRITES_SEPARACIO=2;
     private static final double JUGADOR_DANY_MINIM=5;
     private static final double JUGADOR_DANY_MULTIPLIER=1;
+    private static final double JUGADOR_SEPARACIO_SPRITES_INTERACTUABLE=2;
     private Jugador jugador;
     private Iterator<Zombie> iterator;
     private ListIterator<Zombie> listIterator=zombies.listIterator();
     //private ListIterator<TempSprite> listIteratorSang=temps.listIterator();
     private ListIterator<ZombieMort> listIteratorMorts=morts.listIterator();
+    private boolean fin=false;
+    private int numRonda=1;
+    private Canvas canvas;
 
     public GameView(Context context) {
         super(context);
@@ -76,6 +85,7 @@ public class GameView extends SurfaceView{
         //Fixem el Bitmap
         holder = getHolder();
 
+        //No s'executa aquesta funció
         holder.addCallback(new SurfaceHolder.Callback() {
             @Override
             public void surfaceCreated(SurfaceHolder holder) {
@@ -91,7 +101,7 @@ public class GameView extends SurfaceView{
                 //Posem el marcador de salut
                 GameActivity.setSalutMax(jugador.getSalut());
                 GameActivity.setSalut(jugador.getSalut());
-                startRonda(1);
+                //startRonda(1);//Falta obtindre el numero de ronda
                 createCeldas();
                 gameLoopThread.setRunning(true);
                 gameLoopThread.start();
@@ -142,7 +152,8 @@ public class GameView extends SurfaceView{
                 //Posem el marcador de salut
                 GameActivity.setSalutMax(jugador.getSalut());
                 GameActivity.setSalut(jugador.getSalut());
-                startRonda(1);
+                GameActivity.setRonda(numRonda);
+                startRonda(numRonda);
                 createCeldas();
                 gameLoopThread.setRunning(true);
                 gameLoopThread.start();
@@ -235,6 +246,7 @@ public class GameView extends SurfaceView{
 
     @Override
     protected void onDraw(Canvas canvas) {
+        this.canvas=canvas;
         //Mirem si ja hem rebut la escena
         if(actual!=null) {
             actual.onDraw(canvas, altoSprite, anchoSprite);
@@ -262,15 +274,22 @@ public class GameView extends SurfaceView{
                             int res =isCollision(i,j,x,y);
                             if(res==1)
                             {
-                                Cofre cofre= (Cofre) actual.getDatos()[i][j];
-                                cofre.setAbierto(true);
-                                break;
+                                double dis= Math.sqrt(Math.pow(jugador.getX()-x,2)+Math.pow(jugador.getY()-y,2));
+                                if(((dis)/this.getAltoSprite())<JUGADOR_SEPARACIO_SPRITES_INTERACTUABLE) {
+                                    Cofre cofre = (Cofre) actual.getDatos()[i][j];
+                                    cofre.setAbierto(true);
+                                    break;
+                                }
                             }
                             else if(res==2)
                             {
-                                Puerta porta = (Puerta) actual.getDatos()[i][j];
-                                actual = Globals.getInstance().getGame().map.getPantalles().get(porta.getTeleport().idEscenario); //MAPA NOU
-                                actual.setEscenas(celdas);
+                                double dis= Math.sqrt(Math.pow(jugador.getX()-x,2)+Math.pow(jugador.getY()-y,2));
+                                if(((dis)/this.getAltoSprite())<JUGADOR_SEPARACIO_SPRITES_INTERACTUABLE) {
+                                    Puerta porta = (Puerta) actual.getDatos()[i][j];
+                                    actual = Globals.getInstance().getGame().map.getPantalles().get(porta.getTeleport().idEscenario); //MAPA NOU
+                                    actual.setEscenas(celdas);
+                                    resetZombies();
+                                }
 
                             }
                         }
@@ -334,7 +353,10 @@ public class GameView extends SurfaceView{
         return -1;
     }
 
-    public void startRonda(final int numRonda){
+    public boolean startRonda(final int numRonda){
+        //GameActivity.setRonda(numRonda);
+        final int[] zombiesRespawn = {ZOMBIESRESPAWN_NUMERO};
+        fin = false;
         //Creem els primes zombies
         for (int i = 0; i < ZOMBIESMINIMS+ZOMBIESINICIALS_MULTIPLIER*numRonda; i++) {
             listIterator.add(new Zombie(this,(int)numRonda/5+1,context));
@@ -345,12 +367,21 @@ public class GameView extends SurfaceView{
         TimerTask timerTask = new TimerTask() {
             @Override
             public void run() {
-                for (int i = 0; i < ZOMBIESRESPAWN_MULTIPLIER*numRonda; i++) {
-                    listIterator.add(new Zombie(GameView.this,(int)numRonda/5+1,context));
+                zombiesRespawn[0]--;
+                if(zombiesRespawn[0]>0) {
+                    for (int i = 0; i < ZOMBIESRESPAWN_MULTIPLIER * numRonda; i++) {
+                        listIterator.add(new Zombie(GameView.this, (int) numRonda / 5 + 1, context));
+                    }
+                }
+                else{
+                    fin =true;
+                    novaRonda();
+                    timer.cancel();
                 }
             }
         };
         timer.schedule(timerTask,ZOMBIESRESPAWN_DELAY,ZOMBIESRESPAWN_RATE);
+        return fin;
     }
     public void atacar(){
         //Mirem cap on es dirigeix el jugador
@@ -373,6 +404,23 @@ public class GameView extends SurfaceView{
                 }
             }
         }
+    }
+    public void resetZombies(){
+        for (listIterator= zombies.listIterator(); listIterator.hasNext(); ) {
+            Zombie zombie = listIterator.next();
+            zombie.newRespawn();
+
+        }
+    }
+    public void novaRonda(){
+    numRonda++;
+        //Indiquem Ronda
+        Paint textPaint = new Paint();
+        textPaint.setARGB(200, 254, 0, 0);
+        textPaint.setTextAlign(Paint.Align.CENTER);
+        textPaint.setTextSize(80);
+        canvas.drawText("Ronda"+numRonda, canvas.getWidth()/2, canvas.getHeight()/2  , textPaint);
+    startRonda(numRonda);
     }
 
 }
