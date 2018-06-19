@@ -292,8 +292,13 @@ public class GameView extends SurfaceView{
                                 if(((dis)/this.getAltoSprite())<JUGADOR_SEPARACIO_SPRITES_INTERACTUABLE) {
                                     Cofre cofre = (Cofre) actual.getDatos()[i][j];
                                     cofre.setAbierto(true);
-                                    Globals.getInstance().getGameActivity().getInventarioView().onDrawCofre(cofre.getContenido(),-2,0,0);
-                                    Globals.getInstance().getGameActivity().getInventarioView().setVisibility(View.VISIBLE);
+                                    InventarioView iv=Globals.getInstance().getGameActivity().getInventarioView();
+
+                                    iv.setVisibility(View.VISIBLE);
+                                    iv.setupDimensions();
+                                    iv.cargarCeldas();
+                                    iv.onDrawCofre(cofre.getContenido(),-2,0,0);
+
                                     break;
                                 }
                             }

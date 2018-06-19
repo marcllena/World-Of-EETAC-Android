@@ -154,7 +154,7 @@ public class InventarioView extends SurfaceView implements SurfaceHolder.Callbac
         holder.unlockCanvasAndPost(canvas);
     }
 
-    private void setupDimensions()
+    public void setupDimensions()
     {
         width=getWidth();
         height=getHeight();
@@ -182,7 +182,7 @@ public class InventarioView extends SurfaceView implements SurfaceHolder.Callbac
 
     }
 
-    private void cargarCeldas(){
+    public void cargarCeldas(){
         celdas[0]= BitmapFactory.decodeResource(getResources(), R.drawable.celda_inventario);
         celdas[1]= BitmapFactory.decodeResource(getResources(), R.drawable.celda_inventario_cabeza);
         celdas[2]= BitmapFactory.decodeResource(getResources(), R.drawable.celda_inventario_pecho);
@@ -233,7 +233,7 @@ public class InventarioView extends SurfaceView implements SurfaceHolder.Callbac
 
     }
 
-    private void onDraw(int posItem,int posX,int posY, Objeto[] objetos){
+    public void onDraw(int posItem,int posX,int posY/*, Objeto[] objetos*/){
         Canvas canvas=holder.lockCanvas();
         drawFondo(canvas,false);
         drawInventario(canvas,posItem,posX,posY/*,objetos*/);
@@ -259,11 +259,13 @@ public class InventarioView extends SurfaceView implements SurfaceHolder.Callbac
             String nombreResource = o.getNombre();//"hacha_bombero";
             int idObjeto = getResources().getIdentifier(nombreResource, "drawable", "projecte.dsa.com.world_of_eetac_android");
             Bitmap objeto = BitmapFactory.decodeResource(getResources(), idObjeto);
-            Bitmap simbol = Bitmap.createScaledBitmap(objeto, (int) (2 * anchoObjeto), (int) (2 * altoObjeto), true);
-            if (mov) {
-                canvas.drawBitmap(simbol, posX - anchoObjeto, posY - altoObjeto, null);
-            } else {
-                canvas.drawBitmap(simbol, 5 * (int) anchoCelda + tamañoBordes + initwidth + tamañoSeparador + anchoCelda * 1 / 5, tamañoTop + initHeight + (altoBordes - 2 * altoCelda) / 2 + altoCelda * 1 / 5, null);
+            if (objeto!=null) {
+                Bitmap simbol = Bitmap.createScaledBitmap(objeto, (int) (2 * anchoObjeto), (int) (2 * altoObjeto), true);
+                if (mov) {
+                    canvas.drawBitmap(simbol, posX - anchoObjeto, posY - altoObjeto, null);
+                } else {
+                    canvas.drawBitmap(simbol, 5 * (int) anchoCelda + tamañoBordes + initwidth + tamañoSeparador + anchoCelda * 1 / 5, tamañoTop + initHeight + (altoBordes - 2 * altoCelda) / 2 + altoCelda * 1 / 5, null);
+                }
             }
         }
 
@@ -295,8 +297,7 @@ public class InventarioView extends SurfaceView implements SurfaceHolder.Callbac
             simbol = Bitmap.createScaledBitmap(separador, (int) (tamañoSeparador * 1.1 + (int) (2.1 * anchoCelda)), (int) altoBordes, true);
             canvas.drawBitmap(simbol, 5 * (int) anchoCelda + tamañoBordes + initwidth, tamañoTop + initHeight, null);
 
-            simbol = Bitmap.createScaledBitmap(right, (int) tamañoBordes, (int) altoBordes, true);
-            canvas.drawBitmap(simbol, width - tamañoBordes + initwidth, tamañoTop + initHeight, null);
+
 
             simbol = Bitmap.createScaledBitmap(celdas[1], (int) anchoCelda, (int) altoCelda, true);
             canvas.drawBitmap(simbol, (int) (5 * anchoCelda + tamañoBordes + tamañoSeparador) + initwidth, tamañoTop + initHeight, null);
@@ -313,8 +314,6 @@ public class InventarioView extends SurfaceView implements SurfaceHolder.Callbac
             simbol = Bitmap.createScaledBitmap(celdas[6], (int) anchoCelda, (int) altoCelda, true);
             canvas.drawBitmap(simbol, (int) (6 * anchoCelda + tamañoBordes + tamañoSeparador) + initwidth, tamañoTop + 2 * altoCelda + initHeight, null);
 
-            simbol = Bitmap.createScaledBitmap(celdas[7], (int) anchoCelda / 2, (int) altoCelda / 2, true);
-            canvas.drawBitmap(simbol, (int) (6.5 * anchoCelda + tamañoBordes + tamañoSeparador) + initwidth, tamañoTop + 3 * altoCelda + initHeight, null);
 
         }
         else{
@@ -325,6 +324,12 @@ public class InventarioView extends SurfaceView implements SurfaceHolder.Callbac
             canvas.drawBitmap(simbol,5*(int)anchoCelda+tamañoBordes+initwidth+tamañoSeparador,tamañoTop+initHeight+(altoBordes-2*altoCelda)/2,null);
 
         }
+        simbol = Bitmap.createScaledBitmap(right, (int) tamañoBordes, (int) altoBordes, true);
+        canvas.drawBitmap(simbol, width - tamañoBordes + initwidth, tamañoTop + initHeight, null);
+
+        simbol = Bitmap.createScaledBitmap(celdas[7], (int) anchoCelda / 2, (int) altoCelda / 2, true);
+        canvas.drawBitmap(simbol, (int) (6.5 * anchoCelda + tamañoBordes + tamañoSeparador) + initwidth, tamañoTop + 3 * altoCelda + initHeight, null);
+
 
         //this.getHolder().unlockCanvasAndPost(canvas);
 
@@ -401,7 +406,7 @@ public class InventarioView extends SurfaceView implements SurfaceHolder.Callbac
                 //InventarioCallback.onItemReleased(posX);
                 }
                 else{
-                    onDraw(-1,0,0,Globals.getInstance().getObjetos());
+                    onDraw(-1,0,0);
                 }
             }
         }

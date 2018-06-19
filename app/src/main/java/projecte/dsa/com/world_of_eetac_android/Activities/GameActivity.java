@@ -12,6 +12,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -81,6 +82,7 @@ public class GameActivity extends AppCompatActivity implements JoystickView.Joys
         });
         FloatingActionButton fab2 = findViewById(R.id.fab2);
         fab2.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("WrongCall")
             @Override
             public void onClick(View view) {
                 if(inventarioView.getVisibility()==View.VISIBLE) {
@@ -92,6 +94,9 @@ public class GameActivity extends AppCompatActivity implements JoystickView.Joys
                 else{
                     gameView.setVisibility(View.INVISIBLE);
                     inventarioView.setVisibility(View.VISIBLE);
+                    inventarioView.setupDimensions();
+                    inventarioView.cargarCeldas();
+                    inventarioView.onDraw(-1,0,0);
 
                 }
             }
