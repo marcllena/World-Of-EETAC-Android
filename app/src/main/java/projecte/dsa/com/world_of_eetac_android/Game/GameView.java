@@ -373,7 +373,7 @@ public class GameView extends SurfaceView{
         fin = false;
         //Creem els primes zombies
         for (int i = 0; i < ZOMBIESMINIMS+ZOMBIESINICIALS_MULTIPLIER*numRonda; i++) {
-            listIterator.add(new Zombie(this,(int)numRonda/5+1,context));
+            listIterator.add(new Zombie(this,(int)numRonda/3+1,context));
         }
 
         //Creem els de respawn
@@ -384,13 +384,14 @@ public class GameView extends SurfaceView{
                 zombiesRespawn[0]--;
                 if(zombiesRespawn[0]>0) {
                     for (int i = 0; i < ZOMBIESRESPAWN_MULTIPLIER * numRonda; i++) {
-                        listIterator.add(new Zombie(GameView.this, (int) numRonda / 5 + 1, context));
+                        listIterator.add(new Zombie(GameView.this, (int) numRonda / 3 + 1, context));
                     }
                 }
                 else{
                     fin =true;
                     novaRonda();
                     timer.cancel();
+                    timer.purge();
                 }
             }
         };

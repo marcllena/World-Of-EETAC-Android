@@ -50,6 +50,10 @@ public class Zombie {
 
     public Zombie(GameView gameView,int nivell, Context context) {
         this.gameView=gameView;
+        if(nivell>5)
+        {
+            nivell=5;
+        }
         this.nivell=nivell;
         int id = context.getResources().getIdentifier("zombie"+nivell, "drawable", context.getPackageName());
         bmp = BitmapFactory.decodeResource(context.getResources(),id);
