@@ -2,9 +2,6 @@ package projecte.dsa.com.world_of_eetac_android.Mon;
 
 import java.util.List;
 
-import projecte.dsa.com.world_of_eetac_android.Game.Jugador;
-import projecte.dsa.com.world_of_eetac_android.Mon.Escena;
-import projecte.dsa.com.world_of_eetac_android.Mon.Mapa;
 
 //Server s'encarrega de gestionar l'inici i el final de la partida.
 public class Partida {
@@ -23,12 +20,13 @@ public class Partida {
         jugador=jug;
         mapaFull=mapa;
     }
-    public Partida(){}
-    public Partida(String jug,int mapSelection){
+    public Partida(String jug,int mapSelection,int proffSelection){
 
         jugador=jug;
         this.mapSelection=mapSelection;
+        this.proffSelection = proffSelection;
     }
+    public Partida(){}
     public Partida(int mapSelection,int eleccio, String jugador,int ronda, int enemics, long score)
     {
         this.proffSelection = eleccio;
@@ -39,3 +37,4 @@ public class Partida {
         this.score = score;
     }
 }
+

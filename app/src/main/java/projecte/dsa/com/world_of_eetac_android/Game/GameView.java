@@ -50,7 +50,7 @@ public class GameView extends SurfaceView{
     //private List<Sprite> sprites = new ArrayList<Sprite>();
     private List<Zombie> zombies = new ArrayList<Zombie>();
     private long lastClick;
-    private Bitmap[] celdas=new Bitmap[9];
+    private Bitmap[] celdas=new Bitmap[20];
     Escena actual;
     private int anchoSurface;
     private int altoSurface;
@@ -243,6 +243,16 @@ public class GameView extends SurfaceView{
         celdas[5]=BitmapFactory.decodeResource(getResources(), R.drawable.wall);
         celdas[6]=BitmapFactory.decodeResource(getResources(), R.drawable.forat);
         celdas[7]=BitmapFactory.decodeResource(getResources(), R.drawable.window);
+        celdas[8]=BitmapFactory.decodeResource(getResources(), R.drawable.helmet);
+        celdas[9]=BitmapFactory.decodeResource(getResources(), R.drawable.chest);
+        celdas[10]=BitmapFactory.decodeResource(getResources(), R.drawable.legs);
+        celdas[11]=BitmapFactory.decodeResource(getResources(), R.drawable.boots);
+        celdas[12]=BitmapFactory.decodeResource(getResources(), R.drawable.bow);
+        celdas[13]=BitmapFactory.decodeResource(getResources(), R.drawable.sword);
+        celdas[14]=BitmapFactory.decodeResource(getResources(), R.drawable.magestick);
+        celdas[15]=BitmapFactory.decodeResource(getResources(), R.drawable.pot);
+
+
 
     }
 
