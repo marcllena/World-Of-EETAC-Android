@@ -451,7 +451,7 @@ public class GameView extends SurfaceView{
     }
 
     public void acabarPartida(){
-        activity.endGame();
+        //activity.endGame();
         acabada=true;
 
        /*Timer timer = new Timer();
