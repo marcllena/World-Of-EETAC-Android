@@ -132,7 +132,7 @@ public class GameActivity extends AppCompatActivity implements JoystickView.Joys
                 } else if (codi == 204) {
                     resultat = -1;
                 }
-                if (resultat == -1) {
+                /*if (resultat == -1) {
                     AlertDialog.Builder dlgAlert = new AlertDialog.Builder(GameActivity.this);
                     dlgAlert.setMessage("Error al continuar la partida");
                     dlgAlert.setTitle("Error en les dades");
@@ -143,8 +143,8 @@ public class GameActivity extends AppCompatActivity implements JoystickView.Joys
                     });
                     dlgAlert.setCancelable(true);
                     dlgAlert.create().show();
-                }
-            }
+                }*/
+                            }
 
             @Override
             public void onFailure(Call<Partida> call, Throwable t) {
