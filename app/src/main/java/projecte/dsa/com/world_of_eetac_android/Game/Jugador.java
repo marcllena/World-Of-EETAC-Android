@@ -10,6 +10,7 @@ import android.graphics.Rect;
 import java.util.Random;
 
 import projecte.dsa.com.world_of_eetac_android.Activities.GameActivity;
+import projecte.dsa.com.world_of_eetac_android.Mon.Globals;
 
 
 public class Jugador{
@@ -27,6 +28,8 @@ public class Jugador{
     private GameView gameView;
     private Bitmap bmp;
     private int currentFrame;
+    private int attack;
+    private int defense;
 
     private int nivell;
     private double salut;
@@ -35,6 +38,8 @@ public class Jugador{
 
     public Jugador(GameView gameView,int nivell, Context context) {
         this.gameView=gameView;
+        this.attack= Globals.getInstance().getGame().getPlayer().getAttack();
+        this.defense= Globals.getInstance().getGame().getPlayer().getDefense();
         this.nivell=nivell;
         int id = context.getResources().getIdentifier("bad"+nivell, "drawable", context.getPackageName());
         bmp = BitmapFactory.decodeResource(context.getResources(),id);
@@ -92,6 +97,22 @@ public class Jugador{
     }
     public int getHeight() {
         return bmp.getHeight();
+    }
+
+    public int getAttack() {
+        return attack;
+    }
+
+    public void setAttack(int attack) {
+        this.attack = attack;
+    }
+
+    public int getDefense() {
+        return defense;
+    }
+
+    public void setDefense(int defense) {
+        this.defense = defense;
     }
 
     private void update() {
@@ -156,6 +177,7 @@ public class Jugador{
             textPaint.setTextAlign(Paint.Align.CENTER);
             textPaint.setTextSize(100);
             canvas.drawText("GAME OVER", canvas.getWidth()/2, canvas.getHeight()/2  , textPaint);
+            gameView.acabarPartida();
         }
     }
     public void setMoviment(float xPercent, float yPercent){

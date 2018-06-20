@@ -442,6 +442,7 @@ public class InventarioView extends SurfaceView implements SurfaceHolder.Callbac
                     if (((event.getX() - px > exitX) && (event.getX() - px < (exitX + 0.5 * anchoCelda))) && (event.getY() > exitY) && ((event.getY() < (exitY + 0.5 * altoCelda)))) {
                         InventarioCallback.exitInventario(getId());
                         findViewById(getId()).setVisibility(View.INVISIBLE);
+                        return true;
                     }
                     posX = (int) ((event.getX() - startInventarioWidht-px) / anchoCelda);
                     posY = (int) ((event.getY() - startInventarioHeight) / altoCelda);
