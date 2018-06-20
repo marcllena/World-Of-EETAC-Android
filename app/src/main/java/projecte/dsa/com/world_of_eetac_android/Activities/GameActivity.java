@@ -93,6 +93,8 @@ public class GameActivity extends AppCompatActivity implements JoystickView.Joys
                 }
                 else{
                     //gameView.setVisibility(View.INVISIBLE);
+                    inventarioView.setupDimensions();
+                    inventarioView.cargarCeldas();
                     inventarioView.setVisibility(View.VISIBLE);
                     inventarioView.setupDimensions();
                     inventarioView.cargarCeldas();
@@ -227,31 +229,62 @@ public class GameActivity extends AppCompatActivity implements JoystickView.Joys
 
     @SuppressLint("WrongCall")
     @Override
-    public void onItemReleased(int posX, int posY,int itemPos, int source) {
+    public void onItemReleased(int ItemReleased,int itemPos,boolean c, int source) {
         Jugador j=Globals.getInstance().getGame().player;
-        if(!inventarioView.isC()) {
-            if(posX>0) {
-                if (j.inventario[posX + posY] == null)//comparar si posX+posY esta ocupado en el inventario
+        if(!c) {
+            Objeto o;
+            if(ItemReleased>0) {
+                if (j.inventario[ItemReleased] == null)//comparar si posX+posY esta ocupado en el inventario
                 {
-                    j.inventario[posX + posY] = j.inventario[itemPos];
+                    j.inventario[ItemReleased] = j.inventario[itemPos];
                     j.inventario[itemPos] = null;
                 } else//si lo esta intercambiar los dos objetos
                 {
-                    Objeto o = Globals.getInstance().getGame().player.inventario[posX + posY];
-                    Globals.getInstance().getGame().player.inventario[posX + posY] = Globals.getInstance().getObjetos()[itemPos];
-                    Globals.getInstance().getGame().player.inventario[itemPos] = o;
+                    o = j.inventario[ItemReleased];
+                    j.inventario[ItemReleased] = j.inventario[itemPos];
+                    j.inventario[itemPos] = o;
                 }
                 inventarioView.onDraw(-2,0,0);
             }
-            else{
+            else{//si es negativo posX, es que lo intenta equipar
+                switch(ItemReleased){
+                    case -10:o=j.inventario[itemPos];
+                        j.equipo[itemPos]=j.equipo[0];
+                        j.equipo[0]=o;
+                        break;
+                    case -20:o=j.inventario[itemPos];
+                        j.equipo[itemPos]=j.equipo[1];
+                        j.equipo[1]=o;
+                        break;
+                    case -11:
+                        o=j.inventario[itemPos];
+                        j.equipo[itemPos]=j.equipo[2];
+                        j.equipo[2]=o;
+                        break;
+                    case -21:
+                        o=j.inventario[itemPos];
+                        j.equipo[itemPos]=j.equipo[3];
+                        j.equipo[3]=o;
+                        break;
+                    case -12:o=j.inventario[itemPos];
+                        j.equipo[itemPos]=j.equipo[4];
+                        j.equipo[4]=o;
+                        break;
+                    case -22:
+                        o=j.inventario[itemPos];
+                        j.equipo[itemPos]=j.equipo[5];
+                        j.equipo[5]=o;
+                        break;
+                }
+                inventarioView.onDraw(-2,0,0);
 
             }
-            //si es negativo posX, es que lo intenta equipar
+
             //comprobar que se puede equipar en ese hueco
             //intercambiar los items
         }
         else{
-            if(posX==-1)//lo sueltas en el cofre
+            if(ItemReleased==-1)//lo sueltas en el cofre
             {
                 Objeto o=inventarioView.getCofre().getContenido().get(0);
                 inventarioView.getCofre().getContenido().remove(0);
@@ -261,8 +294,8 @@ public class GameActivity extends AppCompatActivity implements JoystickView.Joys
             }
             else//lo sueltas en el inventario
                 {
-                Objeto o=j.inventario[posX];
-                j.inventario[posX]=inventarioView.getCofre().getContenido().remove(0);
+                Objeto o=j.inventario[ItemReleased];
+                j.inventario[ItemReleased]=inventarioView.getCofre().getContenido().remove(0);
                 inventarioView.getCofre().getContenido().add(0,o);
             }
             inventarioView.onDrawCofre(inventarioView.getCofre(),-2,0,0);
