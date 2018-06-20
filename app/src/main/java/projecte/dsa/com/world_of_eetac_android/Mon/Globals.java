@@ -28,6 +28,16 @@ public class Globals {
     RetrofitAPI serveiRetrofit;
     List<Usuario> usuaris;
     Partida game;
+
+    public Jugador getPlayer() {
+        return player;
+    }
+
+    public void setPlayer(Jugador player) {
+        this.player = player;
+    }
+
+    Jugador player;
     GameActivity gameActivity;
     int usuariSeleccionat=-1;
     public Partida getGame() {

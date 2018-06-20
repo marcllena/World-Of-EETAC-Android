@@ -211,8 +211,8 @@ public class InventarioView extends SurfaceView implements SurfaceHolder.Callbac
 
 
     private void drawInventario(Canvas canvas, int posItem, int posX, int posY/*, Objeto[] objetos*/){
-        Objeto[] objetos=Globals.getInstance().getGame().player.inventario;
-        Objeto[] equipo=Globals.getInstance().getGame().player.equipo;
+        Objeto[] objetos=Globals.getInstance().getPlayer().inventario;
+        Objeto[] equipo=Globals.getInstance().getPlayer().equipo;
         if(objetos!=null) {
             if (getHolder().getSurface().isValid()) {
                 //Canvas canvas = this.getHolder().lockCanvas();
@@ -265,6 +265,7 @@ public class InventarioView extends SurfaceView implements SurfaceHolder.Callbac
 
     public void onDraw(int posItem,int posX,int posY/*, Objeto[] objetos*/){
         c=false;
+        cofre=null;
         Canvas canvas=holder.lockCanvas();
         drawFondo(canvas);
         drawInventario(canvas,posItem,posX,posY/*,objetos*/);
@@ -273,17 +274,17 @@ public class InventarioView extends SurfaceView implements SurfaceHolder.Callbac
 
     public void onDrawCofre(Cofre cof,int posItem,int posX,int posY)//si posItem -1 es que es l'item del cofre
     {
-        cofre=cof;
-        c=true;
-        Canvas canvas=holder.lockCanvas();
-        drawFondo(canvas);
-        drawInventario(canvas,posItem,posX,posY);
-        if(posItem==-1)
-            DrawCofreItem(canvas,true,cofre.getContenido().get(0),posX,posY);
-        else
-            DrawCofreItem(canvas,false,cof.getContenido().get(0),posX,posY);
+            cofre = cof;
+            c = true;
+            Canvas canvas = holder.lockCanvas();
+            drawFondo(canvas);
+            drawInventario(canvas, posItem, posX, posY);
+            if (posItem == -1)
+                DrawCofreItem(canvas, true, cofre.getContenido().get(0), posX, posY);
+            else
+                DrawCofreItem(canvas, false, cof.getContenido().get(0), posX, posY);
 
-        holder.unlockCanvasAndPost(canvas);
+            holder.unlockCanvasAndPost(canvas);
 
     }
 
@@ -405,7 +406,7 @@ public class InventarioView extends SurfaceView implements SurfaceHolder.Callbac
         int posX = 0;
         int posY = 0;
         int releasedItem;
-        if(c==false) {
+        if(cofre==null) {
             if (event.getAction() != event.ACTION_UP) {
                 if (event.getAction() == event.ACTION_DOWN) {
                     if (((event.getX() - px > exitX) && (event.getX() - px < (exitX + 0.5 * anchoCelda))) && (event.getY() > exitY) && ((event.getY() < (exitY + 0.5 * altoCelda)))) {
@@ -443,7 +444,7 @@ public class InventarioView extends SurfaceView implements SurfaceHolder.Callbac
                     }
                 }
                 if(releasedItem==-2){
-                    onDrawCofre(cofre,-2,0,0);
+                    onDraw(-2,0,0);
                 }
                 else{
                     InventarioCallback.onItemReleased(releasedItem,movingItem,false,getId());

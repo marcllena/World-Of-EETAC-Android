@@ -20,6 +20,7 @@ import java.util.List;
 
 import projecte.dsa.com.world_of_eetac_android.ListAdapters.UsuarisListArrayAdapter;
 import projecte.dsa.com.world_of_eetac_android.Mon.Globals;
+import projecte.dsa.com.world_of_eetac_android.Mon.Jugador;
 import projecte.dsa.com.world_of_eetac_android.Mon.Partida;
 import projecte.dsa.com.world_of_eetac_android.Mon.Usuario;
 import projecte.dsa.com.world_of_eetac_android.R;
@@ -64,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
                     resultat=0;
                     Partida game = (Partida) resposta.body();
                     Globals.getInstance().setGame(game);
+                    Globals.getInstance().setPlayer(new Jugador(Globals.getInstance().getUser().getNickname(),Globals.getInstance().getUser().getProfession()));
                     Intent intent = new Intent(getApplicationContext(), GameActivity.class);
                     startActivity(intent);
                 } else if (codi == 204) {

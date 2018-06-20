@@ -38,8 +38,8 @@ public class Jugador{
 
     public Jugador(GameView gameView,int nivell, Context context) {
         this.gameView=gameView;
-        this.attack= Globals.getInstance().getGame().getPlayer().getAttack();
-        this.defense= Globals.getInstance().getGame().getPlayer().getDefense();
+        this.attack= Globals.getInstance().getPlayer().getAttack();
+        this.defense= Globals.getInstance().getPlayer().getDefense();
         this.nivell=nivell;
         int id = context.getResources().getIdentifier("bad"+nivell, "drawable", context.getPackageName());
         bmp = BitmapFactory.decodeResource(context.getResources(),id);

@@ -233,8 +233,8 @@ public class GameActivity extends AppCompatActivity implements JoystickView.Joys
     @SuppressLint("WrongCall")
     @Override
     public void onItemReleased(int ItemReleased,int itemPos,boolean c, int source) {
-        Jugador j=Globals.getInstance().getGame().player;
-        if(!c) {
+        Jugador j=Globals.getInstance().getPlayer();
+        if(Globals.getInstance().getGameActivity().getInventarioView().getCofre()==null) {
             Objeto o;
             if(ItemReleased>0) {
                 if (j.inventario[ItemReleased] == null)//comparar si posX+posY esta ocupado en el inventario
