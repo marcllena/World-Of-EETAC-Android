@@ -242,6 +242,12 @@ public class InventarioView extends SurfaceView implements SurfaceHolder.Callbac
                             nombreResource = equipo[i+2*j].getNombre();
                             idObjeto = getResources().getIdentifier(nombreResource, "drawable", "projecte.dsa.com.world_of_eetac_android");
                             objeto = BitmapFactory.decodeResource(getResources(), idObjeto);
+                            simbol = Bitmap.createScaledBitmap(objeto, (int) anchoObjeto, (int) altoObjeto, true);
+                            if ((-(int)(i/10) - j * 2) == posItem) {
+                                canvas.drawBitmap(simbol, posX - anchoObjeto / 2, posY - altoObjeto / 2, null);
+                            } else {
+                                canvas.drawBitmap(simbol, ((5+i) * anchoCelda + tamañoBordes + tamañoSeparador) + initwidth + anchoCelda / 10, tamañoTop + (j * altoCelda) + initHeight + altoCelda / 10, null);
+                            }
                         }
                     }
 
