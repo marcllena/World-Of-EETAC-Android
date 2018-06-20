@@ -212,6 +212,7 @@ public class InventarioView extends SurfaceView implements SurfaceHolder.Callbac
 
     private void drawInventario(Canvas canvas, int posItem, int posX, int posY/*, Objeto[] objetos*/){
         Objeto[] objetos=Globals.getInstance().getGame().player.inventario;
+        Objeto[] equipo=Globals.getInstance().getGame().player.equipo;
         if(objetos!=null) {
             if (getHolder().getSurface().isValid()) {
                 //Canvas canvas = this.getHolder().lockCanvas();
@@ -235,6 +236,19 @@ public class InventarioView extends SurfaceView implements SurfaceHolder.Callbac
                         }
                     }
                 }
+                for (int j=0;j<3;j++){
+                    for(int i=0;i<2;i++){
+                        if (equipo[i+j*2]!=null){
+                            nombreResource = equipo[i+2*j].getNombre();
+                            idObjeto = getResources().getIdentifier(nombreResource, "drawable", "projecte.dsa.com.world_of_eetac_android");
+                            objeto = BitmapFactory.decodeResource(getResources(), idObjeto);
+                        }
+                    }
+
+                }
+
+
+
 
             }
         }
@@ -403,18 +417,7 @@ public class InventarioView extends SurfaceView implements SurfaceHolder.Callbac
                         }
                     }
                 }
-
-                //InventarioCallback.onItemMoved(posX,posY,moving,getId());
-                Canvas canvas = holder.lockCanvas();
-                if (canvas != null) {
-                    //if(posX<=4) {
-                    drawFondo(canvas);
-
-
-                    drawInventario(canvas, movingItem, (int) event.getX(), (int) event.getY()/*, Globals.getInstance().getObjetos()*/);
-                    holder.unlockCanvasAndPost(canvas);
-                    //}
-                }
+                onDraw(movingItem,(int)(event.getX()-px),(int)(event.getY()));
 
             } else {
                 posX = (int) ((event.getX() - startInventarioWidht) / anchoCelda);

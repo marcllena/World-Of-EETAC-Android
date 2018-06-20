@@ -17,6 +17,8 @@ public class Jugador {
     public int defense;
     public int magicAttack;
     @JsonIgnore
+    public Objeto[] equipo=new Objeto[6];
+    @JsonIgnore
     public Objeto[] inventario = new Objeto[15];
     public Jugador(String nick, int profession){
         this.nickname = nick;

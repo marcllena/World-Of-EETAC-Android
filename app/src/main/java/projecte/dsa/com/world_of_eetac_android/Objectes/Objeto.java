@@ -17,6 +17,16 @@ public class Objeto {
     private String descripcion;
     private int tipo;
 
+    public int getStatUpgrader() {
+        return statUpgrader;
+    }
+
+    public void setStatUpgrader(int statUpgrader) {
+        this.statUpgrader = statUpgrader;
+    }
+
+    private int statUpgrader;
+
     public int getID(){
         return this.id;
     }
@@ -30,12 +40,13 @@ public class Objeto {
         return this.tipo;
     } //Arma, pocion, etc
 
-    public Objeto(int id,String nombre, String descripcion, int tipo)
+    public Objeto(int id,String nombre, String descripcion, int tipo, int statUpgrader)
     {
         this.id=id;
         this.nombre=nombre;
         this.descripcion=descripcion;
         this.tipo=tipo;
+        this.statUpgrader = statUpgrader;
     }
     /*public Objeto(String id,String nombre, String descripcion, String tipo){
         this.id=Integer.parseInt(id);
