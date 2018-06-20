@@ -390,9 +390,18 @@ public class InventarioView extends SurfaceView implements SurfaceHolder.Callbac
                         InventarioCallback.exitInventario(getId());
                         findViewById(getId()).setVisibility(View.INVISIBLE);
                     }
-                    posX = (int) ((event.getX() - startInventarioWidht) / anchoCelda);
+                    posX = (int) ((event.getX() - startInventarioWidht-px) / anchoCelda);
                     posY = (int) ((event.getY() - startInventarioHeight) / altoCelda);
-                    movingItem = (posX + 5 * posY);
+                    if((posX>0)&&(posY>0)&&(posY<2)) {
+                        if ((posX < 4))
+                            movingItem = (posX + 5 * posY);
+                        else{
+                            posX = (int) -((event.getX() - 5 * (int) anchoCelda -startInventarioWidht-tamañoSeparador-px) / (anchoCelda))-1;
+                            posY=(int)((event.getY()-(tamañoTop+initHeight+(altoBordes-2*altoCelda)))/(altoCelda));
+                            if((posX<0)&&(posX>=-2)&&(posY>0)&&(posY<2))
+                                movingItem=10*posX-posY;
+                        }
+                    }
                 }
 
                 //InventarioCallback.onItemMoved(posX,posY,moving,getId());
@@ -447,17 +456,24 @@ public class InventarioView extends SurfaceView implements SurfaceHolder.Callbac
                 onDrawCofre(cofre,movingItem,(int)(event.getX()-px),(int)(event.getY()));
 
             } else {
-                posX = (int) ((event.getX() - startInventarioWidht) / anchoCelda);
+                posX = (int) ((event.getX() - startInventarioWidht-px) / anchoCelda);
                 posY = (int) ((event.getY() - startInventarioHeight) / altoCelda);
-                if (posX > 0 || posY > 0 || posY < 2) {
-                    if (event.getX() > (tamañoBordes + 5 * anchoCelda + tamañoSeparador)) {
-                        //InventarioCallback.onItemReleased(posX,posY,movingItem,getId());
-
-                        posX = -((int) ((event.getX() - (tamañoBordes + 5 * anchoCelda + tamañoSeparador)) / anchoCelda) - 1);
+                releasedItem=-2;
+                if((posX>0)&&(posY>0)&&(posY<2)) {
+                    if ((posX < 4))
+                        releasedItem = (posX + 5 * posY);
+                    else{
+                        posX = (int) ((event.getX() - 5 * (int) anchoCelda -startInventarioWidht-tamañoSeparador-px) / (2*anchoCelda));
+                        posY=(int)((event.getY()-(tamañoTop+initHeight+(altoBordes-2*altoCelda)/2))/(2*altoCelda));
+                        if((posX==0)&&(posY==0))
+                            releasedItem=-1;
                     }
-                    //InventarioCallback.onItemReleased(posX);
-                } else {
-                    onDraw(-1, 0, 0);
+                }
+                if(releasedItem==-2){
+                    onDrawCofre(cofre,-2,0,0);
+                }
+                else{
+                    InventarioCallback.onItemReleased(releasedItem,0,movingItem,getId());
                 }
             }
 
@@ -520,6 +536,22 @@ public class InventarioView extends SurfaceView implements SurfaceHolder.Callbac
             }
         }
         return true;
+    }
+
+    public boolean isC() {
+        return c;
+    }
+
+    public void setC(boolean c) {
+        this.c = c;
+    }
+
+    public Cofre getCofre() {
+        return cofre;
+    }
+
+    public void setCofre(Cofre cofre) {
+        this.cofre = cofre;
     }
 
 

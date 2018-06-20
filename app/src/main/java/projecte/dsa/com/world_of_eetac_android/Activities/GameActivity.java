@@ -1,10 +1,8 @@
 package projecte.dsa.com.world_of_eetac_android.Activities;
 
 import projecte.dsa.com.world_of_eetac_android.Game.*;
-import projecte.dsa.com.world_of_eetac_android.Mon.Escena;
-import projecte.dsa.com.world_of_eetac_android.Mon.Globals;
-import projecte.dsa.com.world_of_eetac_android.Mon.Partida;
-import projecte.dsa.com.world_of_eetac_android.Mon.Usuario;
+import projecte.dsa.com.world_of_eetac_android.Mon.*;
+import projecte.dsa.com.world_of_eetac_android.Mon.Jugador;
 import projecte.dsa.com.world_of_eetac_android.Objectes.Objeto;
 import projecte.dsa.com.world_of_eetac_android.R;
 import projecte.dsa.com.world_of_eetac_android.Services.RetrofitAPI;
@@ -18,6 +16,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.Looper;
+import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -223,21 +222,49 @@ public class GameActivity extends AppCompatActivity implements JoystickView.Joys
         Toast.makeText(this,"Me tocas",Toast.LENGTH_SHORT).show();
     }
 
+    @SuppressLint("WrongCall")
     @Override
     public void onItemReleased(int posX, int posY,int itemPos, int source) {
-        if(Globals.getInstance().getObjetos()[posX+posY]==null)//comparar si posX+posY esta ocupado en el inventario
-        {
-            Globals.getInstance().getObjetos()[posX+posY]=Globals.getInstance().getObjetos()[itemPos];
+        Jugador j=Globals.getInstance().getGame().player;
+        if(!inventarioView.isC()) {
+            if(posX>0) {
+                if (j.inventario[posX + posY] == null)//comparar si posX+posY esta ocupado en el inventario
+                {
+                    j.inventario[posX + posY] = j.inventario[itemPos];
+                    j.inventario[itemPos] = null;
+                } else//si lo esta intercambiar los dos objetos
+                {
+                    Objeto o = Globals.getInstance().getGame().player.inventario[posX + posY];
+                    Globals.getInstance().getGame().player.inventario[posX + posY] = Globals.getInstance().getObjetos()[itemPos];
+                    Globals.getInstance().getGame().player.inventario[itemPos] = o;
+                }
+                inventarioView.onDraw(-2,0,0);
+            }
+            else{
+
+            }
+            //si es negativo posX, es que lo intenta equipar
+            //comprobar que se puede equipar en ese hueco
+            //intercambiar los items
         }
-        else//si lo esta intercambiar los dos objetos
-        {
-            Objeto o=Globals.getInstance().getObjetos()[posX+posY];
-            Globals.getInstance().getObjetos()[posX+posY]=Globals.getInstance().getObjetos()[itemPos];
-            Globals.getInstance().getObjetos()[itemPos]=o;
+        else{
+            if(posX==-1)//lo sueltas en el cofre
+            {
+                Objeto o=inventarioView.getCofre().getContenido().get(0);
+                inventarioView.getCofre().getContenido().remove(0);
+                inventarioView.getCofre().getContenido().add(0,j.inventario[itemPos]);
+                j.inventario[itemPos]=o;
+
+            }
+            else//lo sueltas en el inventario
+                {
+                Objeto o=j.inventario[posX];
+                j.inventario[posX]=inventarioView.getCofre().getContenido().remove(0);
+                inventarioView.getCofre().getContenido().add(0,o);
+            }
+            inventarioView.onDrawCofre(inventarioView.getCofre(),-2,0,0);
+
         }
-        //si es negativo posX, es que lo intenta equipar
-        //comprobar que se puede equipar en ese hueco
-        //intercambiar los items
 
     }
 
