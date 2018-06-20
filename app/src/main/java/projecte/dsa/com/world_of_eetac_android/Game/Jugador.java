@@ -156,6 +156,7 @@ public class Jugador{
             textPaint.setTextAlign(Paint.Align.CENTER);
             textPaint.setTextSize(100);
             canvas.drawText("GAME OVER", canvas.getWidth()/2, canvas.getHeight()/2  , textPaint);
+            gameView.acabarPartida();
         }
     }
     public void setMoviment(float xPercent, float yPercent){

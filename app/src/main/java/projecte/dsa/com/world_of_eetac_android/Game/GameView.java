@@ -61,6 +61,7 @@ public class GameView extends SurfaceView{
     private int numRonda=1;
     private Canvas canvas;
     private GameActivity activity;
+    private boolean acabada=false;
 
     public GameView(Context context) {
         super(context);
@@ -202,6 +203,10 @@ public class GameView extends SurfaceView{
         this.altoSprite = altoSprite;
     }
 
+    public boolean isAcabada() {
+        return acabada;
+    }
+
     public Jugador getJugador() {
         return jugador;
     }
@@ -265,7 +270,7 @@ public class GameView extends SurfaceView{
         //int max=(gameActivity.getWindow().getDecorView().getWidth()-min);
         if (inventarioView.getVisibility() == View.INVISIBLE) {
         if (System.currentTimeMillis() - lastClick > 300) {
-
+            if (!acabada) {
                 lastClick = System.currentTimeMillis();
                 synchronized (getHolder()) {
                     float x = event.getX();
@@ -295,6 +300,8 @@ public class GameView extends SurfaceView{
                                         actual = Globals.getInstance().getGame().map.getPantalles().get(porta.getTeleport().idEscenario); //MAPA NOU
                                         actual.setEscenas(celdas);
                                         resetZombies();
+                                        jugador.setX((porta.getTeleport().X * anchoSprite));
+                                        jugador.setY(porta.getTeleport().Y * altoSprite);
                                     }
 
                                 }
@@ -312,12 +319,14 @@ public class GameView extends SurfaceView{
                     }
                 }
             }
+        }
             return true;
         }
         else{
             Globals.getInstance().getGameActivity().getInventarioView().Touch(event);
             return true;
         }
+
     }
     /*public void obtindreEscena(String id) {
         RetrofitAPI servei = Globals.getInstance().getServeiRetrofit();
@@ -378,44 +387,46 @@ public class GameView extends SurfaceView{
         TimerTask timerTask = new TimerTask() {
             @Override
             public void run() {
-                zombiesRespawn[0]--;
-                if(zombiesRespawn[0]>0) {
-                    for (int i = 0; i < ZOMBIESRESPAWN_MULTIPLIER * numRonda; i++) {
-                        listIterator.add(new Zombie(GameView.this, (int) numRonda / 3 + 1, context));
+                if (!acabada) {
+                    zombiesRespawn[0]--;
+                    if (zombiesRespawn[0] > 0) {
+                        for (int i = 0; i < ZOMBIESRESPAWN_MULTIPLIER * numRonda; i++) {
+                            listIterator.add(new Zombie(GameView.this, (int) numRonda / 3 + 1, context));
+                        }
+                    } else {
+                        fin = true;
+                        novaRonda();
+                        timer.cancel();
+                        timer.purge();
                     }
-                }
-                else{
-                    fin =true;
-                    novaRonda();
-                    timer.cancel();
-                    timer.purge();
                 }
             }
         };
         timer.schedule(timerTask,ZOMBIESRESPAWN_DELAY,ZOMBIESRESPAWN_RATE);
         return fin;
     }
-    public void atacar(){
-        //Mirem cap on es dirigeix el jugador
-        int jugadorX=jugador.getX()+(jugador.getWidth()/2)+JUGADOR_DIRECCIOATAC*jugador.getxSpeed();
-        int jugadorY=jugador.getY()+(jugador.getHeight()/2)+JUGADOR_DIRECCIOATAC*jugador.getySpeed();
-        for (listIterator= zombies.listIterator(); listIterator.hasNext(); ) {
+    public void atacar() {
+        if (!acabada){
+            //Mirem cap on es dirigeix el jugador
+            int jugadorX = jugador.getX() + (jugador.getWidth() / 2) + JUGADOR_DIRECCIOATAC * jugador.getxSpeed();
+        int jugadorY = jugador.getY() + (jugador.getHeight() / 2) + JUGADOR_DIRECCIOATAC * jugador.getySpeed();
+        for (listIterator = zombies.listIterator(); listIterator.hasNext(); ) {
             Zombie objectiu = listIterator.next();
-            int zombieX=objectiu.getX()+(objectiu.getWidth()/2);
-            int zombieY=objectiu.getY()+(objectiu.getHeight()/2);
-            double dis= Math.sqrt(Math.pow(jugadorX-zombieX,2)+Math.pow(jugadorY-zombieY,2));
-            if(((dis)/this.getAltoSprite())<JUGADORMIN_SPRITES_SEPARACIO)
-            {
-                double dany=JUGADOR_DANY_MINIM+JUGADOR_DANY_MULTIPLIER;//Depenent de l'arma que utilitzi
+            int zombieX = objectiu.getX() + (objectiu.getWidth() / 2);
+            int zombieY = objectiu.getY() + (objectiu.getHeight() / 2);
+            double dis = Math.sqrt(Math.pow(jugadorX - zombieX, 2) + Math.pow(jugadorY - zombieY, 2));
+            if (((dis) / this.getAltoSprite()) < JUGADORMIN_SPRITES_SEPARACIO) {
+                double dany = JUGADOR_DANY_MINIM + JUGADOR_DANY_MULTIPLIER;//Depenent de l'arma que utilitzi
                 objectiu.restarSalut(dany);
-                if(objectiu.getSalut()<0) {
+                if (objectiu.getSalut() < 0) {
                     listIterator.remove();
-                    ListIterator<ZombieMort> iterator= morts.listIterator();
+                    ListIterator<ZombieMort> iterator = morts.listIterator();
                     iterator.add(new ZombieMort(morts, this, objectiu.getX(), objectiu.getY(), bmpBlood));
                     break;
                 }
             }
         }
+    }
     }
     public void resetZombies(){
         for (listIterator= zombies.listIterator(); listIterator.hasNext(); ) {
@@ -425,13 +436,33 @@ public class GameView extends SurfaceView{
         }
     }
     public void novaRonda(){
-        numRonda++;
-        //Informa al Server que aumenta ronda
-        /*activity.nextRoundGame();
-        actual = Globals.getInstance().getGame().map.getPantalles().get(0); //MAPA NOU
-        actual.setEscenas(celdas);*/
-        activity.setRonda(numRonda);
-        startRonda(numRonda);
+        if(!acabada) {
+            numRonda++;
+            //Informa al Server que aumenta ronda
+            activity.nextRoundGame();
+            actual = Globals.getInstance().getGame().map.getPantalles().get(0); //MAPA NOU
+            actual.setEscenas(celdas);
+            activity.setRonda(numRonda);
+            startRonda(numRonda);
+        }
+    }
+
+    public void acabarPartida(){
+        //activity.endGame();
+        acabada=true;
+
+       /* Timer timer = new Timer();
+        TimerTask timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                activity.acabarPartida();
+                timer.cancel();
+                timer.purge();
+            }
+        };
+        timer.schedule(timerTask,5000);*/
+        //activity.acabarPartida();
+
     }
 
 }

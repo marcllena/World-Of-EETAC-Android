@@ -150,11 +150,10 @@ public class GameActivity extends AppCompatActivity implements JoystickView.Joys
             }
         });
     }
-    public void endGame(List<Escena> escenaList) {
+    public void endGame() {
         Partida game = Globals.getInstance().getGame();
-
         RetrofitAPI servei = Globals.getInstance().getServeiRetrofit();
-        Call<Partida> callPartida = servei.nextRoundGame(game);
+        Call<Partida> callPartida = servei.endedGame(game);
         callPartida.enqueue(new Callback<Partida>() {
             int resultat = -1;
 
@@ -163,8 +162,7 @@ public class GameActivity extends AppCompatActivity implements JoystickView.Joys
                 int codi = resposta.code();
                 Log.d("Proba ", "Codi agafat" + codi);
                 if (codi == 200) {
-                    Partida game = (Partida) resposta.body();
-                    Globals.getInstance().setGame(new Partida());
+                    return;
                 } else if (codi == 204) {
                     resultat = -1;
                 }
@@ -193,6 +191,7 @@ public class GameActivity extends AppCompatActivity implements JoystickView.Joys
 
     @Override
     public void onJoystickMoved(float xPercent, float yPercent, int source) {
+        if(!gameView.isAcabada())
         gameView.getJugador().setMoviment(xPercent,yPercent);
     }
 
@@ -211,6 +210,10 @@ public class GameActivity extends AppCompatActivity implements JoystickView.Joys
             }
         });
 
+    }
+
+    public void acabarPartida(){
+        this.finish();
     }
 
     public static void setSalut(double val)
