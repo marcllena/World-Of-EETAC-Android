@@ -37,4 +37,12 @@ public class Jugador {
         return profession;
     }
     public Jugador(){}
+
+    public int getAttack() {
+        return attack;
+    }
+
+    public int getDefense() {
+        return defense;
+    }
 }

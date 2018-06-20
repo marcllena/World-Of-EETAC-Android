@@ -5,6 +5,7 @@ import projecte.dsa.com.world_of_eetac_android.Celes.Cofre;
 import projecte.dsa.com.world_of_eetac_android.Celes.Puerta;
 import projecte.dsa.com.world_of_eetac_android.Mon.Globals;
 import projecte.dsa.com.world_of_eetac_android.Mon.Escena;
+import projecte.dsa.com.world_of_eetac_android.Mon.Partida;
 import projecte.dsa.com.world_of_eetac_android.R;
 
 import android.content.Context;
@@ -410,13 +411,15 @@ public class GameView extends SurfaceView{
             //Mirem cap on es dirigeix el jugador
             int jugadorX = jugador.getX() + (jugador.getWidth() / 2) + JUGADOR_DIRECCIOATAC * jugador.getxSpeed();
         int jugadorY = jugador.getY() + (jugador.getHeight() / 2) + JUGADOR_DIRECCIOATAC * jugador.getySpeed();
+
         for (listIterator = zombies.listIterator(); listIterator.hasNext(); ) {
             Zombie objectiu = listIterator.next();
             int zombieX = objectiu.getX() + (objectiu.getWidth() / 2);
             int zombieY = objectiu.getY() + (objectiu.getHeight() / 2);
             double dis = Math.sqrt(Math.pow(jugadorX - zombieX, 2) + Math.pow(jugadorY - zombieY, 2));
             if (((dis) / this.getAltoSprite()) < JUGADORMIN_SPRITES_SEPARACIO) {
-                double dany = JUGADOR_DANY_MINIM + JUGADOR_DANY_MULTIPLIER;//Depenent de l'arma que utilitzi
+                //Dany depenent del atac del jugador
+                double dany = JUGADOR_DANY_MINIM + jugador.getAttack(); ;//Depenent de l'arma que utilitzi
                 objectiu.restarSalut(dany);
                 if (objectiu.getSalut() < 0) {
                     listIterator.remove();
@@ -439,9 +442,9 @@ public class GameView extends SurfaceView{
         if(!acabada) {
             numRonda++;
             //Informa al Server que aumenta ronda
-            activity.nextRoundGame();
-            actual = Globals.getInstance().getGame().map.getPantalles().get(0); //MAPA NOU
-            actual.setEscenas(celdas);
+            //activity.nextRoundGame();
+            //actual = Globals.getInstance().getGame().map.getPantalles().get(0); //MAPA NOU
+           // actual.setEscenas(celdas);
             activity.setRonda(numRonda);
             startRonda(numRonda);
         }

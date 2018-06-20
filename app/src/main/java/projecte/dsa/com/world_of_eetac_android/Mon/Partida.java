@@ -36,5 +36,9 @@ public class Partida {
         this.enemics = enemics;
         this.score = score;
     }
+
+    public Jugador getPlayer() {
+        return player;
+    }
 }
 
