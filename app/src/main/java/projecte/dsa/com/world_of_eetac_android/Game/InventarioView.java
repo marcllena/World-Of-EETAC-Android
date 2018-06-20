@@ -223,6 +223,7 @@ public class InventarioView extends SurfaceView implements SurfaceHolder.Callbac
 
                 for (int j = 0; j < 3; j++) {
                     for (int i = 0; i < 5; i++) {
+
                         if(objetos[i+5*j]!=null) {
                             nombreResource = objetos[i+5*j].getNombre();//"hacha_bombero";
                             idObjeto = getResources().getIdentifier(nombreResource, "drawable", "projecte.dsa.com.world_of_eetac_android");
@@ -404,7 +405,7 @@ public class InventarioView extends SurfaceView implements SurfaceHolder.Callbac
         int posX = 0;
         int posY = 0;
         int releasedItem;
-        if(!c) {
+        if(c==false) {
             if (event.getAction() != event.ACTION_UP) {
                 if (event.getAction() == event.ACTION_DOWN) {
                     if (((event.getX() - px > exitX) && (event.getX() - px < (exitX + 0.5 * anchoCelda))) && (event.getY() > exitY) && ((event.getY() < (exitY + 0.5 * altoCelda)))) {

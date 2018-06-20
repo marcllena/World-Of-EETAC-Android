@@ -289,10 +289,12 @@ public class GameActivity extends AppCompatActivity implements JoystickView.Joys
         else{
             if(ItemReleased==-1)//lo sueltas en el cofre
             {
-                Objeto o=inventarioView.getCofre().getContenido().get(0);
-                inventarioView.getCofre().getContenido().remove(0);
-                inventarioView.getCofre().getContenido().add(0,j.inventario[itemPos]);
-                j.inventario[itemPos]=o;
+                if(itemPos!=-1){
+                    Objeto o=inventarioView.getCofre().getContenido().get(0);
+                    inventarioView.getCofre().getContenido().remove(0);
+                    inventarioView.getCofre().getContenido().add(0,j.inventario[itemPos]);
+                    j.inventario[itemPos]=o;
+                }
 
             }
             else//lo sueltas en el inventario
