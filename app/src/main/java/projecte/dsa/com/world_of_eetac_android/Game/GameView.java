@@ -442,19 +442,19 @@ public class GameView extends SurfaceView{
         if(!acabada) {
             numRonda++;
             //Informa al Server que aumenta ronda
-            //activity.nextRoundGame();
-            //actual = Globals.getInstance().getGame().map.getPantalles().get(0); //MAPA NOU
-           // actual.setEscenas(celdas);
+            activity.nextRoundGame();
+            actual = Globals.getInstance().getGame().map.getPantalles().get(0); //MAPA NOU
+            actual.setEscenas(celdas);
             activity.setRonda(numRonda);
             startRonda(numRonda);
         }
     }
 
     public void acabarPartida(){
-        //activity.endGame();
+        activity.endGame();
         acabada=true;
 
-       /* Timer timer = new Timer();
+       /*Timer timer = new Timer();
         TimerTask timerTask = new TimerTask() {
             @Override
             public void run() {

@@ -113,9 +113,12 @@ public class GameActivity extends AppCompatActivity implements JoystickView.Joys
         //setContentView(new GameView(this));
     }
     public void nextRoundGame() {
+        Partida gameNova = new Partida();
         Partida game = Globals.getInstance().getGame();
+        gameNova.mapSelection=game.mapSelection;
+        gameNova.jugador=game.jugador;
         RetrofitAPI servei = Globals.getInstance().getServeiRetrofit();
-        Call<Partida> callPartida = servei.nextRoundGame(game);
+        Call<Partida> callPartida = servei.nextRoundGame(gameNova);
         callPartida.enqueue(new Callback<Partida>() {
             int resultat = -1;
 
@@ -168,7 +171,7 @@ public class GameActivity extends AppCompatActivity implements JoystickView.Joys
                     resultat = -1;
                 }
                 if (resultat == -1) {
-                    AlertDialog.Builder dlgAlert = new AlertDialog.Builder(GameActivity.this);
+                   /* AlertDialog.Builder dlgAlert = new AlertDialog.Builder(GameActivity.this);
                     dlgAlert.setMessage("Error al finalitzar la partida");
                     dlgAlert.setTitle("Error en les dades");
                     dlgAlert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
@@ -177,7 +180,7 @@ public class GameActivity extends AppCompatActivity implements JoystickView.Joys
                         }
                     });
                     dlgAlert.setCancelable(true);
-                    dlgAlert.create().show();
+                    dlgAlert.create().show();*/
                 }
             }
 
